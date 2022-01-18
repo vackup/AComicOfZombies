@@ -1,4 +1,4 @@
-﻿namespace Platformer.Npc
+﻿namespace ACoZ.Npc
 {
     public enum NpcTypes
     {

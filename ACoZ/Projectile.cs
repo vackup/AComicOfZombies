@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 
-namespace Platformer
+namespace ACoZ
 {
     class Projectile
     {
@@ -22,7 +22,7 @@ namespace Platformer
 
         public Vector2 Position
         {
-            get { return _position; }
+            get { return this._position; }
         }
 
         /// <summary>
@@ -34,21 +34,21 @@ namespace Platformer
         /// <param name="initialAngle">Initial Angle</param>
         public Projectile(float initialPositionX, float initialPositionY, int initialVelocity, double initialAngle)
         {
-            _initialPositionX = initialPositionX;
-            _initialPositionY = initialPositionY;
+            this._initialPositionX = initialPositionX;
+            this._initialPositionY = initialPositionY;
 
-            _initialVelocity = initialVelocity;
+            this._initialVelocity = initialVelocity;
 
-            _initialAngle = initialAngle;
+            this._initialAngle = initialAngle;
         }
 
         public void Update(GameTime gameTime)
         {
 
-            _time += (float)gameTime.ElapsedGameTime.TotalSeconds*10;
+            this._time += (float)gameTime.ElapsedGameTime.TotalSeconds*10;
 
-            _position.X = (float)(_initialPositionX + _initialVelocity * Math.Cos(_initialAngle) * _time);
-            _position.Y = (float)(_initialPositionY + _initialVelocity * Math.Sin(_initialAngle) * _time + 0.5f * ACCELERATION * Math.Pow(_time, 2));
+            this._position.X = (float)(this._initialPositionX + this._initialVelocity * Math.Cos(this._initialAngle) * this._time);
+            this._position.Y = (float)(this._initialPositionY + this._initialVelocity * Math.Sin(this._initialAngle) * this._time + 0.5f * ACCELERATION * Math.Pow(this._time, 2));
 
         }
     }

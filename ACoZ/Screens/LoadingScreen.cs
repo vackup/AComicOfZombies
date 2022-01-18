@@ -8,14 +8,15 @@
 #endregion
 
 #region Using Statements
+
 using System;
+using ACoZ.ScreenManagers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Platformer.ScreenManagers;
 
 #endregion
 
-namespace Platformer.Screens
+namespace ACoZ.Screens
 {
     /// <summary>
     /// The loading screen coordinates transitions between the menu system and the
@@ -54,10 +55,10 @@ namespace Platformer.Screens
         private LoadingScreen(bool loadingIsSlow,
                               GameScreen[] screensToLoad)
         {
-            _loadingIsSlow = loadingIsSlow;
-            _screensToLoad = screensToLoad;
+            this._loadingIsSlow = loadingIsSlow;
+            this._screensToLoad = screensToLoad;
 
-            TransitionOnTime = TimeSpan.FromSeconds(0.5);
+            this.TransitionOnTime = TimeSpan.FromSeconds(0.5);
         }
 
 
@@ -94,15 +95,15 @@ namespace Platformer.Screens
 
             // If all the previous screens have finished transitioning
             // off, it is time to actually perform the load.
-            if (_otherScreensAreGone)
+            if (this._otherScreensAreGone)
             {
-                ScreenManager.RemoveScreen(this);
+                this.ScreenManager.RemoveScreen(this);
 
-                foreach (GameScreen screen in _screensToLoad)
+                foreach (GameScreen screen in this._screensToLoad)
                 {
                     if (screen != null)
                     {
-                        ScreenManager.AddScreen(screen, ControllingPlayer);
+                        this.ScreenManager.AddScreen(screen, this.ControllingPlayer);
                     }
                 }
 
@@ -127,10 +128,10 @@ namespace Platformer.Screens
             // method, rather than in Update, because it isn't enough just for the
             // screens to be gone: in order for the transition to look good we must
             // have actually drawn a frame without them before we perform the load.
-            if ((ScreenState == ScreenState.Active) &&
-                (ScreenManager.GetScreens().Length == 1))
+            if ((this.ScreenState == ScreenState.Active) &&
+                (this.ScreenManager.GetScreens().Length == 1))
             {
-                _otherScreensAreGone = true;
+                this._otherScreensAreGone = true;
             }
 
             // The gameplay screen takes a while to load, so we display a loading
@@ -139,7 +140,7 @@ namespace Platformer.Screens
             // second while returning from the game to the menus. This parameter
             // tells us how long the loading is going to take, so we know whether
             // to bother drawing the message.
-            if (_loadingIsSlow)
+            if (this._loadingIsSlow)
             {
                 //var spriteBatch = ScreenManager.SpriteBatch;
                 //var font = ScreenManager.SpriteFonts.TextFont;
@@ -152,12 +153,12 @@ namespace Platformer.Screens
                 //var textSize = font.MeasureString(message);
                 //var textPosition = (_viewportSize - textSize) / 2;
 
-                var color = Color.White * TransitionAlpha;
+                var color = Color.White * this.TransitionAlpha;
 
                 // Draw the text.
-                _spriteBatch.Begin();
-                _spriteBatch.DrawString(_font, MESSAGE, _textPosition, color);
-                _spriteBatch.End();
+                this._spriteBatch.Begin();
+                this._spriteBatch.DrawString(this._font, MESSAGE, this._textPosition, color);
+                this._spriteBatch.End();
             }
         }
 
@@ -165,14 +166,14 @@ namespace Platformer.Screens
         {
             base.LoadContent();
 
-            _spriteBatch = ScreenManager.SpriteBatch;
-            _font = ScreenManager.SpriteFonts.TittleFont;
+            this._spriteBatch = this.ScreenManager.SpriteBatch;
+            this._font = this.ScreenManager.SpriteFonts.TittleFont;
             
 
-            var viewport = ScreenManager.GraphicsDevice.Viewport;
+            var viewport = this.ScreenManager.GraphicsDevice.Viewport;
             var viewportSize = new Vector2(viewport.Width, viewport.Height);
 
-            _textPosition = (viewportSize - _font.MeasureString(MESSAGE)) / 2;
+            this._textPosition = (viewportSize - this._font.MeasureString(MESSAGE)) / 2;
         }
 
         public override void UnloadContent()

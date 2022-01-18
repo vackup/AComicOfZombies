@@ -1,4 +1,4 @@
-﻿namespace Platformer.Players
+﻿namespace ACoZ.Players
 {
     public enum Actions
     {

@@ -1,17 +1,7 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// Animation.cs
-//
-// Microsoft XNA Community Game Platform
-// Copyright (C) Microsoft Corporation. All rights reserved.
-//-----------------------------------------------------------------------------
-#endregion
-
-using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Platformer.Animations
+namespace ACoZ.Animations
 {
     /// <summary>
     /// Represents an animated texture.
@@ -91,20 +81,20 @@ namespace Platformer.Animations
         /// <param name="rectangleFrames">Array de rectangulos de frames dentro de la textura</param>
         public Animation(Texture2D texture, float frameTime, bool isLooping, Rectangle[] rectangleFrames)
         {
-            RectangleFrames = rectangleFrames;
-            Texture = texture;
-            FrameTime = frameTime;
-            IsLooping = isLooping;
+            this.RectangleFrames = rectangleFrames;
+            this.Texture = texture;
+            this.FrameTime = frameTime;
+            this.IsLooping = isLooping;
             //FrameWidth = Texture.Width / frameCount;
             //FrameHeight = Texture.Height;
-            FrameCount = rectangleFrames.Length;
-            RowCount = 1;
-            MaxRowFrame = FrameCount;
+            this.FrameCount = rectangleFrames.Length;
+            this.RowCount = 1;
+            this.MaxRowFrame = this.FrameCount;
 
-            FrameWidth = rectangleFrames[0].Width;
-            FrameHeight = rectangleFrames[0].Height;
+            this.FrameWidth = rectangleFrames[0].Width;
+            this.FrameHeight = rectangleFrames[0].Height;
 
-            SetDefaultBoundingRectangle();
+            this.SetDefaultBoundingRectangle();
         }
 
         /// <summary>
@@ -118,20 +108,20 @@ namespace Platformer.Animations
         /// <param name="height">Altura maxima de la animacion. Si la animacion esta compuesto x cuadros de distinto tamaño, hay que poner el del tamaño más alto</param>
         public Animation(Texture2D texture, float frameTime, bool isLooping, Rectangle[] rectangleFrames, int width, int height)
         {
-            RectangleFrames = rectangleFrames;
-            Texture = texture;
-            FrameTime = frameTime;
-            IsLooping = isLooping;
+            this.RectangleFrames = rectangleFrames;
+            this.Texture = texture;
+            this.FrameTime = frameTime;
+            this.IsLooping = isLooping;
             //FrameWidth = Texture.Width / frameCount;
             //FrameHeight = Texture.Height;
-            FrameCount = rectangleFrames.Length;
-            RowCount = 1;
-            MaxRowFrame = FrameCount;
+            this.FrameCount = rectangleFrames.Length;
+            this.RowCount = 1;
+            this.MaxRowFrame = this.FrameCount;
 
-            FrameWidth = width;
-            FrameHeight = height;
+            this.FrameWidth = width;
+            this.FrameHeight = height;
 
-            SetDefaultBoundingRectangle();
+            this.SetDefaultBoundingRectangle();
         }
 
         ///// <summary>
@@ -176,18 +166,18 @@ namespace Platformer.Animations
 
         public void SetBoundingRectangle(Rectangle animationBounds)
         {
-            BoundingRectangle = animationBounds;
+            this.BoundingRectangle = animationBounds;
         }
 
         public void SetBoundingRectangle(float widthPercent, float heightPercent)
         {
             // Calculate bounds within texture size.            
-            var width = (int)(FrameWidth * widthPercent);
-            var left = (FrameWidth - width) / 2;
-            var height = (int)(FrameHeight * heightPercent);
-            var top = FrameHeight - height;
+            var width = (int)(this.FrameWidth * widthPercent);
+            var left = (this.FrameWidth - width) / 2;
+            var height = (int)(this.FrameHeight * heightPercent);
+            var top = this.FrameHeight - height;
 
-            BoundingRectangle = new Rectangle(left, top, width, height);
+            this.BoundingRectangle = new Rectangle(left, top, width, height);
         }
 
         //public void SetBoundingRectangle(int width, int height)
@@ -202,12 +192,12 @@ namespace Platformer.Animations
         private void SetDefaultBoundingRectangle()
         {
             // Calculate bounds within texture size.            
-            var width = (int)(FrameWidth * 0.8);
-            var left = (FrameWidth - width) / 2;
-            var height = (int)(FrameHeight * 0.9);
-            var top = FrameHeight - height;
+            var width = (int)(this.FrameWidth * 0.8);
+            var left = (this.FrameWidth - width) / 2;
+            var height = (int)(this.FrameHeight * 0.9);
+            var top = this.FrameHeight - height;
 
-            BoundingRectangle = new Rectangle(left, top, width, height);
+            this.BoundingRectangle = new Rectangle(left, top, width, height);
         }
     }
 }

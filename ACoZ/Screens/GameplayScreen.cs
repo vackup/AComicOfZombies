@@ -1,16 +1,5 @@
 #region Usings
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Platformer.Helpers;
-using Platformer.Levels;
-using Platformer.Players;
-using Platformer.ScreenManagers;
-using Platformer.Weapons;
+
 #if WINDOWS_PHONE || IPHONE
 using Mobile.Base.ScreenSystem;
 using Mobile.Base.VirtualInput;
@@ -22,12 +11,24 @@ using Web.Base.VirtualInput;
 using Desktop.Base.ScreenSystem;
 using Desktop.Base.VirtualInput;
 #endif
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using ACoZ.Helpers;
+using ACoZ.Levels;
+using ACoZ.Players;
+using ACoZ.ScreenManagers;
+using ACoZ.Weapons;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Buttons = Microsoft.Xna.Framework.Input.Buttons;
 using GamePad = Microsoft.Xna.Framework.Input.GamePad;
 using GamePadState = Microsoft.Xna.Framework.Input.GamePadState;
 #endregion
 
-namespace Platformer.Screens
+namespace ACoZ.Screens
 {
     /// <summary>
     /// This screen implements the actual game logic. It is just a
@@ -116,14 +117,14 @@ namespace Platformer.Screens
         #region Constructors
         public GameplayScreen(int currentGoodGuy)
         {
-            _currentGoodGuy = currentGoodGuy;
-            Init();
+            this._currentGoodGuy = currentGoodGuy;
+            this.Init();
         }
 
         public GameplayScreen(ResumeState resumeState)
         {
-            _resumeState = resumeState;
-            Init();
+            this._resumeState = resumeState;
+            this.Init();
         }
 
         //public GameplayScreen(bool continuePreviusGame)
@@ -135,8 +136,8 @@ namespace Platformer.Screens
 
         private void Init()
         {
-            TransitionOnTime = TimeSpan.FromSeconds(1.5);
-            TransitionOffTime = TimeSpan.FromSeconds(0.5);
+            this.TransitionOnTime = TimeSpan.FromSeconds(1.5);
+            this.TransitionOffTime = TimeSpan.FromSeconds(0.5);
         }
 
         /// <summary>
@@ -185,35 +186,35 @@ namespace Platformer.Screens
         /// </summary>
         public override void LoadContent()
         {
-            if (_content == null)
+            if (this._content == null)
             {
                 // Probando de usar el ContentManager compartido
                 //_content = new ContentManager(ScreenManager.Game.Services, GlobalParameters.CONTENT_FOLDER);
-                _content = ScreenManager.Game.Content;
+                this._content = this.ScreenManager.Game.Content;
             }
 
-            _titleSafeArea = ScreenManager.GraphicsDevice.Viewport.TitleSafeArea;
+            this._titleSafeArea = this.ScreenManager.GraphicsDevice.Viewport.TitleSafeArea;
 
-            _spriteBatch = ScreenManager.SpriteBatch;
+            this._spriteBatch = this.ScreenManager.SpriteBatch;
 
             
-            _scoreSize = ScreenManager.SpriteFonts.TittleFontSmall.MeasureString(SCORE_TEXT);
+            _scoreSize = this.ScreenManager.SpriteFonts.TittleFontSmall.MeasureString(SCORE_TEXT);
             
-            var timeSizeWidth = ScreenManager.SpriteFonts.TittleFontSmall.MeasureString("00:00").X;
+            var timeSizeWidth = this.ScreenManager.SpriteFonts.TittleFontSmall.MeasureString("00:00").X;
 
 #if WINDOWS_PHONE || IPHONE
             _scoreLocation = new Vector2(GlobalParameters.LEFT_MARGIN + GlobalParameters.ScreenAssetsData["PANTALLA_CONTROLES0001_psd-Pause"].Width + GlobalParameters.LEFT_MARGIN, GlobalParameters.TOP_MARGIN + GlobalParameters.BANNER_MARGIN);
 #else
-            _scoreLocation = new Vector2(GlobalParameters.LEFT_MARGIN, GlobalParameters.TOP_MARGIN);
+            this._scoreLocation = new Vector2(GlobalParameters.LEFT_MARGIN, GlobalParameters.TOP_MARGIN);
 #endif
-            _timeLocation = new Vector2(GlobalParameters.SCREEN_WIDTH - GlobalParameters.RIGHT_MARGIN - timeSizeWidth, GlobalParameters.TOP_MARGIN + GlobalParameters.BANNER_MARGIN);
+            this._timeLocation = new Vector2(GlobalParameters.SCREEN_WIDTH - GlobalParameters.RIGHT_MARGIN - timeSizeWidth, GlobalParameters.TOP_MARGIN + GlobalParameters.BANNER_MARGIN);
             
 #if WINDOWS_PHONE || IPHONE //|| WINDOWS
             CreateVirtualGamepad();
 #endif
 
-            _center = new Vector2(_titleSafeArea.X + _titleSafeArea.Width / 2.0f,
-                                         _titleSafeArea.Y + _titleSafeArea.Height / 2.0f);
+            this._center = new Vector2(this._titleSafeArea.X + this._titleSafeArea.Width / 2.0f,
+                                         this._titleSafeArea.Y + this._titleSafeArea.Height / 2.0f);
 
             //if (_continuePreviusGame)
             //{
@@ -221,16 +222,16 @@ namespace Platformer.Screens
             //}
             //else
             //{
-                if (_resumeState == null)
+                if (this._resumeState == null)
                 {
-                    _resumeState = SetInitialGameData(_currentGoodGuy);
+                    this._resumeState = this.SetInitialGameData(this._currentGoodGuy);
                     //throw new Exception("_resumeState viene sin valores");
                 }
 
-                _resumeState.LoadContent(_content);
+                this._resumeState.LoadContent(this._content);
 
                 //_levelIndex = _resumeState.CurrentLevel;
-                LoadNextLevel(_resumeState.CurrentLevel, _resumeState.PlayerLives, _resumeState.Score, _resumeState.NextLife, _resumeState.WeaponInventory, _resumeState.PrimaryWeapon, _resumeState.SecondaryWeapon, _resumeState.SelectedPlayerInfo, _resumeState.AmmoInventory);
+                this.LoadNextLevel(this._resumeState.CurrentLevel, this._resumeState.PlayerLives, this._resumeState.Score, this._resumeState.NextLife, this._resumeState.WeaponInventory, this._resumeState.PrimaryWeapon, this._resumeState.SecondaryWeapon, this._resumeState.SelectedPlayerInfo, this._resumeState.AmmoInventory);
             //}
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
@@ -239,41 +240,41 @@ namespace Platformer.Screens
             //ScreenManager.Game.ResetElapsedTime();
 
             // Seteamos los valores del HUD (optimizacion para generar menos garbage)
-            _previusCurrentAmmo = _level.Player.CurrentWeapon.CurrentAmmo;
+            _previusCurrentAmmo = this._level.Player.CurrentWeapon.CurrentAmmo;
             _currentAmmmoText = _previusCurrentAmmo.ToString(CultureInfo.InvariantCulture);
 
-            _previusAviableBullets = _level.Player.GetCurrentWeaponAvailableAmmo();
+            _previusAviableBullets = this._level.Player.GetCurrentWeaponAvailableAmmo();
             _aviableBulletText = _previusAviableBullets.ToString(CultureInfo.InvariantCulture);
 
-            _previusScore = _level.Score;
+            _previusScore = this._level.Score;
             _scoreText = _previusScore.ToString(CultureInfo.InvariantCulture);
             // Fin: Seteamos los valores del HUD (optimizacion para generar menos garbage)
 
             _levelClearTextureRectangle =
                         GlobalParameters.ScreenAssetsData["PANTALLA_LEVEL0001_psd-LEVEL_CLEAR"];
 
-            _levelClearPosition = _center - new Vector2(_levelClearTextureRectangle.Width, _levelClearTextureRectangle.Height) / 2;
+            _levelClearPosition = this._center - new Vector2(_levelClearTextureRectangle.Width, _levelClearTextureRectangle.Height) / 2;
 
             _remainigBulletsIconTextureRectangule = GlobalParameters.ScreenAssetsData["PANTALLA_CONTROLES0001_psd-RESTO_BALAS"];
             _remainigBulletsIconPosition =
                 new Vector2(
-                    (ScreenManager.GraphicsDevice.Viewport.Width / 2) - (_remainigBulletsIconTextureRectangule.Width/2),
+                    (this.ScreenManager.GraphicsDevice.Viewport.Width / 2) - (_remainigBulletsIconTextureRectangule.Width/2),
                     GlobalParameters.TOP_MARGIN/2 + GlobalParameters.BANNER_MARGIN);
 
-            _backgroundTexture = ScreenManager.Game.Content.Load<Texture2D>(GlobalParameters.WEAPON_BUTTON_NORMAL);
+            _backgroundTexture = this.ScreenManager.Game.Content.Load<Texture2D>(GlobalParameters.WEAPON_BUTTON_NORMAL);
 
             var backGroundHeight = _levelClearTextureRectangle.Height + GlobalParameters.TOP_MARGIN*2 + GlobalParameters.BANNER_MARGIN;
-            var backGroundYPosition = _center.Y - (backGroundHeight / 2);
+            var backGroundYPosition = this._center.Y - (backGroundHeight / 2);
 
             _backgroundRectangle = new Rectangle(0, (int)backGroundYPosition, GlobalParameters.SCREEN_WIDTH, backGroundHeight);
 
             _loseOverlayText = "YOU DIE";
-            _loseOverlayTextSize = ScreenManager.SpriteFonts.TittleFont.MeasureString(_loseOverlayText);
-            _loseOverlayPosition = _center - _loseOverlayTextSize / 2;
+            _loseOverlayTextSize = this.ScreenManager.SpriteFonts.TittleFont.MeasureString(_loseOverlayText);
+            _loseOverlayPosition = this._center - _loseOverlayTextSize / 2;
 
             _runOutTimeOverlayText = "RUN OUT OF TIME";
-            _runOutTimeOverlayTextSize = ScreenManager.SpriteFonts.TittleFont.MeasureString(_runOutTimeOverlayText);
-            _runOutTimeOverlayPosition = _center - _runOutTimeOverlayTextSize / 2;
+            _runOutTimeOverlayTextSize = this.ScreenManager.SpriteFonts.TittleFont.MeasureString(_runOutTimeOverlayText);
+            _runOutTimeOverlayPosition = this._center - _runOutTimeOverlayTextSize / 2;
 
 #if WINDOWS || SILVERLIGHT
             _tapToContinueText = "Press " + CONTINUE_KEY.ToString() + " to continue";
@@ -281,7 +282,7 @@ namespace Platformer.Screens
             _tapToContinueText = "Tap to continue";
 #endif
 
-            _tapToContinueTextSize = ScreenManager.SpriteFonts.TextFont.MeasureString(_tapToContinueText);
+            _tapToContinueTextSize = this.ScreenManager.SpriteFonts.TextFont.MeasureString(_tapToContinueText);
 
             // Hacemos una recoleccion de basura luego de cargar todos los elementos
             GC.Collect();
@@ -426,7 +427,7 @@ namespace Platformer.Screens
             //    _level.Dispose();
 
             // Load the level.
-            _level = new Level(_content, levelIndex, totalScore, currentLives, nextLife, weaponInventory, primaryWeapon, secondaryWeapon, playerInfo, ammoInventory);
+            this._level = new Level(this._content, levelIndex, totalScore, currentLives, nextLife, weaponInventory, primaryWeapon, secondaryWeapon, playerInfo, ammoInventory);
         }
 
         //private void LoadNextLevel(int currentLives, int totalScore, int nextLife)
@@ -458,12 +459,12 @@ namespace Platformer.Screens
         /// </summary>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            if (IsActive)
+            if (this.IsActive)
             {
-                if (_level.LevelLoaded)
+                if (this._level.LevelLoaded)
                 {
                     // update our level, passing down the GameTime along with all of our input states
-                    _level.Update(gameTime, _keyboardState, _gamePadState, _mouseState, _virtualGamePadState);
+                    this._level.Update(gameTime, this._keyboardState, this._gamePadState, this._mouseState, this._virtualGamePadState);
                 }
             }
 
@@ -496,9 +497,9 @@ namespace Platformer.Screens
             _isPauseGame = (_virtualGamePadState.Buttons.Start == VirtualButtonState.Pressed &&
                             _previusVirtualGamePadState.Buttons.Start == VirtualButtonState.Released);
 #else
-            _keyboardState = Keyboard.GetState();
-            _gamePadState = GamePad.GetState(PlayerIndex.One);
-			_mouseState = Mouse.GetState();
+            this._keyboardState = Keyboard.GetState();
+            this._gamePadState = GamePad.GetState(PlayerIndex.One);
+			this._mouseState = Mouse.GetState();
 #endif
 
             //_accelerometerState = Accelerometer.GetState();
@@ -519,9 +520,9 @@ namespace Platformer.Screens
 
 
 
-            if (input.IsPauseGame(ControllingPlayer)  || _isPauseGame)// || gamePadDisconnected)
+            if (input.IsPauseGame(this.ControllingPlayer)  || _isPauseGame)// || gamePadDisconnected)
             {
-                ScreenManager.AddScreen(new PauseMenuScreen(_level), ControllingPlayer);
+                this.ScreenManager.AddScreen(new PauseMenuScreen(this._level), this.ControllingPlayer);
             }
             else
             {
@@ -529,46 +530,46 @@ namespace Platformer.Screens
                 var continuePressed = _touchState.AnyTouch() || _virtualGamePadState.Buttons.A == VirtualButtonState.Pressed;
 #else
                 var continuePressed =
-                    _keyboardState.IsKeyDown(CONTINUE_KEY) ||
-                    _gamePadState.IsButtonDown(CONTINUE_BUTTON) ||
-                    _virtualGamePadState.Buttons.A == VirtualButtonState.Pressed;
+                    this._keyboardState.IsKeyDown(CONTINUE_KEY) ||
+                    this._gamePadState.IsButtonDown(CONTINUE_BUTTON) ||
+                    this._virtualGamePadState.Buttons.A == VirtualButtonState.Pressed;
 #endif
 
                 // Perform the appropriate action to advance the game and
                 // to get the player back to playing.
-                if (!_wasContinuePressed && continuePressed)
+                if (!this._wasContinuePressed && continuePressed)
                 {
-                    if (!_level.Player.IsAlive)
+                    if (!this._level.Player.IsAlive)
                     {
-                        GameOver();
+                        this.GameOver();
                     }
-                    else if (_level.TimeRemaining == TimeSpan.Zero)
+                    else if (this._level.TimeRemaining == TimeSpan.Zero)
                     {
-                        if (_level.ReachedExit)
+                        if (this._level.ReachedExit)
                         {
                             var resumeState = new ResumeState
                                                   {
-                                                      NextLife = _level.NextLife,
-                                                      CurrentLevel = _level.CurrentLevel,
-                                                      Score = _level.Score,
-                                                      PlayerLives = _level.Player.CurrentHealth,
-                                                      WeaponInventory = _level.Player.WeaponInventory,
-                                                      SecondaryWeapon = _level.Player.SecondaryWeapon,
-                                                      PrimaryWeapon = _level.Player.PrimaryWeapon,
-                                                      SelectedPlayerInfo = _level.Player.Type,
-                                                      AmmoInventory = _level.Player.AmmoInventory
+                                                      NextLife = this._level.NextLife,
+                                                      CurrentLevel = this._level.CurrentLevel,
+                                                      Score = this._level.Score,
+                                                      PlayerLives = this._level.Player.CurrentHealth,
+                                                      WeaponInventory = this._level.Player.WeaponInventory,
+                                                      SecondaryWeapon = this._level.Player.SecondaryWeapon,
+                                                      PrimaryWeapon = this._level.Player.PrimaryWeapon,
+                                                      SelectedPlayerInfo = this._level.Player.Type,
+                                                      AmmoInventory = this._level.Player.AmmoInventory
                                                   };
 
-                            LoadingScreen.Load(ScreenManager, false, null, new BuyWeaponsScreen(resumeState));
+                            LoadingScreen.Load(this.ScreenManager, false, null, new BuyWeaponsScreen(resumeState));
                         }
                         else
                         {
-                            GameOver();
+                            this.GameOver();
                         }
                     }
                 }
 
-                _wasContinuePressed = continuePressed;
+                this._wasContinuePressed = continuePressed;
             }
 
 #if WINDOWS_PHONE || IPHONE
@@ -583,7 +584,7 @@ namespace Platformer.Screens
         {
             // Game Over! Put finishing screen stuff here
             /////////////////////GO TO MAIN MENU///////////////////
-            LoadingScreen.Load(ScreenManager, true, PlayerIndex.One, new BackgroundScreen(), new MainMenuScreen());
+            LoadingScreen.Load(this.ScreenManager, true, PlayerIndex.One, new BackgroundScreen(), new MainMenuScreen());
         }
 
         /// <summary>
@@ -592,28 +593,28 @@ namespace Platformer.Screens
         public override void Draw(GameTime gameTime)
         {
             // Background color
-            ScreenManager.GraphicsDevice.Clear(Color.Black);
+            this.ScreenManager.GraphicsDevice.Clear(Color.Black);
 
-            if (_level.LevelLoaded)
+            if (this._level.LevelLoaded)
             {
                 // Dibujamos el nivel
-                _level.Draw(gameTime, _spriteBatch);
+                this._level.Draw(gameTime, this._spriteBatch);
 
-                _spriteBatch.Begin();
+                this._spriteBatch.Begin();
                 // Dibujamos el HUD
-                DrawHud(_spriteBatch);
+                this.DrawHud(this._spriteBatch);
 
 #if WINDOWS_PHONE || IPHONE //|| WINDOWS
                 // Dibujamos el VirtualGamePad
                 _virtualGamePad.Draw(gameTime, _spriteBatch);
 #endif
 
-                _spriteBatch.End();
+                this._spriteBatch.End();
             }
 
             // If the game is transitioning on or off, fade it out to black.
-            if (TransitionPosition > 0)
-                ScreenManager.FadeBackBufferToBlack(255 - TransitionAlpha);
+            if (this.TransitionPosition > 0)
+                this.ScreenManager.FadeBackBufferToBlack(255 - this.TransitionAlpha);
         }
 
         /// <summary>
@@ -621,14 +622,14 @@ namespace Platformer.Screens
         /// </summary>
         private void DrawHud(SpriteBatch spriteBatch)
         {
-            if (!_level.LevelLoaded) return;
+            if (!this._level.LevelLoaded) return;
 
             // Draw time remaining. Uses modulo division to cause blinking when the
             // player is running out of time.
             // Draw time
-            TextHelper.DrawShadowedString(spriteBatch, ScreenManager.SpriteFonts.TittleFontSmall,
-                               string.Format("{0}:{1}", _level.TimeRemaining.Minutes.ToString("00"), _level.TimeRemaining.Seconds.ToString("00")), _timeLocation,
-                               (_level.TimeRemaining > WarningTime || _level.ReachedExit || (int)_level.TimeRemaining.TotalSeconds % 2 == 0)
+            TextHelper.DrawShadowedString(spriteBatch, this.ScreenManager.SpriteFonts.TittleFontSmall,
+                               string.Format("{0}:{1}", this._level.TimeRemaining.Minutes.ToString("00"), this._level.TimeRemaining.Seconds.ToString("00")), this._timeLocation,
+                               (this._level.TimeRemaining > WarningTime || this._level.ReachedExit || (int)this._level.TimeRemaining.TotalSeconds % 2 == 0)
                                    ? GlobalParameters.HudColor
                                    : Color.Yellow);
 
@@ -651,20 +652,20 @@ namespace Platformer.Screens
             spriteBatch.DrawInt32(ScreenManager.SpriteFonts.TextFont, (int) (GC.GetTotalMemory(false) / 1024), Vector2.Zero, Color.Yellow);
 #endif
 
-            if (_previusScore != _level.Score)
+            if (_previusScore != this._level.Score)
             {
-                _previusScore = _level.Score;
-                _scoreText = _level.Score.ToString(CultureInfo.InvariantCulture);
+                _previusScore = this._level.Score;
+                _scoreText = this._level.Score.ToString(CultureInfo.InvariantCulture);
             }
 
-            TextHelper.DrawShadowedString(spriteBatch, ScreenManager.SpriteFonts.TittleFontSmall, string.Format("{0} {1}", SCORE_TEXT, _scoreText), _scoreLocation, GlobalParameters.HudColor);
+            TextHelper.DrawShadowedString(spriteBatch, this.ScreenManager.SpriteFonts.TittleFontSmall, string.Format("{0} {1}", SCORE_TEXT, _scoreText), this._scoreLocation, GlobalParameters.HudColor);
 
             //_spriteBatch.DrawInt32(ScreenManager.SpriteFonts.TittleFontSmall, _level.Score,
             //                       _scoreLocation + new Vector2(_scoreSize.X + GlobalParameters.RIGHT_MARGIN, 0.0f), GlobalParameters.HudColor);
 
             //Control.BatchDraw(_hudPanel, ScreenManager.GraphicsDevice, spriteBatch, Vector2.Zero, gameTime, true);
 
-            spriteBatch.Draw(ScreenManager.ScreenAssetsTexture, _remainigBulletsIconPosition, _remainigBulletsIconTextureRectangule, Color.White);
+            spriteBatch.Draw(this.ScreenManager.ScreenAssetsTexture, _remainigBulletsIconPosition, _remainigBulletsIconTextureRectangule, Color.White);
 
             // Dibujamos cuantas balas le quedan al player en el arma
             //_spriteBatch.DrawInt32(ScreenManager.SpriteFonts.TittleFontSmall, _level.Player.CurrentWeapon.CurrentAmmo,
@@ -679,52 +680,52 @@ namespace Platformer.Screens
             //                       new Vector2(GlobalParameters.ScreenAssetsData["PANTALLA_CONTROLES0001_psd-RESTO_BALAS"].Width + _bulletTextWidth,
             //                                   0.0f), GlobalParameters.HudColor);
 
-            if (_previusCurrentAmmo != _level.Player.CurrentWeapon.CurrentAmmo)
+            if (_previusCurrentAmmo != this._level.Player.CurrentWeapon.CurrentAmmo)
             {
-                _previusCurrentAmmo = _level.Player.CurrentWeapon.CurrentAmmo;
-                _currentAmmmoText = _level.Player.CurrentWeapon.CurrentAmmo.ToString(CultureInfo.InvariantCulture);
+                _previusCurrentAmmo = this._level.Player.CurrentWeapon.CurrentAmmo;
+                _currentAmmmoText = this._level.Player.CurrentWeapon.CurrentAmmo.ToString(CultureInfo.InvariantCulture);
             }
             
-            if (_previusAviableBullets != _level.Player.GetCurrentWeaponAvailableAmmo())
+            if (_previusAviableBullets != this._level.Player.GetCurrentWeaponAvailableAmmo())
             {
-                _previusAviableBullets = _level.Player.GetCurrentWeaponAvailableAmmo();
-                _aviableBulletText = _level.Player.GetCurrentWeaponAvailableAmmo().ToString(CultureInfo.InvariantCulture);
+                _previusAviableBullets = this._level.Player.GetCurrentWeaponAvailableAmmo();
+                _aviableBulletText = this._level.Player.GetCurrentWeaponAvailableAmmo().ToString(CultureInfo.InvariantCulture);
             }
 
             // Dibujamos cuantas balas le quedan al player en el arma / cuantas balas le quedan al player para cargar en el arma
-            TextHelper.DrawShadowedString(spriteBatch, ScreenManager.SpriteFonts.TittleFontSmall,
+            TextHelper.DrawShadowedString(spriteBatch, this.ScreenManager.SpriteFonts.TittleFontSmall,
                                string.Format("X.{0}/{1}", _currentAmmmoText, _aviableBulletText),
                                new Vector2(_remainigBulletsIconPosition.X + _remainigBulletsIconTextureRectangule.Width,
                                    _remainigBulletsIconPosition.Y + (_remainigBulletsIconTextureRectangule.Height / 2) - (_scoreSize.Y / 2)),
                                GlobalParameters.HudColor);
 
             // Determine the status overlay message to show.
-            if (_level.TimeRemaining == TimeSpan.Zero)
+            if (this._level.TimeRemaining == TimeSpan.Zero)
             {
                 // Draw the background rectangle.
                 spriteBatch.Draw(_backgroundTexture, _backgroundRectangle, Color.White);
 
-                if (_level.ReachedExit)
+                if (this._level.ReachedExit)
                 {
-                    spriteBatch.Draw(ScreenManager.ScreenAssetsTexture, _levelClearPosition, _levelClearTextureRectangle, Color.White);
+                    spriteBatch.Draw(this.ScreenManager.ScreenAssetsTexture, _levelClearPosition, _levelClearTextureRectangle, Color.White);
 
-                    TextHelper.DrawShadowedString(spriteBatch, ScreenManager.SpriteFonts.TextFont, _tapToContinueText,
-                                                  new Vector2(_center.X - _tapToContinueTextSize.X/2,
+                    TextHelper.DrawShadowedString(spriteBatch, this.ScreenManager.SpriteFonts.TextFont, _tapToContinueText,
+                                                  new Vector2(this._center.X - _tapToContinueTextSize.X/2,
                                                               _levelClearPosition.Y +
                                                               _levelClearTextureRectangle.Height), Color.White);
                 }
                 else
                 {
                     //spriteBatch.Draw(_loseOverlay, _center - new Vector2(_loseOverlay.Width, _loseOverlay.Height) / 2, Color.White);
-                    TextHelper.DrawShadowedString(spriteBatch, ScreenManager.SpriteFonts.TittleFont, _runOutTimeOverlayText, _runOutTimeOverlayPosition, GlobalParameters.HudColor);
+                    TextHelper.DrawShadowedString(spriteBatch, this.ScreenManager.SpriteFonts.TittleFont, _runOutTimeOverlayText, _runOutTimeOverlayPosition, GlobalParameters.HudColor);
 
-                    TextHelper.DrawShadowedString(spriteBatch, ScreenManager.SpriteFonts.TextFont, _tapToContinueText,
-                                                  new Vector2(_center.X - _tapToContinueTextSize.X/2,
+                    TextHelper.DrawShadowedString(spriteBatch, this.ScreenManager.SpriteFonts.TextFont, _tapToContinueText,
+                                                  new Vector2(this._center.X - _tapToContinueTextSize.X/2,
                                                               _runOutTimeOverlayPosition.Y +
                                                               _runOutTimeOverlayTextSize.Y), Color.White);
                 }
             }
-            else if (!_level.Player.IsAlive)
+            else if (!this._level.Player.IsAlive)
             {
                 //var status = _level.Player.CurrentHealth > 0 ? _diedOverlay : _loseOverlay;
                 //spriteBatch.Draw(status, _center - new Vector2(status.Width, status.Height) / 2, Color.White);
@@ -732,10 +733,10 @@ namespace Platformer.Screens
                 // Draw the background rectangle.
                 spriteBatch.Draw(_backgroundTexture, _backgroundRectangle, Color.White);
 
-                TextHelper.DrawShadowedString(spriteBatch, ScreenManager.SpriteFonts.TittleFont, _loseOverlayText, _loseOverlayPosition, GlobalParameters.HudColor);
+                TextHelper.DrawShadowedString(spriteBatch, this.ScreenManager.SpriteFonts.TittleFont, _loseOverlayText, _loseOverlayPosition, GlobalParameters.HudColor);
 
-                TextHelper.DrawShadowedString(spriteBatch, ScreenManager.SpriteFonts.TextFont, _tapToContinueText,
-                                                  new Vector2(_center.X - _tapToContinueTextSize.X / 2,
+                TextHelper.DrawShadowedString(spriteBatch, this.ScreenManager.SpriteFonts.TextFont, _tapToContinueText,
+                                                  new Vector2(this._center.X - _tapToContinueTextSize.X / 2,
                                                               _loseOverlayPosition.Y +
                                                               _loseOverlayTextSize.Y), Color.White);
             }

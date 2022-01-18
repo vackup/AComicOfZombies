@@ -8,16 +8,17 @@
 #endregion
 
 #region Using Statements
+
 using System;
+using ACoZ.Helpers;
+using ACoZ.ScreenManagers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Platformer.Helpers;
-using Platformer.ScreenManagers;
 
 #endregion
 
-namespace Platformer.Screens
+namespace ACoZ.Screens
 {
     /// <summary>
     /// The background screen sits behind all the other menu screens.
@@ -41,8 +42,8 @@ namespace Platformer.Screens
         /// </summary>
         public BackgroundScreen()
         {
-            TransitionOnTime = TimeSpan.FromSeconds(0.5);
-            TransitionOffTime = TimeSpan.FromSeconds(0.5);
+            this.TransitionOnTime = TimeSpan.FromSeconds(0.5);
+            this.TransitionOffTime = TimeSpan.FromSeconds(0.5);
         }
 
 
@@ -55,12 +56,12 @@ namespace Platformer.Screens
         /// </summary>
         public override void LoadContent()
         {
-            if (_content == null)
+            if (this._content == null)
             {
-                _content = new ContentManager(ScreenManager.Game.Services, GlobalParameters.CONTENT_FOLDER);
+                this._content = new ContentManager(this.ScreenManager.Game.Services, GlobalParameters.CONTENT_FOLDER);
             }
 
-            _backgroundTexture = _content.Load<Texture2D>(GlobalParameters.MENU_BACKGROUND);
+            this._backgroundTexture = this._content.Load<Texture2D>(GlobalParameters.MENU_BACKGROUND);
         }
 
 
@@ -69,7 +70,7 @@ namespace Platformer.Screens
         /// </summary>
         public override void UnloadContent()
         {
-            _content.Unload();
+            this._content.Unload();
         }
 
 
@@ -97,12 +98,12 @@ namespace Platformer.Screens
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            var spriteBatch = ScreenManager.SpriteBatch;
-            var viewport = ScreenManager.GraphicsDevice.Viewport;
+            var spriteBatch = this.ScreenManager.SpriteBatch;
+            var viewport = this.ScreenManager.GraphicsDevice.Viewport;
             var fullscreen = new Rectangle(0, 0, viewport.Width, viewport.Height);
             
 			spriteBatch.Begin();
-            spriteBatch.Draw(_backgroundTexture, fullscreen, new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha));			
+            spriteBatch.Draw(this._backgroundTexture, fullscreen, new Color(this.TransitionAlpha, this.TransitionAlpha, this.TransitionAlpha));			
 			//spriteBatch.Draw(_backgroundTexture, Vector2.Zero, new Color(TransitionAlpha, TransitionAlpha, TransitionAlpha));			
             spriteBatch.End();
         }

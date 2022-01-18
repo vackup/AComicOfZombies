@@ -1,84 +1,84 @@
 using System;
 using System.Collections.Generic;
+using ACoZ.Animations;
+using ACoZ.Helpers;
+using ACoZ.Levels;
+using ACoZ.Weapons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
-using Platformer.Animations;
-using Platformer.Helpers;
-using Platformer.Levels;
-using Platformer.Weapons;
 
-namespace Platformer.Players
+namespace ACoZ.Players
 {
     public class Obama : Player
     {
         public Obama(Level level, Vector2 position, List<Weapon> weaponInventory, Weapon primaryWeapon, Weapon secondaryWeapon, Dictionary<int, int> ammoInventory)
             : base(level, position, weaponInventory, primaryWeapon, secondaryWeapon, ammoInventory)
         {
-            HealthBarMargin = GlobalParameters.OBAMA_HEALTH_BAR_MARGIN;
+            this.HealthBarMargin = GlobalParameters.OBAMA_HEALTH_BAR_MARGIN;
 
-            var spriteTexture = Level.Content.Load<Texture2D>(GlobalParameters.OBAMA_ANIMATION_TEXTURE);
+            var spriteTexture = this.Level.Content.Load<Texture2D>(GlobalParameters.OBAMA_ANIMATION_TEXTURE);
 
-            IdleAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.ObamaAnimationRectangulesIdle);
+            this.IdleAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.ObamaAnimationRectangulesIdle);
 
-            RunAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.ObamaAnimationRectangulesRun);
-            RunAnimation.SetBoundingRectangle(IdleAnimation.BoundingRectangle);
+            this.RunAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.ObamaAnimationRectangulesRun);
+            this.RunAnimation.SetBoundingRectangle(this.IdleAnimation.BoundingRectangle);
 
-            DieAnimation = new Animation(spriteTexture, 0.075f, false, GlobalParameters.ObamaAnimationRectangulesDie);
-            DieAnimation.SetBoundingRectangle(IdleAnimation.BoundingRectangle);
+            this.DieAnimation = new Animation(spriteTexture, 0.075f, false, GlobalParameters.ObamaAnimationRectangulesDie);
+            this.DieAnimation.SetBoundingRectangle(this.IdleAnimation.BoundingRectangle);
 
-            BeAttackedAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.ObamaAnimationRectangulesBeAttacked);
-            BeAttackedAnimation.SetBoundingRectangle(IdleAnimation.BoundingRectangle);
+            this.BeAttackedAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.ObamaAnimationRectangulesBeAttacked);
+            this.BeAttackedAnimation.SetBoundingRectangle(this.IdleAnimation.BoundingRectangle);
 
             // TODO: parametrizar todos los datos en un archivo de configuracion
-            AttackAnimation = new Animation(spriteTexture, 0.05f, false, GlobalParameters.ObamaAnimationRectangulesAttack, GlobalParameters.ObamaAnimationRectangulesAttack[0].Width, GlobalParameters.OBAMA_ATTACK_ANIMATION_HEIGHT);
-            AttackAnimation.SetBoundingRectangle(IdleAnimation.BoundingRectangle);
+            this.AttackAnimation = new Animation(spriteTexture, 0.05f, false, GlobalParameters.ObamaAnimationRectangulesAttack, GlobalParameters.ObamaAnimationRectangulesAttack[0].Width, GlobalParameters.OBAMA_ATTACK_ANIMATION_HEIGHT);
+            this.AttackAnimation.SetBoundingRectangle(this.IdleAnimation.BoundingRectangle);
 
-            CelebrateAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.ObamaAnimationRectangulesCelebrate);
-            CelebrateAnimation.SetBoundingRectangle(IdleAnimation.BoundingRectangle);
+            this.CelebrateAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.ObamaAnimationRectangulesCelebrate);
+            this.CelebrateAnimation.SetBoundingRectangle(this.IdleAnimation.BoundingRectangle);
 
             if (primaryWeapon != null)
             {
-                primaryWeapon.IdleAnimation = LoadWeaponAnimation(primaryWeapon, spriteTexture, WeaponAnimationType.Idle);
-                primaryWeapon.IdleAnimationPosition = GetWeaponAnimationPosition(primaryWeapon, WeaponAnimationType.Idle);
-                primaryWeapon.IdleAnimationRunningPosition = GetWeaponRunningAnimationPosition(primaryWeapon, WeaponAnimationType.Idle);
+                primaryWeapon.IdleAnimation = this.LoadWeaponAnimation(primaryWeapon, spriteTexture, WeaponAnimationType.Idle);
+                primaryWeapon.IdleAnimationPosition = this.GetWeaponAnimationPosition(primaryWeapon, WeaponAnimationType.Idle);
+                primaryWeapon.IdleAnimationRunningPosition = this.GetWeaponRunningAnimationPosition(primaryWeapon, WeaponAnimationType.Idle);
 
-                primaryWeapon.ShootAnimation = LoadWeaponAnimation(primaryWeapon, spriteTexture, WeaponAnimationType.Shoot);
-                primaryWeapon.ShootAnimationPosition = GetWeaponAnimationPosition(primaryWeapon, WeaponAnimationType.Shoot);
-                primaryWeapon.ShootAnimationRunningPosition = GetWeaponRunningAnimationPosition(primaryWeapon, WeaponAnimationType.Shoot);
+                primaryWeapon.ShootAnimation = this.LoadWeaponAnimation(primaryWeapon, spriteTexture, WeaponAnimationType.Shoot);
+                primaryWeapon.ShootAnimationPosition = this.GetWeaponAnimationPosition(primaryWeapon, WeaponAnimationType.Shoot);
+                primaryWeapon.ShootAnimationRunningPosition = this.GetWeaponRunningAnimationPosition(primaryWeapon, WeaponAnimationType.Shoot);
 
-                PlayWeaponAnimation(primaryWeapon.IdleAnimation);
+                this.PlayWeaponAnimation(primaryWeapon.IdleAnimation);
             }
 
             if (secondaryWeapon != null)
             {
-                secondaryWeapon.IdleAnimation = LoadWeaponAnimation(secondaryWeapon, spriteTexture, WeaponAnimationType.Idle);
-                secondaryWeapon.IdleAnimationPosition = GetWeaponAnimationPosition(secondaryWeapon, WeaponAnimationType.Idle);
-                secondaryWeapon.IdleAnimationRunningPosition = GetWeaponRunningAnimationPosition(secondaryWeapon, WeaponAnimationType.Idle);
+                secondaryWeapon.IdleAnimation = this.LoadWeaponAnimation(secondaryWeapon, spriteTexture, WeaponAnimationType.Idle);
+                secondaryWeapon.IdleAnimationPosition = this.GetWeaponAnimationPosition(secondaryWeapon, WeaponAnimationType.Idle);
+                secondaryWeapon.IdleAnimationRunningPosition = this.GetWeaponRunningAnimationPosition(secondaryWeapon, WeaponAnimationType.Idle);
 
-                secondaryWeapon.ShootAnimation = LoadWeaponAnimation(secondaryWeapon, spriteTexture, WeaponAnimationType.Shoot);
-                secondaryWeapon.ShootAnimationPosition = GetWeaponAnimationPosition(secondaryWeapon, WeaponAnimationType.Shoot);
-                secondaryWeapon.ShootAnimationRunningPosition = GetWeaponRunningAnimationPosition(secondaryWeapon, WeaponAnimationType.Shoot);
+                secondaryWeapon.ShootAnimation = this.LoadWeaponAnimation(secondaryWeapon, spriteTexture, WeaponAnimationType.Shoot);
+                secondaryWeapon.ShootAnimationPosition = this.GetWeaponAnimationPosition(secondaryWeapon, WeaponAnimationType.Shoot);
+                secondaryWeapon.ShootAnimationRunningPosition = this.GetWeaponRunningAnimationPosition(secondaryWeapon, WeaponAnimationType.Shoot);
             }
 
 
             // Set animation to play
-            PlayAnimation(IdleAnimation);
+            this.PlayAnimation(this.IdleAnimation);
             
             // Load sounds.            
-            KilledSound = Level.Content.Load<SoundEffect>(GlobalParameters.OBAMA_KILLED_SOUND);
+            this.KilledSound = this.Level.Content.Load<SoundEffect>(GlobalParameters.OBAMA_KILLED_SOUND);
 
-            Type = new PlayerInfo(PlayerType.Obama);
+            this.Type = new PlayerInfo(PlayerType.Obama);
 
-            KnifeWidth = GlobalParameters.OBAMA_KNIFE_WIDTH;
-            KnifeHeight = GlobalParameters.OBAMA_KNIFE_HEIGHT;
+            this.KnifeWidth = GlobalParameters.OBAMA_KNIFE_WIDTH;
+            this.KnifeHeight = GlobalParameters.OBAMA_KNIFE_HEIGHT;
 
             // Personalizacion de caracteristas del player
-            MaxAttackTime = 0.47f;
-            MaxHitTime = 0.75f;
+            this.MaxAttackTime = 0.47f;
+            this.MaxHitTime = 0.75f;
             //MaxParalyzedTime = 0.375f;
-            MaxParalyzedTime = 0.5f;
-            MoveAcceleration = 13000.0f;
+            this.MaxParalyzedTime = 0.5f;
+            this.MoveAcceleration = 13000.0f;
         }
 
         private Vector2 GetWeaponRunningAnimationPosition(Weapon weapon, WeaponAnimationType weaponAnimationType)

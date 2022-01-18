@@ -11,7 +11,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Platformer.Animations
+namespace ACoZ.Animations
 {
     /// <summary>
     /// Controls playback of an Animation.
@@ -44,14 +44,14 @@ namespace Platformer.Animations
         public void PlayAnimation(Animation animation)
         {
             // If this animation is already running, do not restart it.
-            if (Animation == animation)
+            if (this.Animation == animation)
                 return;
 
             // Start the new animation.
-            Animation = animation;
-            FrameIndex = 0;
-            _time = 0.0f;
-            Origin = new Vector2(Animation.FrameWidth / 2.0f, Animation.FrameHeight);
+            this.Animation = animation;
+            this.FrameIndex = 0;
+            this._time = 0.0f;
+            this.Origin = new Vector2(this.Animation.FrameWidth / 2.0f, this.Animation.FrameHeight);
         }
 
         /// <summary>
@@ -59,28 +59,28 @@ namespace Platformer.Animations
         /// </summary>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects)
         {
-            Draw(gameTime, spriteBatch, position, spriteEffects, Color.White);
+            this.Draw(gameTime, spriteBatch, position, spriteEffects, Color.White);
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects, Color color)
         {
-            if (Animation == null)
+            if (this.Animation == null)
                 throw new NotSupportedException("No animation is currently playing.");
 
             // Process passing time.
-            _time += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            while (_time > Animation.FrameTime)
+            this._time += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            while (this._time > this.Animation.FrameTime)
             {
-                _time -= Animation.FrameTime;
+                this._time -= this.Animation.FrameTime;
 
                 // Advance the frame index; looping or clamping as appropriate.
-                if (Animation.IsLooping)
+                if (this.Animation.IsLooping)
                 {
-                    FrameIndex = (FrameIndex + 1) % Animation.FrameCount;
+                    this.FrameIndex = (this.FrameIndex + 1) % this.Animation.FrameCount;
                 }
                 else
                 {
-                    FrameIndex = Math.Min(FrameIndex + 1, Animation.FrameCount - 1);
+                    this.FrameIndex = Math.Min(this.FrameIndex + 1, this.Animation.FrameCount - 1);
                 }
             }
 
@@ -98,14 +98,14 @@ namespace Platformer.Animations
             var animPostion = position;
 
             // Para manejar animaciones con distinto alto
-            if (Animation.FrameHeight > Animation.RectangleFrames[FrameIndex].Height)
+            if (this.Animation.FrameHeight > this.Animation.RectangleFrames[this.FrameIndex].Height)
             {
-                animPostion.Y += (Animation.FrameHeight - Animation.RectangleFrames[FrameIndex].Height); 
+                animPostion.Y += (this.Animation.FrameHeight - this.Animation.RectangleFrames[this.FrameIndex].Height); 
             }
 
 
             // Draw the current frame.
-            spriteBatch.Draw(Animation.Texture, animPostion, Animation.RectangleFrames[FrameIndex], color, 0.0f, Origin, 1.0f, spriteEffects, 0.0f);
+            spriteBatch.Draw(this.Animation.Texture, animPostion, this.Animation.RectangleFrames[this.FrameIndex], color, 0.0f, this.Origin, 1.0f, spriteEffects, 0.0f);
         }
 
         

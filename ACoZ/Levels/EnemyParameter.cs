@@ -1,4 +1,4 @@
-namespace Platformer.Levels
+namespace ACoZ.Levels
 {
     class EnemyParameter
     {
@@ -7,8 +7,8 @@ namespace Platformer.Levels
 
         public EnemyParameter(double percent, int poolQuantity)
         {
-            Percent = percent;
-            PoolQuantity = poolQuantity;
+            this.Percent = percent;
+            this.PoolQuantity = poolQuantity;
         }
     }
 }

@@ -2,8 +2,11 @@
 
 using System;
 using System.Collections.Generic;
+using ACoZ.Helpers;
+using ACoZ.Players;
+using ACoZ.Weapons;
 using Microsoft.Xna.Framework;
-
+using Microsoft.Xna.Framework.Graphics;
 #if WINDOWS_PHONE || IPHONE
 using Mobile.Base.Controls;
 #elif SILVERLIGHT
@@ -11,19 +14,13 @@ using Web.Base.Controls;
 #elif WINDOWS
 using Desktop.Base.Controls;
 #endif
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Media;
-using Platformer.Helpers;
-using Platformer.Players;
-using Platformer.Weapons;
 #if IPHONE
 using MonoTouch.UIKit;
 using MonoTouch.Foundation;
 using MonoTouch.CoreGraphics;
 #endif
 #endregion
-namespace Platformer.Screens
+namespace ACoZ.Screens
 {
     /// <summary>
     /// The main menu screen is the first thing displayed when the game starts up.
@@ -53,7 +50,7 @@ namespace Platformer.Screens
             base.LoadContent();
 
             //Creates Menu
-            CreateMenu();
+            this.CreateMenu();
         }
 
         #endregion
@@ -77,7 +74,7 @@ namespace Platformer.Screens
             //1. Play Game
             var playGameButton = new Button
                                      {
-                                         NormalButtonTexture = ScreenManager.ScreenAssetsTexture,
+                                         NormalButtonTexture = this.ScreenManager.ScreenAssetsTexture,
                                          TextureRectangle = GlobalParameters.ScreenAssetsData["PANTALLA_INICIO0001_psd-Play_Game"],
                                          //DisplayText = "Play Game",
                                          //TextVisible = true,
@@ -91,12 +88,12 @@ namespace Platformer.Screens
             playGameButton.Position = new Vector2(viewPortHalfWith - playGameButton.Width/2, firstButtonInitialPosition);
             playGameButton.OnClicked += SelectPlayerEntrySelected;
 
-            PanelMenu.AddChild(playGameButton);
+            this.PanelMenu.AddChild(playGameButton);
 
             //2. Options
             var optionsButton = new Button
                                     {
-                                        NormalButtonTexture = ScreenManager.ScreenAssetsTexture,
+                                        NormalButtonTexture = this.ScreenManager.ScreenAssetsTexture,
                                         TextureRectangle = GlobalParameters.ScreenAssetsData["PANTALLA_INICIO0001_psd-Options"],
                                         //DisplayText = "Options",
                                         //TextVisible = true,
@@ -112,13 +109,13 @@ namespace Platformer.Screens
                                                  marginBetweenButtons);
             optionsButton.OnClicked += OptionsMenuEntrySelected;
 
-            PanelMenu.AddChild(optionsButton);
+            this.PanelMenu.AddChild(optionsButton);
             
 #if !SILVERLIGHT && !IPHONE
             //3. Exit Game
             var exitGameButton = new Button
                                      {
-                                         NormalButtonTexture = ScreenManager.ScreenAssetsTexture,
+                                         NormalButtonTexture = this.ScreenManager.ScreenAssetsTexture,
                                          TextureRectangle = GlobalParameters.ScreenAssetsData["PANTALLA_INICIO0001_psd-Exit"],
                                          //DisplayText = "Exit Game",
                                          //TextVisible = true,
@@ -133,13 +130,13 @@ namespace Platformer.Screens
                                                   optionsButton.Position.Y + optionsButton.Height + marginBetweenButtons);
             exitGameButton.OnClicked += OnCancel;
 
-            PanelMenu.AddChild(exitGameButton);
+            this.PanelMenu.AddChild(exitGameButton);
 #endif
 
             // Facebook button
             var facebookButton = new Button
             {
-                NormalButtonTexture = ScreenManager.ScreenAssetsTexture,
+                NormalButtonTexture = this.ScreenManager.ScreenAssetsTexture,
                 TextureRectangle = GlobalParameters.ScreenAssetsData["facebook"],
                 //TextVisible = true,
                 //TextSize = Button.FontSize.Big,
@@ -152,7 +149,7 @@ namespace Platformer.Screens
                                                   GlobalParameters.SCREEN_HEIGHT - facebookButton.Height - GlobalParameters.BOTTOM_MARGIN);
             facebookButton.OnClicked += GotoFacebook;
 
-            PanelMenu.AddChild(facebookButton);
+            this.PanelMenu.AddChild(facebookButton);
 
 #if WINDOWS || SILVERLIGHT
             var appStoreTexture = ScreenManager.Game.Content.Load<Texture2D>("AppStore");
@@ -296,7 +293,7 @@ namespace Platformer.Screens
         private void SelectPlayerEntrySelected(Button sender)
         {
             //ScreenManager.AddScreen(new SelectPlayerScreen(), PlayerIndex.One);
-            LoadingScreen.Load(ScreenManager, true, PlayerIndex.One, new GameplayScreen((int)PlayerType.Obama));
+            LoadingScreen.Load(this.ScreenManager, true, PlayerIndex.One, new GameplayScreen((int)PlayerType.Obama));
         }
 
 #if WINDOWS_PHONE || WINDOWS || XBOX
@@ -316,7 +313,7 @@ namespace Platformer.Screens
         /// </summary>
         private void OptionsMenuEntrySelected(Button sender)
         {
-            ScreenManager.AddScreen(new OptionsMenuScreen(), PlayerIndex.One);
+            this.ScreenManager.AddScreen(new OptionsMenuScreen(), PlayerIndex.One);
         }
 
 #if !SILVERLIGHT
@@ -325,7 +322,7 @@ namespace Platformer.Screens
         /// </summary>
         protected override void OnCancel(Button sender)
         {
-            ScreenManager.AddScreen(new TouchMessageBoxScreen(GlobalParameters.QUIT_GAME_MESSAGE, ConfirmExitMessageBoxAccepted), PlayerIndex.One);
+            this.ScreenManager.AddScreen(new TouchMessageBoxScreen(GlobalParameters.QUIT_GAME_MESSAGE, ConfirmExitMessageBoxAccepted), PlayerIndex.One);
         }
 
         /// <summary>
@@ -334,7 +331,7 @@ namespace Platformer.Screens
         /// </summary>
         protected virtual void ConfirmExitMessageBoxAccepted(Button sender)
         {
-            ScreenManager.Game.Exit();
+            this.ScreenManager.Game.Exit();
         }
 #endif
 

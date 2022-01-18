@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace Platformer
+namespace ACoZ
 {
     public class GameObject
     {
@@ -21,58 +21,58 @@ namespace Platformer
         {
             get
             {
-                _boundingRectangle.X = (int)Position.X;
-                _boundingRectangle.Y = (int)Position.Y;
-                _boundingRectangle.Width = Width;
-                _boundingRectangle.Height = Height;
+                this._boundingRectangle.X = (int)this.Position.X;
+                this._boundingRectangle.Y = (int)this.Position.Y;
+                this._boundingRectangle.Width = this.Width;
+                this._boundingRectangle.Height = this.Height;
 
-                return _boundingRectangle;
+                return this._boundingRectangle;
             }
         }
 
         public GameObject()
         {
-            Rotation = 0.0f;
-            Position = Vector2.Zero;
+            this.Rotation = 0.0f;
+            this.Position = Vector2.Zero;
         }
 
         public GameObject(Texture2D loadedTexture) //: this(loadedTexture, 1)
         {
-            Init(loadedTexture);
+            this.Init(loadedTexture);
         }
 
         public void Init(Texture2D loadedTexture)
         {
-            Power = 1;
-            Rotation = 0.0f;
-            Position = Vector2.Zero;
-            Sprite = loadedTexture;
-            Width = Sprite.Width;
-            Height = Sprite.Height;
-            Center = new Vector2(Width / 2, Height / 2);
-            Velocity = Vector2.Zero;
+            this.Power = 1;
+            this.Rotation = 0.0f;
+            this.Position = Vector2.Zero;
+            this.Sprite = loadedTexture;
+            this.Width = this.Sprite.Width;
+            this.Height = this.Sprite.Height;
+            this.Center = new Vector2(this.Width / 2, this.Height / 2);
+            this.Velocity = Vector2.Zero;
 
 
-            _boundingRectangle = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+            this._boundingRectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
         public void Init(int width, int height)
         {
-            Width = width;
-            Height = height;
-            Power = 1;
-            Rotation = 0.0f;
-            Position = Vector2.Zero;
-            Center = new Vector2(Width / 2, Height / 2);
-            Velocity = Vector2.Zero;
+            this.Width = width;
+            this.Height = height;
+            this.Power = 1;
+            this.Rotation = 0.0f;
+            this.Position = Vector2.Zero;
+            this.Center = new Vector2(this.Width / 2, this.Height / 2);
+            this.Velocity = Vector2.Zero;
             //Alive = false;
 
-            _boundingRectangle = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+            this._boundingRectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Sprite, Position, Color.White);
+            spriteBatch.Draw(this.Sprite, this.Position, Color.White);
         }
     }
 }

@@ -8,11 +8,13 @@
 #endregion
 
 #region Using Statements
+
 using System;
 using Microsoft.Xna.Framework;
+
 #endregion
 
-namespace Platformer.Screens
+namespace ACoZ.Screens
 {
     /// <summary>
     /// Custom event argument which includes the index of the player who
@@ -34,7 +36,7 @@ namespace Platformer.Screens
         /// </summary>
         public PlayerIndex PlayerIndex
         {
-            get { return playerIndex; }
+            get { return this.playerIndex; }
         }
 
         PlayerIndex playerIndex;

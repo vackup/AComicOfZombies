@@ -1,13 +1,14 @@
 #region Using Statements
 
 using System;
+using ACoZ.Helpers;
+using ACoZ.Players;
+using ACoZ.ScreenManagers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Platformer.Helpers;
-using Platformer.Players;
-using Platformer.ScreenManagers;
+
 #if WINDOWS_PHONE || IPHONE
 using Mobile.Base.Controls;
 using Mobile.Base.ScreenSystem;
@@ -22,7 +23,7 @@ using Desktop.Base.ScreenSystem;
 
 #endregion
 
-namespace Platformer.Screens
+namespace ACoZ.Screens
 {
     /// <summary>
     /// Buy Weapons Screen
@@ -41,36 +42,36 @@ namespace Platformer.Screens
 
         public SelectPlayerScreen()
         {
-            TransitionOnTime = TimeSpan.FromSeconds(0.5);
-            TransitionOffTime = TimeSpan.FromSeconds(0.5);
+            this.TransitionOnTime = TimeSpan.FromSeconds(0.5);
+            this.TransitionOffTime = TimeSpan.FromSeconds(0.5);
         }
 
         public override void LoadContent()
         {
-            if (_content == null)
+            if (this._content == null)
             {
-                _content = new ContentManager(ScreenManager.Game.Services, GlobalParameters.CONTENT_FOLDER);
+                this._content = new ContentManager(this.ScreenManager.Game.Services, GlobalParameters.CONTENT_FOLDER);
             }
 
             foreach (var playerInfo in GlobalParameters.PlayersInfoList)
             {
-                playerInfo.Init(_content);
+                playerInfo.Init(this._content);
             }
 
-            UpdateScreen();
+            this.UpdateScreen();
 
-            CreateMenu();
+            this.CreateMenu();
 
-            _currentGoodGuy = PlayerInfoManager.CurrentPlayerIndex;
-            PlayerInfoManager.CurrentPlayerInfo = PlayerInfoManager.GetGoodGuy(_currentGoodGuy);
+            this._currentGoodGuy = PlayerInfoManager.CurrentPlayerIndex;
+            PlayerInfoManager.CurrentPlayerInfo = PlayerInfoManager.GetGoodGuy(this._currentGoodGuy);
 
             base.LoadContent();
         }
 
         private void UpdateScreen()
         {
-            var viewport = ScreenManager.GraphicsDevice.Viewport;
-            _viewport = new Rectangle(0, 0, viewport.Width, viewport.Height);
+            var viewport = this.ScreenManager.GraphicsDevice.Viewport;
+            this._viewport = new Rectangle(0, 0, viewport.Width, viewport.Height);
         }
 
         #endregion
@@ -96,7 +97,7 @@ namespace Platformer.Screens
             //    ExitScreen();
             //}
 
-            _pnlMenu.HandleInput(input);
+            this._pnlMenu.HandleInput(input);
             base.HandleInput(input);
         }
 
@@ -118,13 +119,13 @@ namespace Platformer.Screens
         {
 
             // Allows popup to be closed by back button
-            if (IsActive && GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (this.IsActive && GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
             {
-                ExitScreen();
+                this.ExitScreen();
             }
 
             //Update Menu states
-            _pnlMenu.Update(gameTime);
+            this._pnlMenu.Update(gameTime);
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
@@ -133,32 +134,32 @@ namespace Platformer.Screens
         #region Game Methods - Draw
         public override void Draw(GameTime gameTime)
         {
-            if (!IsActive) return;
+            if (!this.IsActive) return;
 
-            ScreenManager.SpriteBatch.Begin();
+            this.ScreenManager.SpriteBatch.Begin();
 
             //Draw Background
             //DrawBackground(ScreenManager.SpriteBatch);
 
             // Draw current player info
-            DrawCurrentPlayerInfo(ScreenManager.SpriteBatch);
+            this.DrawCurrentPlayerInfo(this.ScreenManager.SpriteBatch);
 
-            ScreenManager.SpriteBatch.End();
+            this.ScreenManager.SpriteBatch.End();
 
             // Draw Menu
-            DrawMenu(gameTime);
+            this.DrawMenu(gameTime);
         }
 
         private void DrawCurrentPlayerInfo(SpriteBatch spriteBatch)
         {
-            var playerInfo = PlayerInfoManager.GetGoodGuy(_currentGoodGuy);
-            playerInfo.Draw(spriteBatch, new Vector2(_viewport.Width / 2 - playerInfo.Texture.Width / 2, 5));
+            var playerInfo = PlayerInfoManager.GetGoodGuy(this._currentGoodGuy);
+            playerInfo.Draw(spriteBatch, new Vector2(this._viewport.Width / 2 - playerInfo.Texture.Width / 2, 5));
         }
 
         private void DrawMenu(GameTime gameTime)
         {
             //Draw Weapon Selector list
-            Control.BatchDraw(_pnlMenu, ScreenManager.GraphicsDevice, ScreenManager.SpriteBatch, Vector2.Zero, gameTime);
+            Control.BatchDraw(this._pnlMenu, this.ScreenManager.GraphicsDevice, this.ScreenManager.SpriteBatch, Vector2.Zero, gameTime);
         }
 
         #endregion
@@ -167,13 +168,13 @@ namespace Platformer.Screens
         private void CreateMenu()
         {
             //Initialize MenuPanel
-            _pnlMenu = new PanelControl();
+            this._pnlMenu = new PanelControl();
 
             var startButton = new Button
                                   {
                                       DisplayText = "start",
                                       TextVisible = true,
-                                      Font = ScreenManager.SpriteFonts.TittleFont,
+                                      Font = this.ScreenManager.SpriteFonts.TittleFont,
                                       TextSize = Button.FontSize.Big,
                                       TextAlignment = Button.TextAlign.Centre,
                                   };
@@ -181,65 +182,65 @@ namespace Platformer.Screens
 
             startButton.Width = startButton.TextWidth;
             startButton.Height = startButton.TextHeight;
-            startButton.Position = new Vector2(_viewport.Width - startButton.Width, _viewport.Height - startButton.Height);
-            startButton.OnClicked += sender => StartButtonClick();
+            startButton.Position = new Vector2(this._viewport.Width - startButton.Width, this._viewport.Height - startButton.Height);
+            startButton.OnClicked += sender => this.StartButtonClick();
 
             var previousPlayerButton = new Button
                                            {
                                                DisplayText = "prev",
                                                TextVisible = true,
-                                               Font = ScreenManager.SpriteFonts.TittleFont,
+                                               Font = this.ScreenManager.SpriteFonts.TittleFont,
                                                TextSize = Button.FontSize.Big,
                                                TextAlignment = Button.TextAlign.Centre,
                                            };
             previousPlayerButton.Width = previousPlayerButton.TextWidth;
             previousPlayerButton.Height = previousPlayerButton.TextHeight;
             previousPlayerButton.Position = new Vector2(0, 0);
-            previousPlayerButton.OnClicked += sender => PreviousButtonClick();
+            previousPlayerButton.OnClicked += sender => this.PreviousButtonClick();
 
             var nextPlayerButton = new Button
                                        {
                                            DisplayText = "next",
                                            TextVisible = true,
-                                           Font = ScreenManager.SpriteFonts.TittleFont,
+                                           Font = this.ScreenManager.SpriteFonts.TittleFont,
                                            TextSize = Button.FontSize.Big,
                                            TextAlignment = Button.TextAlign.Centre,
                                        };
             
             nextPlayerButton.Width = nextPlayerButton.TextWidth;
             nextPlayerButton.Height = nextPlayerButton.TextHeight;
-            nextPlayerButton.Position = new Vector2(_viewport.Width - nextPlayerButton.Width, 0);
-            nextPlayerButton.OnClicked += sender => NextButtonClick();
+            nextPlayerButton.Position = new Vector2(this._viewport.Width - nextPlayerButton.Width, 0);
+            nextPlayerButton.OnClicked += sender => this.NextButtonClick();
             
-            _pnlMenu.AddChild(startButton);
-            _pnlMenu.AddChild(previousPlayerButton);
-            _pnlMenu.AddChild(nextPlayerButton);
+            this._pnlMenu.AddChild(startButton);
+            this._pnlMenu.AddChild(previousPlayerButton);
+            this._pnlMenu.AddChild(nextPlayerButton);
 
         }
 
         private void StartButtonClick()
         {
-            LoadingScreen.Load(ScreenManager, true, PlayerIndex.One, new GameplayScreen(_currentGoodGuy));
+            LoadingScreen.Load(this.ScreenManager, true, PlayerIndex.One, new GameplayScreen(this._currentGoodGuy));
         }
 
         private void PreviousButtonClick()
         {
-            _currentGoodGuy--;
-            if (_currentGoodGuy < 0)
-                _currentGoodGuy = PlayerInfoManager.Count - 1;
+            this._currentGoodGuy--;
+            if (this._currentGoodGuy < 0)
+                this._currentGoodGuy = PlayerInfoManager.Count - 1;
 
-            PlayerInfoManager.CurrentPlayerIndex = _currentGoodGuy;
-            PlayerInfoManager.CurrentPlayerInfo = PlayerInfoManager.GetGoodGuy(_currentGoodGuy);
+            PlayerInfoManager.CurrentPlayerIndex = this._currentGoodGuy;
+            PlayerInfoManager.CurrentPlayerInfo = PlayerInfoManager.GetGoodGuy(this._currentGoodGuy);
         }
 
         private void NextButtonClick()
         {
-            _currentGoodGuy++;
-            if (_currentGoodGuy >= PlayerInfoManager.Count)
-                _currentGoodGuy = 0;
+            this._currentGoodGuy++;
+            if (this._currentGoodGuy >= PlayerInfoManager.Count)
+                this._currentGoodGuy = 0;
 
-            PlayerInfoManager.CurrentPlayerIndex = _currentGoodGuy;
-            PlayerInfoManager.CurrentPlayerInfo = PlayerInfoManager.GetGoodGuy(_currentGoodGuy);
+            PlayerInfoManager.CurrentPlayerIndex = this._currentGoodGuy;
+            PlayerInfoManager.CurrentPlayerInfo = PlayerInfoManager.GetGoodGuy(this._currentGoodGuy);
         }
         #endregion
 
@@ -248,7 +249,7 @@ namespace Platformer.Screens
         /// </summary>
         public override void UnloadContent()
         {
-            _content.Unload();
+            this._content.Unload();
         }
     }
 }

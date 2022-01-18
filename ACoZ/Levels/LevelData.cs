@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
-using Platformer.Helpers;
-using Platformer.Npc;
+using ACoZ.Helpers;
+using ACoZ.Npc;
 
-namespace Platformer.Levels
+namespace ACoZ.Levels
 {
     internal class LevelData
     {
@@ -29,43 +28,43 @@ namespace Platformer.Levels
 
         public LevelData(int levelNumber)
         {
-            _realLevelNumber = levelNumber + 1; // xq empieza en 0
-            _linesPerScreen = GlobalParameters.SCREEN_HEIGHT / GlobalParameters.TILE_HEIGHT;
+            this._realLevelNumber = levelNumber + 1; // xq empieza en 0
+            this._linesPerScreen = GlobalParameters.SCREEN_HEIGHT / GlobalParameters.TILE_HEIGHT;
 
             int colsPerScreen = GlobalParameters.SCREEN_WIDTH / GlobalParameters.TILE_WITH;
-            _colsPerLevel = colsPerScreen * GlobalParameters.INITIAL_SCREENS + colsPerScreen * GlobalParameters.ADD_SCREEN_PER_LEVEL * levelNumber;
+            this._colsPerLevel = colsPerScreen * GlobalParameters.INITIAL_SCREENS + colsPerScreen * GlobalParameters.ADD_SCREEN_PER_LEVEL * levelNumber;
 
             // Seteamos el punto de inicio en el primer cuarto de la primera pantalla del nivel
-            _startingPoint = colsPerScreen/4;
+            this._startingPoint = colsPerScreen/4;
             // Seteamos el punto de finalizacion en el ultimo cuarto de la ultima pantalla del nivel
-            _endingPoint = _colsPerLevel - _startingPoint;
+            this._endingPoint = this._colsPerLevel - this._startingPoint;
 
-            Load();
+            this.Load();
         }
 
         private void Load()
         {
-            var lines = new List<string>(_linesPerScreen);
+            var lines = new List<string>(this._linesPerScreen);
 
-            for (var i = 0; i < _linesPerScreen - 3; ++i)
+            for (var i = 0; i < this._linesPerScreen - 3; ++i)
             {
-                lines.Add(GetLevelLine(EMPTY_TILE));
+                lines.Add(this.GetLevelLine(EMPTY_TILE));
             }
 
-            lines.Add(GetLevelLine(EMPTY_TILE, true));
-            lines.Add(GetLevelLine(GROUND_TILE));
-            lines.Add(GetLevelLine(EMPTY_TILE));
+            lines.Add(this.GetLevelLine(EMPTY_TILE, true));
+            lines.Add(this.GetLevelLine(GROUND_TILE));
+            lines.Add(this.GetLevelLine(EMPTY_TILE));
 
-            Lines = lines;
+            this.Lines = lines;
 
-            EnemySpawnTimeFrom = TimeSpan.FromSeconds(RandomUtil.NextDouble(GlobalParameters.ENEMY_SPAWN_TIME_FROM_BASE, GlobalParameters.ENEMY_SPAWN_TIME_FROM_TOP));
-            EnemySpawnTimeTo = TimeSpan.FromSeconds(RandomUtil.NextDouble(GlobalParameters.ENEMY_SPAWN_TIME_TO_BASE, GlobalParameters.ENEMY_SPAWN_TIME_TO_TOP));
+            this.EnemySpawnTimeFrom = TimeSpan.FromSeconds(RandomUtil.NextDouble(GlobalParameters.ENEMY_SPAWN_TIME_FROM_BASE, GlobalParameters.ENEMY_SPAWN_TIME_FROM_TOP));
+            this.EnemySpawnTimeTo = TimeSpan.FromSeconds(RandomUtil.NextDouble(GlobalParameters.ENEMY_SPAWN_TIME_TO_BASE, GlobalParameters.ENEMY_SPAWN_TIME_TO_TOP));
             
             //EnemySpawnTimeFrom = TimeSpan.FromSeconds(3.0f);
             //EnemySpawnTimeTo = TimeSpan.FromSeconds(5.0f);
 
-            EnemiesParameters = GetEnemiesParameters();
-            TimeToCompleteLevel = GetMinutesToCompleteLevel();
+            this.EnemiesParameters = this.GetEnemiesParameters();
+            this.TimeToCompleteLevel = this.GetMinutesToCompleteLevel();
 
             // Solo para testing :)
             //EnemiesParameters = GetEmptyEnemiesParameters();
@@ -74,7 +73,7 @@ namespace Platformer.Levels
 
         private TimeSpan GetMinutesToCompleteLevel()
         {
-            var minutesToAdd = _realLevelNumber/GlobalParameters.ADD_MINUTES_EVERY_X_LEVEL;
+            var minutesToAdd = this._realLevelNumber/GlobalParameters.ADD_MINUTES_EVERY_X_LEVEL;
 
             return TimeSpan.FromMinutes(GlobalParameters.INITIAL_MINUTES_TO_COMPLETE_LEVEL +
                                      minutesToAdd*GlobalParameters.MINUTES_TO_ADD_EVERY_X_LEVEL);
@@ -101,7 +100,7 @@ namespace Platformer.Levels
             // La parte entera de la division del nivel y ADD_ENEMY_TYPE_EVERY_X_LEVEL
             // X ej: nivel 16 / agregar enemigos cada 5 niveles = 3.2. La parte entera es 3, + 1 = 4 
             // 4 es > a 3 MAX_ENEMIES_AVAILABLE
-            var enemiesTypeToAdd = _realLevelNumber / GlobalParameters.ADD_ENEMY_TYPE_EVERY_X_LEVEL + 1;
+            var enemiesTypeToAdd = this._realLevelNumber / GlobalParameters.ADD_ENEMY_TYPE_EVERY_X_LEVEL + 1;
 
             if (enemiesTypeToAdd > GlobalParameters.MAX_ENEMIES_AVAILABLE)
             {
@@ -110,7 +109,7 @@ namespace Platformer.Levels
 
             var percent = 1.0f / enemiesTypeToAdd;
 
-            var enemiesToAddToPool = _realLevelNumber / GlobalParameters.ADD_ENEMY_TO_POOL_EVERY_X_LEVEL + GlobalParameters.INITIAL_ENEMY_POOL;
+            var enemiesToAddToPool = this._realLevelNumber / GlobalParameters.ADD_ENEMY_TO_POOL_EVERY_X_LEVEL + GlobalParameters.INITIAL_ENEMY_POOL;
 
 
             int enemiesToAddToPoolPerEnemy;
@@ -134,7 +133,7 @@ namespace Platformer.Levels
                 enemiesPercentString[npcTypesArray[i].ToString()].PoolQuantity = enemiesToAddToPoolPerEnemy;
             }
             
-            ValidateEnemies(enemiesPercentString);
+            this.ValidateEnemies(enemiesPercentString);
 
             return enemiesPercentString;
         }
@@ -154,17 +153,17 @@ namespace Platformer.Levels
 
         private string GetLevelLine(char tile, bool includeStartEndPoints)
         {
-            var lineString = new StringBuilder(_colsPerLevel);
+            var lineString = new StringBuilder(this._colsPerLevel);
 
-            for (var x = 0; x < _colsPerLevel; ++x)
+            for (var x = 0; x < this._colsPerLevel; ++x)
             {
                 if (includeStartEndPoints)
                 {
-                    if (x == _startingPoint)
+                    if (x == this._startingPoint)
                     {
                         lineString.Append(START_TILE);
                     }
-                    else if (x == _endingPoint)
+                    else if (x == this._endingPoint)
                     {
                         lineString.Append(END_TILE);
                     }
@@ -183,7 +182,7 @@ namespace Platformer.Levels
 
         private string GetLevelLine(char tile)
         {
-            return GetLevelLine(tile, false);
+            return this.GetLevelLine(tile, false);
         }
     }
 }

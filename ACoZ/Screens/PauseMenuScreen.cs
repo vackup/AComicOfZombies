@@ -1,10 +1,11 @@
 #region Using Statements
-using System;
+
+using ACoZ.Helpers;
+using ACoZ.Levels;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Platformer.Helpers;
-using Platformer.Levels;
+
 #if WINDOWS_PHONE || IPHONE
 using Mobile.Base.Controls;
 #elif SILVERLIGHT
@@ -15,7 +16,7 @@ using Desktop.Base.Controls;
 
 #endregion
 
-namespace Platformer.Screens
+namespace ACoZ.Screens
 {
     /// <summary>
     /// The pause menu comes up over the top of the game,
@@ -34,44 +35,44 @@ namespace Platformer.Screens
         /// <param name="level"></param>
         public PauseMenuScreen(Level level) : base(true)
         {
-            _level = level;
+            this._level = level;
         }
 
         public override void LoadContent()
         {
             base.LoadContent();
 
-            if (_content == null)
+            if (this._content == null)
             {
                 //_content = new ContentManager(ScreenManager.Game.Services, GlobalParameters.CONTENT_FOLDER);
-                _content = ScreenManager.Game.Content;
+                this._content = this.ScreenManager.Game.Content;
             }
 
             //Creates Menu
-            CreateMenu();
+            this.CreateMenu();
         }
         #endregion
 
         #region Menu
         private void CreateMenu()
         {
-            var backgroundTexture = _content.Load<Texture2D>(GlobalParameters.WEAPON_BUTTON_NORMAL);
+            var backgroundTexture = this._content.Load<Texture2D>(GlobalParameters.WEAPON_BUTTON_NORMAL);
             var backgroungImage = new ImageControl(backgroundTexture, new Rectangle(0, 0, GlobalParameters.SCREEN_WIDTH / 2, GlobalParameters.SCREEN_HEIGHT), Vector2.Zero);
             var backgroundHalfWith = backgroungImage.TextureRectangle.Value.Width / 2;
 
             //Set PanelMenu Position
-            PanelMenu.Position = new Vector2(GlobalParameters.SCREEN_WIDTH / 2 - backgroundHalfWith, 0);
-            PanelMenu.Size = backgroungImage.Size;
+            this.PanelMenu.Position = new Vector2(GlobalParameters.SCREEN_WIDTH / 2 - backgroundHalfWith, 0);
+            this.PanelMenu.Size = backgroungImage.Size;
 
             var pausedTextureRectangle = GlobalParameters.ScreenAssetsData["PANTALLA_PAUSA0001_psd-PAUSED"];
             var pausedTitlePosition = new Vector2(backgroundHalfWith - pausedTextureRectangle.Width / 2, GlobalParameters.FIRST_BUTTON_INITIAL_POSITION);
-            var pausedTitle = new ImageControl(ScreenManager.ScreenAssetsTexture, pausedTextureRectangle, pausedTitlePosition);
+            var pausedTitle = new ImageControl(this.ScreenManager.ScreenAssetsTexture, pausedTextureRectangle, pausedTitlePosition);
 
             //Add MenuItems
             //1. Resume Game
             var resumeGameButton = new Button
                                        {
-                                           NormalButtonTexture = ScreenManager.ScreenAssetsTexture,
+                                           NormalButtonTexture = this.ScreenManager.ScreenAssetsTexture,
                                            TextureRectangle = GlobalParameters.ScreenAssetsData["PANTALLA_PAUSA0001_psd-RESUME_GAME"],
                                        };
             resumeGameButton.Width = resumeGameButton.TextureRectangle.Width;
@@ -84,7 +85,7 @@ namespace Platformer.Screens
 #if !IPHONE
             var saveGameButton = new Button
                                      {
-                                         NormalButtonTexture = ScreenManager.ScreenAssetsTexture,
+                                         NormalButtonTexture = this.ScreenManager.ScreenAssetsTexture,
                                          TextureRectangle = GlobalParameters.ScreenAssetsData["PANTALLA_PAUSA0001_psd-SAVE_GAME"],
                                      };
             saveGameButton.Width = saveGameButton.TextureRectangle.Width;
@@ -100,7 +101,7 @@ namespace Platformer.Screens
 
             var quitGameButton = new Button
                                      {
-                                         NormalButtonTexture = ScreenManager.ScreenAssetsTexture,
+                                         NormalButtonTexture = this.ScreenManager.ScreenAssetsTexture,
                                          TextureRectangle = GlobalParameters.ScreenAssetsData["PANTALLA_PAUSA0001_psd-QUIT_GAME"],
                                      };
             quitGameButton.Width = quitGameButton.TextureRectangle.Width;
@@ -117,13 +118,13 @@ namespace Platformer.Screens
             quitGameButton.OnClicked += QuitGameMenuEntrySelected;
 
             //Add MenuItems to Menupanel
-            PanelMenu.AddChild(backgroungImage);
-            PanelMenu.AddChild(pausedTitle);
-            PanelMenu.AddChild(resumeGameButton);
+            this.PanelMenu.AddChild(backgroungImage);
+            this.PanelMenu.AddChild(pausedTitle);
+            this.PanelMenu.AddChild(resumeGameButton);
 #if !IPHONE
-            PanelMenu.AddChild(saveGameButton);
+            this.PanelMenu.AddChild(saveGameButton);
 #endif
-            PanelMenu.AddChild(quitGameButton);
+            this.PanelMenu.AddChild(quitGameButton);
         }
 
         #endregion
@@ -145,7 +146,7 @@ namespace Platformer.Screens
         /// </summary>
         void QuitGameMenuEntrySelected(Button sender)
         {
-            ScreenManager.AddScreen(new TouchMessageBoxScreen(GlobalParameters.QUIT_GAME_MESSAGE, ConfirmQuitMessageBoxAccepted), ControllingPlayer);
+            this.ScreenManager.AddScreen(new TouchMessageBoxScreen(GlobalParameters.QUIT_GAME_MESSAGE, ConfirmQuitMessageBoxAccepted), this.ControllingPlayer);
         }
 
         /// <summary>
@@ -155,7 +156,7 @@ namespace Platformer.Screens
         /// </summary>
         protected virtual void ConfirmQuitMessageBoxAccepted(Button sender)
         {
-            LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
+            LoadingScreen.Load(this.ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
         }
         #endregion
 

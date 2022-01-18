@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
-namespace Platformer
+namespace ACoZ
 {
 #if WINDOWS && !NETFX_CORE
     [Serializable]

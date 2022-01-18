@@ -7,11 +7,11 @@
 //-----------------------------------------------------------------------------
 #endregion
 
+using ACoZ.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Platformer.Helpers;
 
-namespace Platformer.Levels
+namespace ACoZ.Levels
 {
     /// <summary>
     /// Stores the appearance and collision behavior of a tile.
@@ -32,8 +32,8 @@ namespace Platformer.Levels
         /// </summary>
         public Tile(Texture2D texture, TileCollision collision)
         {
-            Texture = texture;
-            Collision = collision;
+            this.Texture = texture;
+            this.Collision = collision;
         }
     }
 }

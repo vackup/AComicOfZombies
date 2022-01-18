@@ -1,4 +1,4 @@
-﻿namespace Platformer.Weapons
+﻿namespace ACoZ.Weapons
 {
     /// <summary>
     /// Tipos de armas / armas que existen en el juego. Si se agrega un nuevo tipo de arma, debe incrementarse la constante GlobalParameters.MAX_WEAPONS_AVAILABLE

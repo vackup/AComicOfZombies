@@ -1,8 +1,7 @@
 using System;
+using ACoZ.ScreenManagers;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Platformer.ScreenManagers;
 
 #if WINDOWS_PHONE || IPHONE
 using Mobile.Base.Controls;
@@ -16,7 +15,7 @@ using Desktop.Base.Controls;
 using Desktop.Base.ScreenSystem;
 #endif
 
-namespace Platformer.Screens
+namespace ACoZ.Screens
 {
     public abstract class ButtonMenuScreen : GameScreen
     {
@@ -28,17 +27,17 @@ namespace Platformer.Screens
         #region Initialization
         public ButtonMenuScreen(bool isPopUp)
         {
-            IsPopup = isPopUp;
+            this.IsPopup = isPopUp;
 
-            TransitionOnTime = TimeSpan.FromSeconds(0.5);
-            TransitionOffTime = TimeSpan.FromSeconds(0.5);
+            this.TransitionOnTime = TimeSpan.FromSeconds(0.5);
+            this.TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
 //#if WINDOWS_PHONE || IPHONE
 //            EnabledGestures = GestureType.Tap;
 //#endif
 
             // Default position
-            PanelMenu = new PanelControl
+            this.PanelMenu = new PanelControl
                           {
                               Position = new Vector2(0, 0)
                           };
@@ -46,15 +45,15 @@ namespace Platformer.Screens
 
         public override void LoadContent()
         {
-            UpdateScreen();
+            this.UpdateScreen();
 
             base.LoadContent();
         }
 
         private void UpdateScreen()
         {
-            var viewport = ScreenManager.GraphicsDevice.Viewport;
-            Viewport = new Rectangle(0, 0, viewport.Width, viewport.Height);
+            var viewport = this.ScreenManager.GraphicsDevice.Viewport;
+            this.Viewport = new Rectangle(0, 0, viewport.Width, viewport.Height);
         }
         #endregion
 
@@ -67,7 +66,7 @@ namespace Platformer.Screens
         /// </summary>
         public override void HandleInput(InputHelper input)
         {
-            PanelMenu.HandleInput(input);
+            this.PanelMenu.HandleInput(input);
             base.HandleInput(input);
         }
         #endregion
@@ -79,11 +78,11 @@ namespace Platformer.Screens
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            if (!IsActive) return;
+            if (!this.IsActive) return;
 
             // TODO: agregar efectos deslizantes como hacia MenuScreen (no es obligatorio)
 
-            Control.BatchDraw(PanelMenu, ScreenManager.GraphicsDevice, ScreenManager.SpriteBatch, Vector2.Zero, gameTime);
+            Control.BatchDraw(this.PanelMenu, this.ScreenManager.GraphicsDevice, this.ScreenManager.SpriteBatch, Vector2.Zero, gameTime);
         }
 
 
@@ -95,13 +94,13 @@ namespace Platformer.Screens
         {
 
             // Allows popup to be closed by back button
-            if (IsActive && GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (this.IsActive && GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
             {
-                ExitScreen();
+                this.ExitScreen();
             }
 
             //Update Menu states
-            PanelMenu.Update(gameTime);
+            this.PanelMenu.Update(gameTime);
 
             //// TODO: remover esto que lo puse para testear los clicks
             //// INICIO TEST
@@ -119,7 +118,7 @@ namespace Platformer.Screens
         /// </summary>
         protected virtual void OnCancel(Button sender)
         {
-            ExitScreen();
+            this.ExitScreen();
         }
     }
 }

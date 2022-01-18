@@ -1,12 +1,12 @@
 ﻿using System;
+using ACoZ.Levels;
+using ACoZ.Players;
+using ACoZ.ScreenManagers;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
-using Platformer.Levels;
-using Platformer.Players;
-using Platformer.ScreenManagers;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace Platformer
+namespace ACoZ
 {
     /// <summary>
     /// A valuable item the player can collect.
@@ -39,7 +39,7 @@ namespace Platformer
         {
             get
             {
-                return _basePosition + new Vector2(0.0f, _bounce);
+                return this._basePosition + new Vector2(0.0f, this._bounce);
             }
         }
 
@@ -50,7 +50,7 @@ namespace Platformer
         {
             get
             {
-                return new Circle(Position, Tile.WIDTH / 3.0f);
+                return new Circle(this.Position, Tile.WIDTH / 3.0f);
             }
         }
 
@@ -61,7 +61,7 @@ namespace Platformer
         {
             get
             {
-                return new Rectangle((int)Position.X - (_texture.Width / 2), (int)Position.Y - (_texture.Height / 2), _texture.Width, _texture.Height);
+                return new Rectangle((int)this.Position.X - (this._texture.Width / 2), (int)this.Position.Y - (this._texture.Height / 2), this._texture.Width, this._texture.Height);
             }
         }
 
@@ -73,24 +73,24 @@ namespace Platformer
 
         public Item(ScreenManager thisScreenManager, Level level, Vector2 position, ItemType itemType, bool isItemOn)
         {
-            IsItemOn = isItemOn;
-            SetItem(thisScreenManager, level, position, itemType);
+            this.IsItemOn = isItemOn;
+            this.SetItem(thisScreenManager, level, position, itemType);
         }
 
         public Item(ScreenManager thisScreenManager, Level level, Vector2 position, ItemType itemType)
         {
-            IsItemOn = false;
-            SetItem(thisScreenManager, level, position, itemType);
+            this.IsItemOn = false;
+            this.SetItem(thisScreenManager, level, position, itemType);
         }
 
         private void SetItem(ScreenManager thisScreenManager, Level level, Vector2 position, ItemType itemType)
         {
-            _screenManager = thisScreenManager;
-            Level = level;
-            _basePosition = position;
-            ItemType = itemType;
+            this._screenManager = thisScreenManager;
+            this.Level = level;
+            this._basePosition = position;
+            this.ItemType = itemType;
             
-            switch (ItemType)
+            switch (this.ItemType)
             {
                 //case ItemType.Checkpoint:
                 //    _texture = _screenManager.Checkpoint1Texture;
@@ -160,7 +160,7 @@ namespace Platformer
             }
 
             //texture = screenManager.GemTexture;
-            _origin = new Vector2(_texture.Width / 2.0f, _texture.Height / 2.0f);
+            this._origin = new Vector2(this._texture.Width / 2.0f, this._texture.Height / 2.0f);
         }
 
 
@@ -169,9 +169,9 @@ namespace Platformer
         /// </summary>
         public void LoadContent()
         {
-            if (_texture != null)
+            if (this._texture != null)
             {
-                _origin = new Vector2(_texture.Width / 2.0f, _texture.Height / 2.0f);
+                this._origin = new Vector2(this._texture.Width / 2.0f, this._texture.Height / 2.0f);
             }
             else
             {
@@ -192,11 +192,11 @@ namespace Platformer
 
             // Bounce along a sine curve over time.
             // Include the X coordinate so that neighboring gems bounce in a nice wave pattern.            
-            double t = gameTime.TotalGameTime.TotalSeconds * bounceRate + Position.X * bounceSync;
-            if (IsBouncing)
-                _bounce = (float)Math.Sin(t) * bounceHeight * _texture.Height;
+            double t = gameTime.TotalGameTime.TotalSeconds * bounceRate + this.Position.X * bounceSync;
+            if (this.IsBouncing)
+                this._bounce = (float)Math.Sin(t) * bounceHeight * this._texture.Height;
             else
-                _bounce = 0 - _texture.Height/4;
+                this._bounce = 0 - this._texture.Height/4;
 
         }
 
@@ -212,7 +212,7 @@ namespace Platformer
         /// </param>
         public void OnCollected(Player collectedBy, int itemNumber)
         {
-            switch (ItemType)
+            switch (this.ItemType)
             {
                 //case ItemType.Checkpoint:
                 //    int checkpointnumber = 0;
@@ -244,7 +244,7 @@ namespace Platformer
                    // Level.Items.RemoveAt(itemNumber--);
                     //Level.Score += this.PointValue;
                     //Level.GemsRemaining -= 1;
-                    PlaySound();
+                    this.PlaySound();
                     break;
 
                 //case ItemType.Powerup:
@@ -256,7 +256,7 @@ namespace Platformer
                 case ItemType.Life:
                     //Level.Items.RemoveAt(itemNumber--);
                     //collectedBy.GainLive();
-                    PlaySound();
+                    this.PlaySound();
                     break;
                 //case ItemType.Heart:
                 //    _level.items.RemoveAt(itemNumber--);
@@ -279,7 +279,7 @@ namespace Platformer
             try
             {
                 //collectedSound.Play(screenManager.Settings.SoundVolumeAmount);
-                _collectedSound.Play();
+                this._collectedSound.Play();
             }
             catch
             {}
@@ -290,7 +290,7 @@ namespace Platformer
         /// </summary>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, Position, null, Color, 0.0f, _origin, 1.0f, SpriteEffects.None, 0.0f);
+            spriteBatch.Draw(this._texture, this.Position, null, this.Color, 0.0f, this._origin, 1.0f, SpriteEffects.None, 0.0f);
         }
     }
 }

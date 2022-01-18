@@ -1,8 +1,8 @@
 ﻿using System;
+using ACoZ.Helpers;
+using ACoZ.ScreenManagers;
+using ACoZ.Screens;
 using Microsoft.Xna.Framework;
-using Platformer.Helpers;
-using Platformer.Screens;
-using Platformer.ScreenManagers;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Desktop.Base.Components;

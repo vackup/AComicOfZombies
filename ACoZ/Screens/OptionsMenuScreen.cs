@@ -6,9 +6,10 @@
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
 #endregion
-using Microsoft.Xna.Framework.Media;
+
+using ACoZ.Helpers;
 using Microsoft.Xna.Framework;
-using Platformer.Helpers;
+
 #if WINDOWS_PHONE || IPHONE
 using Mobile.Base.Controls;
 #elif SILVERLIGHT
@@ -17,7 +18,7 @@ using Web.Base.Controls;
 using Desktop.Base.Controls;
 #endif
 
-namespace Platformer.Screens
+namespace ACoZ.Screens
 {
     /// <summary>
     /// The options screen is brought up over the top of the main menu
@@ -69,10 +70,10 @@ namespace Platformer.Screens
 
             base.LoadContent();
 
-            _playMusic = ScreenManager.IsMusicPlaying;
+            this._playMusic = this.ScreenManager.IsMusicPlaying;
 
             //Creates Menu
-            CreateMenu();
+            this.CreateMenu();
         }
 
 
@@ -81,7 +82,7 @@ namespace Platformer.Screens
         /// </summary>
         void SetMenuEntryText()
         {
-            _musicButton.DisplayText = "Music: " + (_playMusic ? "on" : "off");
+            this._musicButton.DisplayText = "Music: " + (this._playMusic ? "on" : "off");
         }
         #endregion
 
@@ -91,37 +92,37 @@ namespace Platformer.Screens
             const float firstButtonInitialPosition = 70f;
             const float marginBetweenButtons = 25f;
 
-            float screenWith = Viewport.Width;
+            float screenWith = this.Viewport.Width;
 
             var viewPortHalfWith = screenWith / 2;
 
             //Add MenuItems
             //1. Option
-            _musicButton = new Button
+            this._musicButton = new Button
             {
                 TextVisible = true,
-                Font = ScreenManager.SpriteFonts.TittleFont,
+                Font = this.ScreenManager.SpriteFonts.TittleFont,
                 TextSize = Button.FontSize.Big,
                 TextAlignment = Button.TextAlign.Centre,
                 Foreground = GlobalParameters.HudColor
             };
 
             // Seteamos el texto del boton xq sino _musicButton.TextWidth y _musicButton.TextHeight es 0
-            SetMenuEntryText();
+            this.SetMenuEntryText();
 
-            _musicButton.Width = _musicButton.TextWidth;
-            _musicButton.Height = _musicButton.TextHeight;
-            _musicButton.Position = new Vector2(viewPortHalfWith - _musicButton.Width / 2, firstButtonInitialPosition);
-            _musicButton.OnClicked += MusicMenuEntrySelected;
+            this._musicButton.Width = this._musicButton.TextWidth;
+            this._musicButton.Height = this._musicButton.TextHeight;
+            this._musicButton.Position = new Vector2(viewPortHalfWith - this._musicButton.Width / 2, firstButtonInitialPosition);
+            this._musicButton.OnClicked += MusicMenuEntrySelected;
 
-            PanelMenu.AddChild(_musicButton);
+            this.PanelMenu.AddChild(this._musicButton);
 
             //2. Back
             var backButton = new Button
             {
                 DisplayText = "Back",
                 TextVisible = true,
-                Font = ScreenManager.SpriteFonts.TittleFont,
+                Font = this.ScreenManager.SpriteFonts.TittleFont,
                 TextSize = Button.FontSize.Big,
                 TextAlignment = Button.TextAlign.Centre,
                 Foreground = GlobalParameters.HudColor
@@ -129,10 +130,10 @@ namespace Platformer.Screens
 
             backButton.Width = backButton.TextWidth;
             backButton.Height = backButton.TextHeight;
-            backButton.Position = new Vector2(viewPortHalfWith - backButton.Width / 2, _musicButton.Position.Y + _musicButton.Height + marginBetweenButtons);
+            backButton.Position = new Vector2(viewPortHalfWith - backButton.Width / 2, this._musicButton.Position.Y + this._musicButton.Height + marginBetweenButtons);
             backButton.OnClicked += OnCancel;
 
-            PanelMenu.AddChild(backButton);
+            this.PanelMenu.AddChild(backButton);
 
 
             //#if WINDOWS_PHONE || WINDOWS || XBOX
@@ -164,13 +165,13 @@ namespace Platformer.Screens
 
         protected override void OnCancel(Button sender)
         {
-            if (ScreenManager.IsMusicPlaying && !_playMusic)
+            if (this.ScreenManager.IsMusicPlaying && !this._playMusic)
             {
-                ScreenManager.StopMusic();
+                this.ScreenManager.StopMusic();
             }
-            else if (!ScreenManager.IsMusicPlaying && _playMusic)
+            else if (!this.ScreenManager.IsMusicPlaying && this._playMusic)
             {
-                ScreenManager.PlayMusic();
+                this.ScreenManager.PlayMusic();
             }
 
             base.OnCancel(sender);
@@ -181,9 +182,9 @@ namespace Platformer.Screens
         /// </summary>
         void MusicMenuEntrySelected(Button sender)
         {
-            _playMusic = !_playMusic;
+            this._playMusic = !this._playMusic;
 
-            SetMenuEntryText();
+            this.SetMenuEntryText();
         }
         
 //#if WINDOWS_PHONE || WINDOWS ||XBOX

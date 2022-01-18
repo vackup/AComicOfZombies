@@ -1,21 +1,15 @@
 using System;
 using System.Collections.Generic;
+using ACoZ.Players;
+using ACoZ.Weapons;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Platformer.Players;
-using Platformer.Weapons;
 
-namespace Platformer.Helpers
+namespace ACoZ.Helpers
 {
     class GlobalParameters
     {
         #region Parametros globales
-
-#if WINDOWS && NETFX_CORE
-        public const string CONTENT_FOLDER = "Content_W8";
-#else
-         public const string CONTENT_FOLDER  = "Content";
-#endif
+        public const string CONTENT_FOLDER  = "Content";
 
         /// <summary>
         /// Cancion

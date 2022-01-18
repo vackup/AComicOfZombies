@@ -11,10 +11,10 @@ using Web.Base.Controls;
 #elif WINDOWS
 using Desktop.Base.Controls;
 #endif
-using Microsoft.Xna.Framework.Content;
+
 #endregion
 
-namespace Platformer.Screens
+namespace ACoZ.Screens
 {
     class PressStartScreen : ButtonMenuScreen
     {
@@ -37,7 +37,7 @@ namespace Platformer.Screens
             base.LoadContent();
 
             //Creates Menu
-            CreateMenu();
+            this.CreateMenu();
         }
         #endregion
 
@@ -57,7 +57,7 @@ namespace Platformer.Screens
                                        {
                                            DisplayText = startMenuEntry,
                                            TextVisible = true,
-                                           Font = ScreenManager.SpriteFonts.TittleFont,
+                                           Font = this.ScreenManager.SpriteFonts.TittleFont,
                                            TextSize = Button.FontSize.Big,
                                            TextAlignment = Button.TextAlign.Centre
                                        };
@@ -65,8 +65,8 @@ namespace Platformer.Screens
             pressStartButton.Width = pressStartButton.TextWidth;
             pressStartButton.Height = pressStartButton.TextHeight;
 
-            float screenWith = Viewport.Width;
-			float screenHeight = Viewport.Height;
+            float screenWith = this.Viewport.Width;
+			float screenHeight = this.Viewport.Height;
 #if IPHONE
             // Al ser el primer screen que carga, todavia no reconocio el giro de pantalla.
 			if (ScreenManager.Game.Window.CurrentOrientation == DisplayOrientation.Default)
@@ -83,14 +83,14 @@ namespace Platformer.Screens
             pressStartButton.OnClicked += StartMenuEntrySelected;
 
             //Add MenuItems to Menupanel
-            PanelMenu.AddChild(pressStartButton);
+            this.PanelMenu.AddChild(pressStartButton);
         }
         #endregion
 
         #region Click Events
         private void StartMenuEntrySelected(Button sender)
         {
-            PromptMe(PlayerIndex.One);
+            this.PromptMe(PlayerIndex.One);
         }
 
         private void PromptMe(PlayerIndex playerIndex)
@@ -153,8 +153,8 @@ namespace Platformer.Screens
 //                ScreenManager.AddScreen(new MainMenuScreen(), playerIndex);
 //            };
 //#else
-            ScreenManager.RemoveScreen(this);
-            ScreenManager.AddScreen(new MainMenuScreen(), PlayerIndex.One);
+            this.ScreenManager.RemoveScreen(this);
+            this.ScreenManager.AddScreen(new MainMenuScreen(), PlayerIndex.One);
             //LoadingScreen.Load(ScreenManager, true, PlayerIndex.One, new MainMenuScreen());
 //#endif
 

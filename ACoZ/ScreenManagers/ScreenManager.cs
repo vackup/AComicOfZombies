@@ -1,27 +1,15 @@
-#region File Description
-//-----------------------------------------------------------------------------
-// ScreenManager.cs
-//
-// Microsoft XNA Community Game Platform
-// Copyright (C) Microsoft Corporation. All rights reserved.
-//-----------------------------------------------------------------------------
-#endregion
-
 #region Using Statements
+
 using System;
-using System.Diagnostics;
 using System.Collections.Generic;
+using System.Diagnostics;
+using ACoZ.Animations;
+using ACoZ.Helpers;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input.Touch;
-using System.IO;
-//using System.IO.IsolatedStorage;
 using Microsoft.Xna.Framework.Media;
-using Platformer.Animations;
-using Platformer.Helpers;
-using Platformer.Weapons;
+//using System.IO.IsolatedStorage;
 
 #if WINDOWS_PHONE || IPHONE
 using Mobile.Base.ScreenSystem;
@@ -33,7 +21,7 @@ using Desktop.Base.ScreenSystem;
 
 #endregion
 
-namespace Platformer.ScreenManagers
+namespace ACoZ.ScreenManagers
 {
     /// <summary>
     /// The screen manager is a component which manages one or more GameScreen
@@ -126,7 +114,7 @@ namespace Platformer.ScreenManagers
         {
             base.Initialize();
 
-            _isInitialized = true;
+            this._isInitialized = true;
         }
 
 
@@ -135,7 +123,7 @@ namespace Platformer.ScreenManagers
         /// </summary>
         protected override void LoadContent()
         {
-            var contentManager = Game.Content;
+            var contentManager = this.Game.Content;
 
             if (contentManager == null)
 			{
@@ -149,22 +137,22 @@ namespace Platformer.ScreenManagers
 #endif
 
 			// Load content belonging to the screen manager.
-            _blankTexture = contentManager.Load<Texture2D>("Menu/blank");
+            this._blankTexture = contentManager.Load<Texture2D>("Menu/blank");
 
-            SpriteFonts = new SpriteFonts(contentManager);
+            this.SpriteFonts = new SpriteFonts(contentManager);
 
-            SpriteBatch = new SpriteBatch(GraphicsDevice);            
+            this.SpriteBatch = new SpriteBatch(this.GraphicsDevice);            
 
-            LoadAnimationData();
+            this.LoadAnimationData();
 
-            SetWeaponMaxData();
+            this.SetWeaponMaxData();
 
-            LoadScreenAssetsData(contentManager);
+            this.LoadScreenAssetsData(contentManager);
 
             //LoadGameContent(ContentManager);
 
             // Tell each of the screens to load their content.
-            foreach (var screen in screens)
+            foreach (var screen in this.screens)
             {
                 screen.LoadContent();
             }
@@ -172,11 +160,11 @@ namespace Platformer.ScreenManagers
 #if WINDOWS && OPENGL
             _musicTheme = null;
 #else
-           _musicTheme = contentManager.Load<Song>(GlobalParameters.MUSIC_THEME);
+           this._musicTheme = contentManager.Load<Song>(GlobalParameters.MUSIC_THEME);
 #endif
 
 #if !DEBUG
-			PlayMusic();
+			this.PlayMusic();
 #endif
         }
 
@@ -192,16 +180,16 @@ namespace Platformer.ScreenManagers
             try
             {
 
-                if (_musicTheme == null)
+                if (this._musicTheme == null)
                     return;
 
                 // TODO: Reemplazar MediaPlayer con XACT. Leer para mas info http://stackoverflow.com/questions/3732070/xna-mediaplayer-volume-setter-being-extremely-slow
                 // The only sure-fire way to make the problems go away is to not use MediaPlayer at all. You can put your music into XACT and compress it (I think you can use SoundEffect as well).
                 MediaPlayer.IsRepeating = true;
-                MediaPlayer.Play(_musicTheme);
+                MediaPlayer.Play(this._musicTheme);
                 MediaPlayer.Volume = 1.0f;
 
-                IsMusicPlaying = true;
+                this.IsMusicPlaying = true;
             }
             catch
             {
@@ -217,7 +205,7 @@ namespace Platformer.ScreenManagers
             {
                 MediaPlayer.Stop();
 
-                IsMusicPlaying = false;
+                this.IsMusicPlaying = false;
             }
             catch
             {
@@ -249,7 +237,7 @@ namespace Platformer.ScreenManagers
 
         private void LoadScreenAssetsData(ContentManager contentManager)
         {
-            ScreenAssetsTexture = contentManager.Load<Texture2D>(GlobalParameters.SCREEN_ASSETS_TEXTURE);
+            this.ScreenAssetsTexture = contentManager.Load<Texture2D>(GlobalParameters.SCREEN_ASSETS_TEXTURE);
 			GlobalParameters.ScreenAssetsData = Loader.LoadData(GlobalParameters.SCREEN_ASSETS_DATA, GlobalParameters.MAX_SCREEN_ASSETS_AVAILABLE);
         }
 
@@ -385,27 +373,27 @@ namespace Platformer.ScreenManagers
             GlobalParameters.ObamaAnimationRectangulesFusilXm8Shoot = Loader.LoadData(GlobalParameters.FusilXm8ShotAnimation, GlobalParameters.OBAMA_ANIMATION_DATA);
             if (GlobalParameters.ObamaAnimationRectangulesFusilXm8Shoot.Length == 0) throw new Exception(string.Format("No se encuentran datos para Obama {0} ", GlobalParameters.FusilXm8ShotAnimation));
 
-            GlobalParameters.ObamaWeaponAnimationPosition = LoadObamaWeaponAnimationPosition();
+            GlobalParameters.ObamaWeaponAnimationPosition = this.LoadObamaWeaponAnimationPosition();
             #endregion
 
             #region Gordo Mercenario
-            GlobalParameters.GordoAnimationRectangulesIdle = Loader.LoadData(GlobalParameters.GORDO_MERCENARIO_IDLE_ANIMATION, GlobalParameters.GORDO_MERCENARIO_ANIMATION_DATA);
-            if (GlobalParameters.GordoAnimationRectangulesIdle.Length == 0) throw new Exception(string.Format("No se encuentran datos para Gordo {0} ", GlobalParameters.GORDO_MERCENARIO_IDLE_ANIMATION));
+            //GlobalParameters.GordoAnimationRectangulesIdle = Loader.LoadData(GlobalParameters.GORDO_MERCENARIO_IDLE_ANIMATION, GlobalParameters.GORDO_MERCENARIO_ANIMATION_DATA);
+            //if (GlobalParameters.GordoAnimationRectangulesIdle.Length == 0) throw new Exception(string.Format("No se encuentran datos para Gordo {0} ", GlobalParameters.GORDO_MERCENARIO_IDLE_ANIMATION));
 
-            GlobalParameters.GordoAnimationRectangulesRun = Loader.LoadData(GlobalParameters.GORDO_MERCENARIO_RUN_ANIMATION, GlobalParameters.GORDO_MERCENARIO_ANIMATION_DATA);
-            if (GlobalParameters.GordoAnimationRectangulesRun.Length == 0) throw new Exception(string.Format("No se encuentran datos para Gordo {0} ", GlobalParameters.GORDO_MERCENARIO_RUN_ANIMATION));
+            //GlobalParameters.GordoAnimationRectangulesRun = Loader.LoadData(GlobalParameters.GORDO_MERCENARIO_RUN_ANIMATION, GlobalParameters.GORDO_MERCENARIO_ANIMATION_DATA);
+            //if (GlobalParameters.GordoAnimationRectangulesRun.Length == 0) throw new Exception(string.Format("No se encuentran datos para Gordo {0} ", GlobalParameters.GORDO_MERCENARIO_RUN_ANIMATION));
             
-            GlobalParameters.GordoAnimationRectangulesDie = Loader.LoadData(GlobalParameters.GORDO_MERCENARIO_DIE_ANIMATION, GlobalParameters.GORDO_MERCENARIO_ANIMATION_DATA);
-            if (GlobalParameters.GordoAnimationRectangulesDie.Length == 0) throw new Exception(string.Format("No se encuentran datos para Gordo {0} ", GlobalParameters.GORDO_MERCENARIO_DIE_ANIMATION));
+            //GlobalParameters.GordoAnimationRectangulesDie = Loader.LoadData(GlobalParameters.GORDO_MERCENARIO_DIE_ANIMATION, GlobalParameters.GORDO_MERCENARIO_ANIMATION_DATA);
+            //if (GlobalParameters.GordoAnimationRectangulesDie.Length == 0) throw new Exception(string.Format("No se encuentran datos para Gordo {0} ", GlobalParameters.GORDO_MERCENARIO_DIE_ANIMATION));
 
-            GlobalParameters.GordoAnimationRectangulesBeAttacked = Loader.LoadData(GlobalParameters.GORDO_MERCENARIO_BE_ATTACKED_ANIMATION, GlobalParameters.GORDO_MERCENARIO_ANIMATION_DATA);
-            if (GlobalParameters.GordoAnimationRectangulesBeAttacked.Length == 0) throw new Exception(string.Format("No se encuentran datos para Gordo {0} ", GlobalParameters.GORDO_MERCENARIO_BE_ATTACKED_ANIMATION));
+            //GlobalParameters.GordoAnimationRectangulesBeAttacked = Loader.LoadData(GlobalParameters.GORDO_MERCENARIO_BE_ATTACKED_ANIMATION, GlobalParameters.GORDO_MERCENARIO_ANIMATION_DATA);
+            //if (GlobalParameters.GordoAnimationRectangulesBeAttacked.Length == 0) throw new Exception(string.Format("No se encuentran datos para Gordo {0} ", GlobalParameters.GORDO_MERCENARIO_BE_ATTACKED_ANIMATION));
 
-            GlobalParameters.GordoAnimationRectangulesAttack = Loader.LoadData(GlobalParameters.GORDO_MERCENARIO_ATTACK_ANIMATION, GlobalParameters.GORDO_MERCENARIO_ANIMATION_DATA);
-            if (GlobalParameters.GordoAnimationRectangulesAttack.Length == 0) throw new Exception(string.Format("No se encuentran datos para Gordo {0} ", GlobalParameters.GORDO_MERCENARIO_ATTACK_ANIMATION));
+            //GlobalParameters.GordoAnimationRectangulesAttack = Loader.LoadData(GlobalParameters.GORDO_MERCENARIO_ATTACK_ANIMATION, GlobalParameters.GORDO_MERCENARIO_ANIMATION_DATA);
+            //if (GlobalParameters.GordoAnimationRectangulesAttack.Length == 0) throw new Exception(string.Format("No se encuentran datos para Gordo {0} ", GlobalParameters.GORDO_MERCENARIO_ATTACK_ANIMATION));
             
-            GlobalParameters.GordoAnimationRectangulesCelebrate = Loader.LoadData(GlobalParameters.GORDO_MERCENARIO_IDLE_ANIMATION, GlobalParameters.GORDO_MERCENARIO_ANIMATION_DATA);
-            if (GlobalParameters.GordoAnimationRectangulesCelebrate.Length == 0) throw new Exception(string.Format("No se encuentran datos para Gordo {0} ", GlobalParameters.GORDO_MERCENARIO_IDLE_ANIMATION));
+            //GlobalParameters.GordoAnimationRectangulesCelebrate = Loader.LoadData(GlobalParameters.GORDO_MERCENARIO_IDLE_ANIMATION, GlobalParameters.GORDO_MERCENARIO_ANIMATION_DATA);
+            //if (GlobalParameters.GordoAnimationRectangulesCelebrate.Length == 0) throw new Exception(string.Format("No se encuentran datos para Gordo {0} ", GlobalParameters.GORDO_MERCENARIO_IDLE_ANIMATION));
 
             //GlobalParameters.GordoAnimationRectangulesPistolaBerettaM9Idle = Loader.LoadData(GlobalParameters.PistolaBerettaM9IdleAnimation, GlobalParameters.GORDO_MERCENARIO_ANIMATION_DATA);
             //if (GlobalParameters.GordoAnimationRectangulesPistolaBerettaM9Idle.Length == 0) throw new Exception(string.Format("No se encuentran datos para Gordo {0} ", GlobalParameters.PistolaBerettaM9IdleAnimation));
@@ -577,7 +565,7 @@ namespace Platformer.ScreenManagers
         protected override void UnloadContent()
         {
             // Tell each of the screens to unload their content.
-            foreach (GameScreen screen in screens)
+            foreach (GameScreen screen in this.screens)
             {
                 screen.UnloadContent();
             }
@@ -595,25 +583,25 @@ namespace Platformer.ScreenManagers
         public override void Update(GameTime gameTime)
         {
             // Read the keyboard and gamepad.
-            input.Update();
+            this.input.Update();
 
             // Make a copy of the master screen list, to avoid confusion if
             // the process of updating one screen adds or removes others.
-            screensToUpdate.Clear();
+            this.screensToUpdate.Clear();
 
-            foreach (var screen in screens)
-                screensToUpdate.Add(screen);
+            foreach (var screen in this.screens)
+                this.screensToUpdate.Add(screen);
 
-            var otherScreenHasFocus = !Game.IsActive;
+            var otherScreenHasFocus = !this.Game.IsActive;
             var coveredByOtherScreen = false;
 
             // Loop as long as there are screens waiting to be updated.
-            while (screensToUpdate.Count > 0)
+            while (this.screensToUpdate.Count > 0)
             {
                 // Pop the topmost screen off the waiting list.
-                var screen = screensToUpdate[screensToUpdate.Count - 1];
+                var screen = this.screensToUpdate[this.screensToUpdate.Count - 1];
 
-                screensToUpdate.RemoveAt(screensToUpdate.Count - 1);
+                this.screensToUpdate.RemoveAt(this.screensToUpdate.Count - 1);
 
                 // Update the screen.
                 screen.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -625,7 +613,7 @@ namespace Platformer.ScreenManagers
                     // give it a chance to handle input.
                     if (!otherScreenHasFocus)
                     {
-                        screen.HandleInput(input);
+                        screen.HandleInput(this.input);
 
                         otherScreenHasFocus = true;
                     }
@@ -638,8 +626,8 @@ namespace Platformer.ScreenManagers
             }
 
             // Print debug trace?
-            if (TraceEnabled)
-                TraceScreens();
+            if (this.TraceEnabled)
+                this.TraceScreens();
         }
 
 
@@ -650,7 +638,7 @@ namespace Platformer.ScreenManagers
         {
             List<string> screenNames = new List<string>();
 
-            foreach (GameScreen screen in screens)
+            foreach (GameScreen screen in this.screens)
                 screenNames.Add(screen.GetType().Name);
 
             Debug.WriteLine(string.Join(", ", screenNames.ToArray()));
@@ -662,7 +650,7 @@ namespace Platformer.ScreenManagers
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            foreach (GameScreen screen in screens)
+            foreach (GameScreen screen in this.screens)
             {
                 if (screen.ScreenState == ScreenState.Hidden)
                     continue;
@@ -687,12 +675,12 @@ namespace Platformer.ScreenManagers
             screen.IsExiting = false;
 
             // If we have a graphics device, tell the screen to load content.
-            if (_isInitialized)
+            if (this._isInitialized)
             {
                 screen.LoadContent();
             }
 
-            screens.Add(screen);
+            this.screens.Add(screen);
 
             // update the TouchPanel to respond to gestures this screen is interested in
 //#if WINDOWS_PHONE || IPHONE
@@ -710,13 +698,13 @@ namespace Platformer.ScreenManagers
         public void RemoveScreen(GameScreen screen)
         {
             // If we have a graphics device, tell the screen to unload content.
-            if (_isInitialized)
+            if (this._isInitialized)
             {
                 screen.UnloadContent();
             }
 
-            screens.Remove(screen);
-            screensToUpdate.Remove(screen);
+            this.screens.Remove(screen);
+            this.screensToUpdate.Remove(screen);
 
 //#if WINDOWS_PHONE || IPHONE
 //            // if there is a screen still in the manager, update TouchPanel
@@ -736,7 +724,7 @@ namespace Platformer.ScreenManagers
         /// </summary>
         public GameScreen[] GetScreens()
         {
-            return screens.ToArray();
+            return this.screens.ToArray();
         }
 
 
@@ -746,15 +734,15 @@ namespace Platformer.ScreenManagers
         /// </summary>
         public void FadeBackBufferToBlack(float alpha)
         {
-            Viewport viewport = GraphicsDevice.Viewport;
+            Viewport viewport = this.GraphicsDevice.Viewport;
 
-            SpriteBatch.Begin();
+            this.SpriteBatch.Begin();
 
-            SpriteBatch.Draw(_blankTexture,
+            this.SpriteBatch.Draw(this._blankTexture,
                              new Rectangle(0, 0, viewport.Width, viewport.Height),
                              Color.Black * alpha);
 
-            SpriteBatch.End();
+            this.SpriteBatch.End();
         }
 
 #if WINDOWS_PHONE

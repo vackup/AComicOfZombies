@@ -1,7 +1,7 @@
 using System;
-using Platformer.Helpers;
+using ACoZ.Helpers;
 
-namespace Platformer.Players
+namespace ACoZ.Players
 {
     public class PlayerInfoManager
     {

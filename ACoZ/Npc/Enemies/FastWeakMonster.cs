@@ -1,9 +1,9 @@
+using ACoZ.Animations;
+using ACoZ.Helpers;
+using ACoZ.Levels;
 using Microsoft.Xna.Framework.Graphics;
-using Platformer.Animations;
-using Platformer.Helpers;
-using Platformer.Levels;
 
-namespace Platformer.Npc.Enemies
+namespace ACoZ.Npc.Enemies
 {
     public class FastWeakMonster : Enemy
     {
@@ -17,21 +17,21 @@ namespace Platformer.Npc.Enemies
         {
             base.Init(followPlayer, level);
 
-            var spriteTexture = Level.Content.Load<Texture2D>(GlobalParameters.FAST_WEAK_MONSTER_ANIMATION_TEXTURE);
+            var spriteTexture = this.Level.Content.Load<Texture2D>(GlobalParameters.FAST_WEAK_MONSTER_ANIMATION_TEXTURE);
 
-            IdleAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.FwmAnimationRectangulesIdle);
+            this.IdleAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.FwmAnimationRectangulesIdle);
 
-            RunAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.FwmAnimationRectangulesRun);
-            RunAnimation.SetBoundingRectangle(IdleAnimation.BoundingRectangle);
+            this.RunAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.FwmAnimationRectangulesRun);
+            this.RunAnimation.SetBoundingRectangle(this.IdleAnimation.BoundingRectangle);
 
-            DieAnimation = new Animation(spriteTexture, 0.075f, false, GlobalParameters.FwmAnimationRectangulesDie);
-            DieAnimation.SetBoundingRectangle(IdleAnimation.BoundingRectangle);
+            this.DieAnimation = new Animation(spriteTexture, 0.075f, false, GlobalParameters.FwmAnimationRectangulesDie);
+            this.DieAnimation.SetBoundingRectangle(this.IdleAnimation.BoundingRectangle);
 
-            HitAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.FwmAnimationRectangulesHit);
-            HitAnimation.SetBoundingRectangle(IdleAnimation.BoundingRectangle);
+            this.HitAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.FwmAnimationRectangulesHit);
+            this.HitAnimation.SetBoundingRectangle(this.IdleAnimation.BoundingRectangle);
 
-            AttackAnimation = new Animation(spriteTexture, 0.0375f, true, GlobalParameters.FwmAnimationRectangulesAttack);
-            AttackAnimation.SetBoundingRectangle(IdleAnimation.BoundingRectangle);
+            this.AttackAnimation = new Animation(spriteTexture, 0.0375f, true, GlobalParameters.FwmAnimationRectangulesAttack);
+            this.AttackAnimation.SetBoundingRectangle(this.IdleAnimation.BoundingRectangle);
 
             //Load sounds. 
             //_killedSound = Level.Content.Load<SoundEffect>("Sounds/MonsterKilled");
@@ -41,10 +41,10 @@ namespace Platformer.Npc.Enemies
             // Si quisieramos debuguear y ver como es el campo de vision, entonces si tendriamos que usar la textura
             //spotlightTexture = Level.Content.Load<Texture2D>("Overlays/spotlight2");
             
-            TotalHealth = TOTAL_HEALTH;
-            Acceleration = 2.0f;
-            PointValue = 10;
-            CurrentHealth = TOTAL_HEALTH;
+            this.TotalHealth = TOTAL_HEALTH;
+            this.Acceleration = 2.0f;
+            this.PointValue = 10;
+            this.CurrentHealth = TOTAL_HEALTH;
         }
     }
 }

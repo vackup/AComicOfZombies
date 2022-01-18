@@ -8,13 +8,14 @@
 #endregion
 
 #region Using Statements
+
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 #endregion
 
-namespace Platformer.Screens
+namespace ACoZ.Screens
 {
     /// <summary>
     /// Helper class represents a single entry in a MenuScreen. By default this
@@ -65,8 +66,8 @@ namespace Platformer.Screens
         /// </summary>
         protected internal virtual void OnSelectEntry(PlayerIndex playerIndex)
         {
-            if (Selected != null)
-                Selected(this, new PlayerIndexEventArgs(playerIndex));
+            if (this.Selected != null)
+                this.Selected(this, new PlayerIndexEventArgs(playerIndex));
         }
 
 
@@ -78,7 +79,7 @@ namespace Platformer.Screens
         /// </summary>
         public MenuEntry(string text)
         {
-            Text = text;
+            this.Text = text;
         }
         #endregion
 
@@ -103,9 +104,9 @@ namespace Platformer.Screens
             var fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds * 4;
 
             if (isSelected)
-                _selectionFade = Math.Min(_selectionFade + fadeSpeed, 1);
+                this._selectionFade = Math.Min(this._selectionFade + fadeSpeed, 1);
             else
-                _selectionFade = Math.Max(_selectionFade - fadeSpeed, 0);
+                this._selectionFade = Math.Max(this._selectionFade - fadeSpeed, 0);
         }
 
 
@@ -128,7 +129,7 @@ namespace Platformer.Screens
             
             float pulsate = (float)Math.Sin(time * 6) + 1;
 
-            float scale = 1 + pulsate * 0.05f * _selectionFade;
+            float scale = 1 + pulsate * 0.05f * this._selectionFade;
 
             // Modify the alpha to fade text out during transitions.
             color *= screen.TransitionAlpha;
@@ -140,7 +141,7 @@ namespace Platformer.Screens
 
             var origin = new Vector2(0, font.LineSpacing / 2);
 
-            spriteBatch.DrawString(font, Text, Position, color, 0,
+            spriteBatch.DrawString(font, this.Text, this.Position, color, 0,
                                    origin, scale, SpriteEffects.None, 0);
         }
 
@@ -159,7 +160,7 @@ namespace Platformer.Screens
         /// </summary>
         public virtual int GetWidth(MenuScreen screen)
         {
-            return (int)screen.ScreenManager.SpriteFonts.TextFont.MeasureString(Text).X;
+            return (int)screen.ScreenManager.SpriteFonts.TextFont.MeasureString(this.Text).X;
         }
 
 

@@ -1,9 +1,9 @@
+using ACoZ.Animations;
+using ACoZ.Helpers;
+using ACoZ.Levels;
 using Microsoft.Xna.Framework.Graphics;
-using Platformer.Animations;
-using Platformer.Helpers;
-using Platformer.Levels;
 
-namespace Platformer.Npc.Enemies
+namespace ACoZ.Npc.Enemies
 {
     /// <summary>
     /// Zombie1
@@ -20,24 +20,24 @@ namespace Platformer.Npc.Enemies
         {
             base.Init(followPlayer, level);
 
-            var spriteTexture = Level.Content.Load<Texture2D>(GlobalParameters.SLOW_STRONG_MONSTER_ANIMATION_TEXTURE);
+            var spriteTexture = this.Level.Content.Load<Texture2D>(GlobalParameters.SLOW_STRONG_MONSTER_ANIMATION_TEXTURE);
 
-            IdleAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.SsmAnimationRectangulesIdle);
+            this.IdleAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.SsmAnimationRectangulesIdle);
 
-            RunAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.SsmAnimationRectangulesRun);
-            RunAnimation.SetBoundingRectangle(IdleAnimation.BoundingRectangle);
+            this.RunAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.SsmAnimationRectangulesRun);
+            this.RunAnimation.SetBoundingRectangle(this.IdleAnimation.BoundingRectangle);
 
-            DieAnimation = new Animation(spriteTexture, 0.075f, false, GlobalParameters.SsmAnimationRectangulesDie);
-            DieAnimation.SetBoundingRectangle(IdleAnimation.BoundingRectangle);
+            this.DieAnimation = new Animation(spriteTexture, 0.075f, false, GlobalParameters.SsmAnimationRectangulesDie);
+            this.DieAnimation.SetBoundingRectangle(this.IdleAnimation.BoundingRectangle);
 
-            HitAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.SsmAnimationRectangulesHit);
-            HitAnimation.SetBoundingRectangle(IdleAnimation.BoundingRectangle);
+            this.HitAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.SsmAnimationRectangulesHit);
+            this.HitAnimation.SetBoundingRectangle(this.IdleAnimation.BoundingRectangle);
 
-            AttackAnimation = new Animation(spriteTexture, 0.0375f, true, GlobalParameters.SsmAnimationRectangulesAttack);
-            AttackAnimation.SetBoundingRectangle(IdleAnimation.BoundingRectangle);
+            this.AttackAnimation = new Animation(spriteTexture, 0.0375f, true, GlobalParameters.SsmAnimationRectangulesAttack);
+            this.AttackAnimation.SetBoundingRectangle(this.IdleAnimation.BoundingRectangle);
 
             // Set animation to play
-            PlayAnimation(IdleAnimation);
+            this.PlayAnimation(this.IdleAnimation);
 
             //Load sounds. 
             //_killedSound = Level.Content.Load<SoundEffect>("Sounds/MonsterKilled");
@@ -48,10 +48,10 @@ namespace Platformer.Npc.Enemies
             //spotlightTexture = Level.Content.Load<Texture2D>("Overlays/spotlight2");
 
             // Caracteristicas
-            TotalHealth = TOTAL_HEALTH;
-            Acceleration = 1.0f;
-            PointValue = 30;
-            CurrentHealth = TOTAL_HEALTH;
+            this.TotalHealth = TOTAL_HEALTH;
+            this.Acceleration = 1.0f;
+            this.PointValue = 30;
+            this.CurrentHealth = TOTAL_HEALTH;
         }
     }
 }

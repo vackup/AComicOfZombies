@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace Platformer.Levels
+namespace ACoZ.Levels
 {
     public class Layer
     {
@@ -29,11 +29,11 @@ namespace Platformer.Levels
             const string backgroundSufix = "";
 #endif
 
-            _textures = new Texture2D[segmentsCount];
+            this._textures = new Texture2D[segmentsCount];
             for (int i = 0; i < segmentsCount; ++i)
-                _textures[i] = content.Load<Texture2D>(string.Format("{0}_{1}{2}", basePath, i, backgroundSufix));
+                this._textures[i] = content.Load<Texture2D>(string.Format("{0}_{1}{2}", basePath, i, backgroundSufix));
 
-            ScrollRate = scrollRate;
+            this.ScrollRate = scrollRate;
         }
 
         /// <summary>
@@ -48,10 +48,10 @@ namespace Platformer.Levels
         public void Draw(SpriteBatch spriteBatch, float cameraPosition)
         {
             // Assume each segment is the same width.
-            var segmentWidth = _textures[0].Width;
+            var segmentWidth = this._textures[0].Width;
 
             // Calculate which segments to draw and how much to offset them.
-            var x = cameraPosition * ScrollRate;
+            var x = cameraPosition * this.ScrollRate;
             var leftSegment = (int)Math.Floor(x / segmentWidth);
             var rightSegment = leftSegment + 1;
             x = (x / segmentWidth - leftSegment) * -segmentWidth;
@@ -65,8 +65,8 @@ namespace Platformer.Levels
             const float desplazamientoY = 0.0f;
 #endif
 
-            spriteBatch.Draw(_textures[leftSegment % _textures.Length], new Vector2((float)Math.Floor(x), desplazamientoY), Color.White);
-            spriteBatch.Draw(_textures[rightSegment % _textures.Length], new Vector2((float)Math.Floor(x + segmentWidth), desplazamientoY), Color.White);
+            spriteBatch.Draw(this._textures[leftSegment % this._textures.Length], new Vector2((float)Math.Floor(x), desplazamientoY), Color.White);
+            spriteBatch.Draw(this._textures[rightSegment % this._textures.Length], new Vector2((float)Math.Floor(x + segmentWidth), desplazamientoY), Color.White);
         }
     }
 }

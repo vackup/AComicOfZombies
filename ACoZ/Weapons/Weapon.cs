@@ -1,12 +1,12 @@
 using System;
+using ACoZ.Animations;
+using ACoZ.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Platformer.Animations;
-using Platformer.Helpers;
 
-namespace Platformer.Weapons
+namespace ACoZ.Weapons
 {
     public class Weapon
     {
@@ -91,201 +91,201 @@ namespace Platformer.Weapons
 
         public string Name { get; private set; }
 
-        public bool HasAmmo { get { return CurrentAmmo > 0; } }
+        public bool HasAmmo { get { return this.CurrentAmmo > 0; } }
 
         public Weapon(WeaponType weaponType)
         {
-            CanShoot = true;
+            this.CanShoot = true;
 
-            Type = weaponType;
+            this.Type = weaponType;
 
-            GameData = new GameObject();
+            this.GameData = new GameObject();
 
             // Todas las pistolas tienen el mismo poder, difieren en la cantidad de balas que cargan (MaxAmmo) y en el fire rate (FireRate). Cargan x bala
             // Las escopetas son las que mayor tienen, pero son las lentas (FireRate) y cargan menos balas (MaxAmmo). Cargan x bala
             // Los subfusiles tienen el mismo poder que las pistolas. Son automaticos.
             // Los fusiles tienen el mayor poder que los subfusiles pero menos que las escopetas. Son automaticos.
-            switch (Type)
+            switch (this.Type)
             {
                 case WeaponType.PistolaColtPython:
-                    Position = WeaponPosition.Primary;
-                    Power = 1;
-                    BulletVelocity = 15.0f;
-                    FireRate = 0.75f;
-                    ScoreValue = 100;
+                    this.Position = WeaponPosition.Primary;
+                    this.Power = 1;
+                    this.BulletVelocity = 15.0f;
+                    this.FireRate = 0.75f;
+                    this.ScoreValue = 100;
                     //FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.PISTOLA_FIRE_SOUND);
                     //ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.PISTOLA_RELOAD_SOUND);
-                    MaxAmmo = 6;
-                    CurrentAmmo = MaxAmmo;
-                    Name = "Colt Python";
-                    IsReloadTimePerBullet = true;
-                    ReloadTime = 1.00f;
-                    IsAutomatic = false;
+                    this.MaxAmmo = 6;
+                    this.CurrentAmmo = this.MaxAmmo;
+                    this.Name = "Colt Python";
+                    this.IsReloadTimePerBullet = true;
+                    this.ReloadTime = 1.00f;
+                    this.IsAutomatic = false;
                     break;
                 case WeaponType.PistolaColtM1911:
-                    Position = WeaponPosition.Primary;    
-                    Power = 1;
-                    BulletVelocity = 15.0f;
-                    FireRate = 0.65f;
-                    ScoreValue = 150;
+                    this.Position = WeaponPosition.Primary;    
+                    this.Power = 1;
+                    this.BulletVelocity = 15.0f;
+                    this.FireRate = 0.65f;
+                    this.ScoreValue = 150;
                     //FireSoundEffect = contentManager.Load<SoundEffect>(Assets.PISTOLA_FIRE_SOUND);
                     //ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.PISTOLA_RELOAD_SOUND);
-                    MaxAmmo = 7;
-                    CurrentAmmo = MaxAmmo;
-                    Name = "Colt M1911";
-                    IsReloadTimePerBullet = true;
-                    ReloadTime = 1.00f;
-                    IsAutomatic = false;
+                    this.MaxAmmo = 7;
+                    this.CurrentAmmo = this.MaxAmmo;
+                    this.Name = "Colt M1911";
+                    this.IsReloadTimePerBullet = true;
+                    this.ReloadTime = 1.00f;
+                    this.IsAutomatic = false;
                     break;
                 case WeaponType.PistolaBerettaM9:
-                    Position = WeaponPosition.Primary;
-                    Power = 1;
-                    BulletVelocity = 15.0f;
-                    FireRate = 0.55f;
-                    ScoreValue = 200;
+                    this.Position = WeaponPosition.Primary;
+                    this.Power = 1;
+                    this.BulletVelocity = 15.0f;
+                    this.FireRate = 0.55f;
+                    this.ScoreValue = 200;
                     //FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.PISTOLA_FIRE_SOUND);
                     //ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.PISTOLA_RELOAD_SOUND);
-                    MaxAmmo = 15;
-                    CurrentAmmo = MaxAmmo;
-                    Name = "Beretta M9";
-                    IsReloadTimePerBullet = true;
-                    ReloadTime = 1.00f;
-                    IsAutomatic = false;
+                    this.MaxAmmo = 15;
+                    this.CurrentAmmo = this.MaxAmmo;
+                    this.Name = "Beretta M9";
+                    this.IsReloadTimePerBullet = true;
+                    this.ReloadTime = 1.00f;
+                    this.IsAutomatic = false;
                     break;   
                 case WeaponType.EscopetaBeretta682:
-                    Position = WeaponPosition.Secondary;
-                    Power = 3;
-                    BulletVelocity = 15.0f;
-                    FireRate = 1.25f;
-                    ScoreValue = 400;
+                    this.Position = WeaponPosition.Secondary;
+                    this.Power = 3;
+                    this.BulletVelocity = 15.0f;
+                    this.FireRate = 1.25f;
+                    this.ScoreValue = 400;
                     //FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.ESCOPETA_FIRE_SOUND);
                     //ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.ESCOPETA_RELOAD_SOUND);
-                    MaxAmmo = 2;
-                    CurrentAmmo = MaxAmmo;
-                    Name = "Beretta 682";
-                    IsReloadTimePerBullet = true;
-                    ReloadTime = 1.00f;
-                    IsAutomatic = false;
+                    this.MaxAmmo = 2;
+                    this.CurrentAmmo = this.MaxAmmo;
+                    this.Name = "Beretta 682";
+                    this.IsReloadTimePerBullet = true;
+                    this.ReloadTime = 1.00f;
+                    this.IsAutomatic = false;
                     break;
                 case WeaponType.EscopetaIthaca37:
-                    Position = WeaponPosition.Secondary;
-                    Power = 3;
-                    BulletVelocity = 15.0f;
-                    FireRate = 1.25f;
-                    ScoreValue = 600;
+                    this.Position = WeaponPosition.Secondary;
+                    this.Power = 3;
+                    this.BulletVelocity = 15.0f;
+                    this.FireRate = 1.25f;
+                    this.ScoreValue = 600;
                     //FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.ESCOPETA_FIRE_SOUND);
                     //ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.ESCOPETA_RELOAD_SOUND);
-                    MaxAmmo = 4;
-                    CurrentAmmo = MaxAmmo;
-                    Name = "Ithaca 37";
-                    IsReloadTimePerBullet = true;
-                    ReloadTime = 1.00f;
-                    IsAutomatic = false;
+                    this.MaxAmmo = 4;
+                    this.CurrentAmmo = this.MaxAmmo;
+                    this.Name = "Ithaca 37";
+                    this.IsReloadTimePerBullet = true;
+                    this.ReloadTime = 1.00f;
+                    this.IsAutomatic = false;
                     break;
                 case WeaponType.EscopetaSpas12:
-                    Position = WeaponPosition.Secondary;
-                    Power = 3;
-                    BulletVelocity = 15.0f;
-                    FireRate = 1.25f;
-                    ScoreValue = 800;
+                    this.Position = WeaponPosition.Secondary;
+                    this.Power = 3;
+                    this.BulletVelocity = 15.0f;
+                    this.FireRate = 1.25f;
+                    this.ScoreValue = 800;
                     //FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.ESCOPETA_FIRE_SOUND);
                     //ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.ESCOPETA_RELOAD_SOUND);
-                    MaxAmmo = 8;
-                    CurrentAmmo = MaxAmmo;
-                    Name = "Spas 12";
-                    IsReloadTimePerBullet = true;
-                    ReloadTime = 1.00f;
-                    IsAutomatic = false;
+                    this.MaxAmmo = 8;
+                    this.CurrentAmmo = this.MaxAmmo;
+                    this.Name = "Spas 12";
+                    this.IsReloadTimePerBullet = true;
+                    this.ReloadTime = 1.00f;
+                    this.IsAutomatic = false;
                     break;
                 case WeaponType.SubFusilUzi:
-                    Position = WeaponPosition.Primary;
-                    Power = 1;
-                    BulletVelocity = 15.0f;
-                    FireRate = 0.1f;
-                    ScoreValue = 1000;
+                    this.Position = WeaponPosition.Primary;
+                    this.Power = 1;
+                    this.BulletVelocity = 15.0f;
+                    this.FireRate = 0.1f;
+                    this.ScoreValue = 1000;
                     //FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.SUBFUSIL_FIRE_SOUND);
                     //ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.SUBFUSIL_RELOAD_SOUND);
-                    MaxAmmo = 20;
-                    CurrentAmmo = MaxAmmo;
-                    Name = "Uzi";
-                    IsReloadTimePerBullet = false;
-                    ReloadTime = 2.00f;
-                    IsAutomatic = true;
+                    this.MaxAmmo = 20;
+                    this.CurrentAmmo = this.MaxAmmo;
+                    this.Name = "Uzi";
+                    this.IsReloadTimePerBullet = false;
+                    this.ReloadTime = 2.00f;
+                    this.IsAutomatic = true;
                     break;
                 case WeaponType.SubFusilMp5K:
-                    Position = WeaponPosition.Primary;
-                    Power = 1;
-                    BulletVelocity = 15.0f;
-                    FireRate = 0.1f;
-                    ScoreValue = 1250;
+                    this.Position = WeaponPosition.Primary;
+                    this.Power = 1;
+                    this.BulletVelocity = 15.0f;
+                    this.FireRate = 0.1f;
+                    this.ScoreValue = 1250;
                     //FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.SUBFUSIL_FIRE_SOUND);
                     //ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.SUBFUSIL_RELOAD_SOUND);
-                    MaxAmmo = 30;
-                    CurrentAmmo = MaxAmmo;
-                    Name = "MP 5 K";
-                    IsReloadTimePerBullet = false;
-                    ReloadTime = 2.00f;
-                    IsAutomatic = true;
+                    this.MaxAmmo = 30;
+                    this.CurrentAmmo = this.MaxAmmo;
+                    this.Name = "MP 5 K";
+                    this.IsReloadTimePerBullet = false;
+                    this.ReloadTime = 2.00f;
+                    this.IsAutomatic = true;
                     break;
                 case WeaponType.SubFusilMp40:
-                    Position = WeaponPosition.Primary;
-                    Power = 1;
-                    BulletVelocity = 15.0f;
-                    FireRate = 0.1f;
-                    ScoreValue = 1500;
+                    this.Position = WeaponPosition.Primary;
+                    this.Power = 1;
+                    this.BulletVelocity = 15.0f;
+                    this.FireRate = 0.1f;
+                    this.ScoreValue = 1500;
                     //FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.SUBFUSIL_FIRE_SOUND);
                     //ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.SUBFUSIL_RELOAD_SOUND);
-                    MaxAmmo = 40;
-                    CurrentAmmo = MaxAmmo;
-                    Name = "MP 40";
-                    IsReloadTimePerBullet = false;
-                    ReloadTime = 2.00f;
-                    IsAutomatic = true;
+                    this.MaxAmmo = 40;
+                    this.CurrentAmmo = this.MaxAmmo;
+                    this.Name = "MP 40";
+                    this.IsReloadTimePerBullet = false;
+                    this.ReloadTime = 2.00f;
+                    this.IsAutomatic = true;
                     break;
                 case WeaponType.FusilAk47:
-                    Position = WeaponPosition.Secondary;
-                    Power = 2;
-                    BulletVelocity = 15.0f;
-                    FireRate = 0.05f;
-                    ScoreValue = 2000;
+                    this.Position = WeaponPosition.Secondary;
+                    this.Power = 2;
+                    this.BulletVelocity = 15.0f;
+                    this.FireRate = 0.05f;
+                    this.ScoreValue = 2000;
                     //FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.FUSIL_FIRE_SOUND);
                     //ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.FUSIL_RELOAD_SOUND);
-                    MaxAmmo = 30;
-                    CurrentAmmo = MaxAmmo;
-                    Name = "AK 47";
-                    IsReloadTimePerBullet = false;
-                    ReloadTime = 1.00f;
-                    IsAutomatic = true;
+                    this.MaxAmmo = 30;
+                    this.CurrentAmmo = this.MaxAmmo;
+                    this.Name = "AK 47";
+                    this.IsReloadTimePerBullet = false;
+                    this.ReloadTime = 1.00f;
+                    this.IsAutomatic = true;
                     break;
                 case WeaponType.FusilM4A1:
-                    Position = WeaponPosition.Secondary;
-                    Power = 2;
-                    BulletVelocity = 15.0f;
-                    FireRate = 0.05f;
-                    ScoreValue = 2500;
+                    this.Position = WeaponPosition.Secondary;
+                    this.Power = 2;
+                    this.BulletVelocity = 15.0f;
+                    this.FireRate = 0.05f;
+                    this.ScoreValue = 2500;
                     //FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.FUSIL_FIRE_SOUND);
                     //ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.FUSIL_RELOAD_SOUND);
-                    MaxAmmo = 40;
-                    CurrentAmmo = MaxAmmo;
-                    Name = "M4A1";
-                    IsReloadTimePerBullet = false;
-                    ReloadTime = 1.00f;
-                    IsAutomatic = true;
+                    this.MaxAmmo = 40;
+                    this.CurrentAmmo = this.MaxAmmo;
+                    this.Name = "M4A1";
+                    this.IsReloadTimePerBullet = false;
+                    this.ReloadTime = 1.00f;
+                    this.IsAutomatic = true;
                     break;
                 case WeaponType.FusilXm8:
-                    Position = WeaponPosition.Secondary;
-                    Power = 5;
-                    BulletVelocity = 15.0f;
-                    FireRate = 0.05f;
-                    ScoreValue = 3000;
+                    this.Position = WeaponPosition.Secondary;
+                    this.Power = 5;
+                    this.BulletVelocity = 15.0f;
+                    this.FireRate = 0.05f;
+                    this.ScoreValue = 3000;
                     //FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.FUSIL_FIRE_SOUND);
                     //ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.FUSIL_RELOAD_SOUND);
-                    MaxAmmo = 50;
-                    CurrentAmmo = MaxAmmo;
-                    Name = "XM 8";
-                    IsReloadTimePerBullet = false;
-                    ReloadTime = 1.00f;
-                    IsAutomatic = true;
+                    this.MaxAmmo = 50;
+                    this.CurrentAmmo = this.MaxAmmo;
+                    this.Name = "XM 8";
+                    this.IsReloadTimePerBullet = false;
+                    this.ReloadTime = 1.00f;
+                    this.IsAutomatic = true;
                     break;
                 default:
                     throw new Exception("Wrong gun");
@@ -293,28 +293,28 @@ namespace Platformer.Weapons
 
             //EmptySoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.WEAPON_EMPTY_SOUND);
 
-            if (Name == string.Empty)
-                throw new Exception(string.Format("Weapon name not set for type {0}", Type));
+            if (this.Name == string.Empty)
+                throw new Exception(string.Format("Weapon name not set for type {0}", this.Type));
 
-            AmmoPack = MaxAmmo*3;
-            AmmoScoreValue = (int)(ScoreValue * 0.2);
+            this.AmmoPack = this.MaxAmmo*3;
+            this.AmmoScoreValue = (int)(this.ScoreValue * 0.2);
         }
 
         //public void Fire(GameTime gameTime, Pool<Bullet> bulletsPool, SpriteEffects flip, GameObject playerArm)
         public void Fire(GameTime gameTime, Pool<Bullet> bulletsPool, SpriteEffects flip)
         {
-            if (IsReloading)
+            if (this.IsReloading)
                 throw new Exception("No se puede disparar el arma mientras esta siendo cargada.");
 
             // Si no quedan mas balas en el arma, entonces que ejecute el sonido de vacio y retorne
-            if (CurrentAmmo <= 0)
+            if (this.CurrentAmmo <= 0)
             {
-                EmptySoundEffect.Play();
+                this.EmptySoundEffect.Play();
                 return;
             }
 
             // Actualiza el tiempo de disparo para la animacion
-            IsShooting = true;            
+            this.IsShooting = true;            
 
             // Fire a new bullet enemy every X seconds
             // Si la cantidad de segundos desde el ultimo disparo (totalSeconds - _previousTotalSecondsBulletFire) es < que el tiempo de disparo (FireRate),
@@ -322,11 +322,11 @@ namespace Platformer.Weapons
             //var actualTotalSeconds = (float)gameTime.TotalGameTime.TotalSeconds;
             //if (actualTotalSeconds - _previousTotalSecondsBulletFire < FireRate) return;
             //_previousTotalSecondsBulletFire = actualTotalSeconds;
-            if (!CanShoot) return;
+            if (!this.CanShoot) return;
 
-            CanShoot = false;
+            this.CanShoot = false;
             //_totalSecondsBulletFire = (float)gameTime.TotalGameTime.TotalSeconds;
-            _totalSecondsBulletFire = 0.0f;
+            this._totalSecondsBulletFire = 0.0f;
 
             // Si no existen balas disponibles en el Pool de balas, entonces que retorne
             if (bulletsPool.AvailableCount <= 0) return;
@@ -336,10 +336,10 @@ namespace Platformer.Weapons
 
             //And set it to alive.
             //bullet.Alive = true;
-            bullet.Power = Power;
+            bullet.Power = this.Power;
 
-            var armCos = (float)Math.Cos(GameData.Rotation);
-            var armSin = (float)Math.Sin(GameData.Rotation); 
+            var armCos = (float)Math.Cos(this.GameData.Rotation);
+            var armSin = (float)Math.Sin(this.GameData.Rotation); 
 
             if (flip == SpriteEffects.FlipHorizontally) //Facing right
             {
@@ -354,8 +354,8 @@ namespace Platformer.Weapons
                 //    playerArm.Position.Y + 42*armSin);
 
                 bullet.Position = new Vector2(
-                    GameData.Position.X + 42 * armCos,
-                    GameData.Position.Y + 42 * armSin);
+                    this.GameData.Position.X + 42 * armCos,
+                    this.GameData.Position.Y + 42 * armSin);
 
                 //And give it a velocity of the direction we're aiming.
                 //Increase/decrease speed by changing 15.0f
@@ -364,7 +364,7 @@ namespace Platformer.Weapons
                 //    (float)Math.Sin(_arm.rotation - MathHelper.PiOver2)) * 15.0f;
                 bullet.Velocity = new Vector2(
                                       armCos,
-                                      armSin)*BulletVelocity;
+                                      armSin)*this.BulletVelocity;
             }
             else //Facing left
             {
@@ -378,19 +378,19 @@ namespace Platformer.Weapons
                 //    playerArm.Position.X - 42*armCos,
                 //    playerArm.Position.Y - 42*armSin);
                 bullet.Position = new Vector2(
-                   GameData.Position.X - 42 * armCos,
-                   GameData.Position.Y - 42 * armSin);
+                   this.GameData.Position.X - 42 * armCos,
+                   this.GameData.Position.Y - 42 * armSin);
 
                 //And give it a velocity of the direction we're aiming.
                 //Increase/decrease speed by changing 15.0f
                 bullet.Velocity = new Vector2(
                                       -armCos,
-                                      -armSin)*BulletVelocity;
+                                      -armSin)*this.BulletVelocity;
             }
 
-            FireSoundEffect.Play();
+            this.FireSoundEffect.Play();
 
-            CurrentAmmo--;
+            this.CurrentAmmo--;
         }
 
         /// <summary>
@@ -405,14 +405,14 @@ namespace Platformer.Weapons
         /// <returns>Municiones restantes, es decir, la diferencia entre las municiones que teniamos disponibles y las que el arma necesitaba reponer</returns>
         public int Reload(int availableAmmo)
         {
-            if (IsReloading)
+            if (this.IsReloading)
                 throw new Exception("No se puede cargar el arma mientras esta siendo cargada.");
 
-            IsReloading = true;
-            _reloadSoundPlayed = false;
+            this.IsReloading = true;
+            this._reloadSoundPlayed = false;
 
             // Calculamos las municiones que hay que cargar al arma
-            var weaponAmmoSpace = MaxAmmo - CurrentAmmo;
+            var weaponAmmoSpace = this.MaxAmmo - this.CurrentAmmo;
 
             int remainingAmmo;
 
@@ -421,18 +421,18 @@ namespace Platformer.Weapons
             // sino solo cargamos las municiones que tenemos disponibles
             if (availableAmmo > weaponAmmoSpace)
             {
-                _ammoToLoad = weaponAmmoSpace;
+                this._ammoToLoad = weaponAmmoSpace;
                 remainingAmmo = availableAmmo - weaponAmmoSpace;
             }
             else
             {
-                _ammoToLoad = availableAmmo;
+                this._ammoToLoad = availableAmmo;
                 remainingAmmo = 0;
             }
 
             // Seteamos el tiempo de carga remanente
             //_remaingReloadTime = IsReloadTimePerBullet ? (ReloadTime * _ammoToLoad) + ReloadTime : ReloadTime;
-            _remaingReloadTimePerBullet = IsReloadTimePerBullet ? 0.0f : ReloadTime; // para que las armas que cargan x bala, la primer bala la cargue al toque
+            this._remaingReloadTimePerBullet = this.IsReloadTimePerBullet ? 0.0f : this.ReloadTime; // para que las armas que cargan x bala, la primer bala la cargue al toque
             //CurrentAmmo += ammoToLoad;
 
             return remainingAmmo;
@@ -446,20 +446,20 @@ namespace Platformer.Weapons
         {
             // Si puede disparar, que no calcule ningun tiempo
             //if (CanShoot && Math.Abs(_totalSecondsBulletFire - 0.0f) < 0.001f) return;
-            if (CanShoot) return;
+            if (this.CanShoot) return;
 
             //var elapsed = (float)gameTime.TotalGameTime.TotalSeconds;
             var elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            _totalSecondsBulletFire += elapsed;
+            this._totalSecondsBulletFire += elapsed;
 
             // Si no puede disparar, entonces hacemos el calculo del proximo FireRate
             // Si la cantidad de segundo que paso desde el ultimo disparo (elapsed - _totalSecondsBulletFire) es >= al FireRate
             // entonces puede volver a disparar
             //if (elapsed - _totalSecondsBulletFire < FireRate) return;
-            if (_totalSecondsBulletFire < FireRate) return;
+            if (this._totalSecondsBulletFire < this.FireRate) return;
 
-            CanShoot = true;
+            this.CanShoot = true;
             //_totalSecondsBulletFire = 0.0f;
         }
 
@@ -470,22 +470,22 @@ namespace Platformer.Weapons
         private void UpdateShootTime(GameTime gameTime)
         {
             // If the player wants to attack
-            if (IsShooting)
+            if (this.IsShooting)
             {
                 // Begin or continue an attack
-                if (_shootingTime > 0.0f)
+                if (this._shootingTime > 0.0f)
                 {
-                    _shootingTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    this._shootingTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
                 }
                 else
                 {
-                    IsShooting = false;
+                    this.IsShooting = false;
                 }
             }
             else
             {
                 //Continues not attack or cancels an attack in progress
-                _shootingTime = 0.0f;
+                this._shootingTime = 0.0f;
             }
         }
 
@@ -498,12 +498,12 @@ namespace Platformer.Weapons
         {
             get
             {
-                return _isShooting;
+                return this._isShooting;
             }
             private set
             {
-                _shootingTime = MAX_SHOOTING_TIME; 
-                _isShooting = value;
+                this._shootingTime = MAX_SHOOTING_TIME; 
+                this._isShooting = value;
             }
         }
 
@@ -511,137 +511,137 @@ namespace Platformer.Weapons
         {
             var elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (!IsReloading)
+            if (!this.IsReloading)
             {
-                UpdateCanShootTime(gameTime);
-                UpdateShootTime(gameTime);
+                this.UpdateCanShootTime(gameTime);
+                this.UpdateShootTime(gameTime);
                 return;
             }
 
-            if (IsReloadTimePerBullet)
+            if (this.IsReloadTimePerBullet)
             {
                 // Si todavia quedan balas x regarcar
-                if (_ammoToLoad > 0)
+                if (this._ammoToLoad > 0)
                 {
                     // Si la carga es x bala, entonces calculamos el _remaingReloadTimePerBullet y cuando finaliza,
                     // cargamos una bala sumando a CurrentAmmo y ejecutamos el sonido de recarga 
                     // (cuyo fin deberia coincidir con el proximo _remaingReloadTimePerBullet = 0 asi se vuelve a ejecutar otro sonido)
-                    if (_remaingReloadTimePerBullet > 0)
+                    if (this._remaingReloadTimePerBullet > 0)
                     {
-                        _remaingReloadTimePerBullet -= elapsed;
+                        this._remaingReloadTimePerBullet -= elapsed;
                     }
                     else
                     {
-                        ReloadSoundEffect.Play();
-                        _remaingReloadTimePerBullet = ReloadTime;
-                        _ammoToLoad--;
-                        CurrentAmmo++;
+                        this.ReloadSoundEffect.Play();
+                        this._remaingReloadTimePerBullet = this.ReloadTime;
+                        this._ammoToLoad--;
+                        this.CurrentAmmo++;
                     }
                 }
                 else
                 {
-                    _ammoToLoad = 0;
-                    IsReloading = false;    
+                    this._ammoToLoad = 0;
+                    this.IsReloading = false;    
                 }
             }
             else
             {
                 // Si el arma no se carga x bala, ejecutamos el sonido del recarga cuyo finde debera coincidir con _remaingReloadTime = 0;
                 // Las balas se suman todas juntas al final de la recarga
-                if (!_reloadSoundPlayed)
+                if (!this._reloadSoundPlayed)
                 {
-                    ReloadSoundEffect.Play();
-                    _reloadSoundPlayed = true;
+                    this.ReloadSoundEffect.Play();
+                    this._reloadSoundPlayed = true;
                 }
 
-                if (_remaingReloadTimePerBullet > 0)
+                if (this._remaingReloadTimePerBullet > 0)
                 {
-                    _remaingReloadTimePerBullet -= elapsed;
+                    this._remaingReloadTimePerBullet -= elapsed;
                 }
                 else
                 {
                     // Si el arma no se carga x bala, las balas se suman todas juntas (a diferencia de la carga x bala que se suma en cada ciclo)
-                    CurrentAmmo += _ammoToLoad;
-                    _ammoToLoad = 0;
-                    IsReloading = false;
+                    this.CurrentAmmo += this._ammoToLoad;
+                    this._ammoToLoad = 0;
+                    this.IsReloading = false;
                 }
             }
         }
 
         public void LoadSoundEffects(ContentManager contentManager)
         {
-            switch (Type)
+            switch (this.Type)
             {
                 case WeaponType.PistolaColtPython:
-                    FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.PISTOLA_FIRE_SOUND);
-                    ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.PISTOLA_RELOAD_SOUND);
+                    this.FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.PISTOLA_FIRE_SOUND);
+                    this.ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.PISTOLA_RELOAD_SOUND);
                     break;
                 case WeaponType.PistolaColtM1911:
-                    FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.PISTOLA_FIRE_SOUND);
-                    ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.PISTOLA_RELOAD_SOUND);
+                    this.FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.PISTOLA_FIRE_SOUND);
+                    this.ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.PISTOLA_RELOAD_SOUND);
                     break;
                 case WeaponType.PistolaBerettaM9:
-                    FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.PISTOLA_FIRE_SOUND);
-                    ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.PISTOLA_RELOAD_SOUND);
+                    this.FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.PISTOLA_FIRE_SOUND);
+                    this.ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.PISTOLA_RELOAD_SOUND);
                     break;
                 case WeaponType.EscopetaBeretta682:
-                    FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.ESCOPETA_FIRE_SOUND);
-                    ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.ESCOPETA_RELOAD_SOUND);
+                    this.FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.ESCOPETA_FIRE_SOUND);
+                    this.ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.ESCOPETA_RELOAD_SOUND);
                     break;
                 case WeaponType.EscopetaIthaca37:
-                    FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.ESCOPETA_FIRE_SOUND);
-                    ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.ESCOPETA_RELOAD_SOUND);
+                    this.FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.ESCOPETA_FIRE_SOUND);
+                    this.ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.ESCOPETA_RELOAD_SOUND);
                     break;
                 case WeaponType.EscopetaSpas12:
-                    FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.ESCOPETA_FIRE_SOUND);
-                    ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.ESCOPETA_RELOAD_SOUND);
+                    this.FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.ESCOPETA_FIRE_SOUND);
+                    this.ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.ESCOPETA_RELOAD_SOUND);
                     break;
                 case WeaponType.SubFusilUzi:
-                    FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.SUBFUSIL_FIRE_SOUND);
-                    ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.SUBFUSIL_RELOAD_SOUND);
+                    this.FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.SUBFUSIL_FIRE_SOUND);
+                    this.ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.SUBFUSIL_RELOAD_SOUND);
                     break;
                 case WeaponType.SubFusilMp5K:
-                    FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.SUBFUSIL_FIRE_SOUND);
-                    ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.SUBFUSIL_RELOAD_SOUND);
+                    this.FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.SUBFUSIL_FIRE_SOUND);
+                    this.ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.SUBFUSIL_RELOAD_SOUND);
                     break;
                 case WeaponType.SubFusilMp40:
-                    FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.SUBFUSIL_FIRE_SOUND);
-                    ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.SUBFUSIL_RELOAD_SOUND);
+                    this.FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.SUBFUSIL_FIRE_SOUND);
+                    this.ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.SUBFUSIL_RELOAD_SOUND);
                     break;
                 case WeaponType.FusilAk47:
-                    FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.FUSIL_FIRE_SOUND);
-                    ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.FUSIL_RELOAD_SOUND);
+                    this.FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.FUSIL_FIRE_SOUND);
+                    this.ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.FUSIL_RELOAD_SOUND);
                     break;
                 case WeaponType.FusilM4A1:
-                    FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.FUSIL_FIRE_SOUND);
-                    ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.FUSIL_RELOAD_SOUND);
+                    this.FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.FUSIL_FIRE_SOUND);
+                    this.ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.FUSIL_RELOAD_SOUND);
                     break;
                 case WeaponType.FusilXm8:
-                    FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.FUSIL_FIRE_SOUND);
-                    ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.FUSIL_RELOAD_SOUND);
+                    this.FireSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.FUSIL_FIRE_SOUND);
+                    this.ReloadSoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.FUSIL_RELOAD_SOUND);
                     break;
                 default:
                     throw new Exception("Wrong gun");
             }
 
-            EmptySoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.WEAPON_EMPTY_SOUND);
+            this.EmptySoundEffect = contentManager.Load<SoundEffect>(GlobalParameters.WEAPON_EMPTY_SOUND);
 
-            if (EmptySoundEffect == null || FireSoundEffect == null || ReloadSoundEffect == null)
+            if (this.EmptySoundEffect == null || this.FireSoundEffect == null || this.ReloadSoundEffect == null)
                 throw new Exception("One or more of weapons sound effect not set");
         }
 
         public int FastReload(int availableAmmo)
         {
             // Por si justo se ejecuta el otro reload
-            IsReloading = true;
+            this.IsReloading = true;
 
             int remainingAmmo;
 
             // Si estaban cargandose balas antes de llegar a esta pantalla
-            if (_ammoToLoad > 0)
+            if (this._ammoToLoad > 0)
             {
                 // solo le cargamos las balas que quedaban x cargar
-                CurrentAmmo += _ammoToLoad;
+                this.CurrentAmmo += this._ammoToLoad;
 
                 // Las balas remanentes (remainingAmmo) son las disponibles (availableAmmo)
                 // xq cuando habia comenzado a cargar anteriormente, ya las habia restado
@@ -650,24 +650,24 @@ namespace Platformer.Weapons
             else
             {
                 // Calculamos las municiones que hay que cargar al arma
-                var weaponAmmoSpace = MaxAmmo - CurrentAmmo;
+                var weaponAmmoSpace = this.MaxAmmo - this.CurrentAmmo;
 
                 // Si las municiones disponibles son mayores a las municiones a cargar,
                 // entonces cargamos las municiones a cargar y devolvemos las municiones restantes que no se usaron
                 // sino solo cargamos las municiones que tenemos disponibles
                 if (availableAmmo > weaponAmmoSpace)
                 {
-                    CurrentAmmo += weaponAmmoSpace;
+                    this.CurrentAmmo += weaponAmmoSpace;
                     remainingAmmo = availableAmmo - weaponAmmoSpace;
                 }
                 else
                 {
-                    CurrentAmmo += availableAmmo;
+                    this.CurrentAmmo += availableAmmo;
                     remainingAmmo = 0;
                 }
             }
 
-            IsReloading = false;
+            this.IsReloading = false;
 
             return remainingAmmo;
         }

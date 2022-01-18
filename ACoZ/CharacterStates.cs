@@ -1,4 +1,4 @@
-﻿namespace Platformer
+﻿namespace ACoZ
 {
     public enum CharacterStates
     {

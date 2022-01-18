@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 
-namespace Platformer
+namespace ACoZ
 {
 #if WINDOWS && !NETFX_CORE
     [Serializable]

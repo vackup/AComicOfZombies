@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
+using ACoZ.Animations;
+using ACoZ.Helpers;
+using ACoZ.Levels;
+using ACoZ.Npc.Enemies;
+using ACoZ.Weapons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Platformer.Animations;
-using Platformer.Helpers;
-using Platformer.Levels;
-using Platformer.Npc.Enemies;
-using Platformer.Weapons;
+
 #if WINDOWS_PHONE || IPHONE
 using Microsoft.Xna.Framework.Input.Touch;
 using Mobile.Base.Components;
@@ -21,7 +22,7 @@ using Desktop.Base.Components;
 using Desktop.Base.VirtualInput;
 #endif
 
-namespace Platformer.Players
+namespace ACoZ.Players
 {
     /// <summary>
     /// Our fearless adventurer!
@@ -157,12 +158,12 @@ namespace Platformer.Players
         {
             get
             {
-                _boundingRectangle.X = (int) Math.Round(Position.X - LocalBounds.Width/2);
-                _boundingRectangle.Y = (int) Math.Round(Position.Y - LocalBounds.Height);
-                _boundingRectangle.Width = LocalBounds.Width;
-                _boundingRectangle.Height = LocalBounds.Height;
+                this._boundingRectangle.X = (int) Math.Round(this.Position.X - this.LocalBounds.Width/2);
+                this._boundingRectangle.Y = (int) Math.Round(this.Position.Y - this.LocalBounds.Height);
+                this._boundingRectangle.Width = this.LocalBounds.Width;
+                this._boundingRectangle.Height = this.LocalBounds.Height;
 
-                return _boundingRectangle;
+                return this._boundingRectangle;
             }
         }
 
@@ -178,16 +179,16 @@ namespace Platformer.Players
                 //                                : BoundingRectangle.X - KnifeWidth;
 
                 // Para que empiece desde la mitad
-                _knifeBoundingRectangle.X = Direction == SpriteEffects.FlipHorizontally
-                                                ? BoundingRectangle.X + BoundingRectangle.Width/2
-                                                : BoundingRectangle.X - KnifeWidth + BoundingRectangle.Width/2;
+                this._knifeBoundingRectangle.X = this.Direction == SpriteEffects.FlipHorizontally
+                                                ? this.BoundingRectangle.X + this.BoundingRectangle.Width/2
+                                                : this.BoundingRectangle.X - this.KnifeWidth + this.BoundingRectangle.Width/2;
 
-                _knifeBoundingRectangle.Y = (BoundingRectangle.Y + BoundingRectangle.Height / 2) - (KnifeHeight / 2);
-                _knifeBoundingRectangle.Width = KnifeWidth;
+                this._knifeBoundingRectangle.Y = (this.BoundingRectangle.Y + this.BoundingRectangle.Height / 2) - (this.KnifeHeight / 2);
+                this._knifeBoundingRectangle.Width = this.KnifeWidth;
                 //_knifeBoundingRectangle.Height = BoundingRectangle.Height;
-                _knifeBoundingRectangle.Height = KnifeHeight;
+                this._knifeBoundingRectangle.Height = this.KnifeHeight;
 
-                return _knifeBoundingRectangle;
+                return this._knifeBoundingRectangle;
             }
         }
 
@@ -221,51 +222,51 @@ namespace Platformer.Players
         /// </summary>
         protected Player(Level level, Vector2 position, List<Weapon> weaponInventory, Weapon primaryWeapon, Weapon secondaryWeapon, Dictionary<int, int> ammoInventory)
         {
-			TotalHealth = GlobalParameters.TOTAL_LIVES;
+			this.TotalHealth = GlobalParameters.TOTAL_LIVES;
 
-            Direction = SpriteEffects.FlipHorizontally;
-            CurrentAction = Actions.Gun;
+            this.Direction = SpriteEffects.FlipHorizontally;
+            this.CurrentAction = Actions.Gun;
             
-            Level = level;
+            this.Level = level;
 
-            WeaponInventory = weaponInventory;
+            this.WeaponInventory = weaponInventory;
 
-            PrimaryWeapon = primaryWeapon;
-            SecondaryWeapon = secondaryWeapon;
+            this.PrimaryWeapon = primaryWeapon;
+            this.SecondaryWeapon = secondaryWeapon;
             
-            CurrentWeapon = PrimaryWeapon;
+            this.CurrentWeapon = this.PrimaryWeapon;
 
-            AmmoInventory = ammoInventory;
+            this.AmmoInventory = ammoInventory;
 
-            LoadBullets();
+            this.LoadBullets();
 
-            SetInit(position);
+            this.SetInit(position);
 
-            HealthBar = new HealthBar(Level.Content);
-            DrawHealthBar = true;
+            this.HealthBar = new HealthBar(this.Level.Content);
+            this.DrawHealthBar = true;
 
             //Rectangle the size of the screen so bullets that fly off screen are deleted.
-            _screenRect = new Rectangle(0, 0, GlobalParameters.SCREEN_WIDTH, GlobalParameters.SCREEN_HEIGHT);
+            this._screenRect = new Rectangle(0, 0, GlobalParameters.SCREEN_WIDTH, GlobalParameters.SCREEN_HEIGHT);
 
-            var left = (int)Math.Round(Position.X - Sprite.Origin.X) + LocalBounds.X;
-            var top = (int)Math.Round(Position.Y - Sprite.Origin.Y) + LocalBounds.Y;
+            var left = (int)Math.Round(this.Position.X - this.Sprite.Origin.X) + this.LocalBounds.X;
+            var top = (int)Math.Round(this.Position.Y - this.Sprite.Origin.Y) + this.LocalBounds.Y;
 
-            _boundingRectangle = new Rectangle(left, top, LocalBounds.Width, LocalBounds.Height);
+            this._boundingRectangle = new Rectangle(left, top, this.LocalBounds.Width, this.LocalBounds.Height);
 
-            _knifeBoundingRectangle =
-                new Rectangle(left + (int) Math.Round(Position.X - Sprite.Origin.X) + LocalBounds.X,
-                              (int) Math.Round(Position.Y - Sprite.Origin.Y) + LocalBounds.Y, LocalBounds.Width,
-                              LocalBounds.Height);
+            this._knifeBoundingRectangle =
+                new Rectangle(left + (int) Math.Round(this.Position.X - this.Sprite.Origin.X) + this.LocalBounds.X,
+                              (int) Math.Round(this.Position.Y - this.Sprite.Origin.Y) + this.LocalBounds.Y, this.LocalBounds.Width,
+                              this.LocalBounds.Height);
         }
 
         private void LoadBullets()
         {
-            _bulletsPool = new Pool<Bullet>(GlobalParameters.MAX_BULLET_REPOSITORY);
+            this._bulletsPool = new Pool<Bullet>(GlobalParameters.MAX_BULLET_REPOSITORY);
             
             //var bulletTexture = Level.Content.Load<Texture2D>(GlobalParameters.BULLET_TEXTURE);
 
             // If there is any one-time initialization of all resources, it can be done here.
-            foreach (var bullet in _bulletsPool.AllNodes)
+            foreach (var bullet in this._bulletsPool.AllNodes)
             {
                 //bullet.Item.Init(bulletTexture);
                 bullet.Item.Init(GlobalParameters.BULLET_WIDTH, GlobalParameters.BULLET_HEIGHT);
@@ -274,9 +275,9 @@ namespace Platformer.Players
 
         private void SetInit(Vector2 position)
         {
-            Position = position;
-            _velocity = Vector2.Zero;
-            IsAlive = true;
+            this.Position = position;
+            this._velocity = Vector2.Zero;
+            this.IsAlive = true;
         }
 
         public List<Weapon> WeaponInventory { get; private set; }
@@ -292,8 +293,8 @@ namespace Platformer.Players
         /// <param name="position">The position to come to life at.</param>
         public void Reset(Vector2 position)
         {
-            SetInit(position);
-            PlayAnimation(IdleAnimation);
+            this.SetInit(position);
+            this.PlayAnimation(this.IdleAnimation);
         }
 
         /// <summary>
@@ -308,104 +309,104 @@ namespace Platformer.Players
         {
             var elapsed = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (_hitTime > 0.0f)
+            if (this._hitTime > 0.0f)
             {
-                _hitTime -= elapsed;
+                this._hitTime -= elapsed;
             }
 
-            if (_paralyzedTime > 0.0f)
+            if (this._paralyzedTime > 0.0f)
             {
-                _paralyzedTime -= elapsed;
-                _velocity = Vector2.Zero;
+                this._paralyzedTime -= elapsed;
+                this._velocity = Vector2.Zero;
                 //PlayAnimation(BeAttackedAnimation);
             }
             else
             {
-                HandleInput(gameTime, keyboardState, gamePadState, mouseState, virtualGamePadState);
+                this.HandleInput(gameTime, keyboardState, gamePadState, mouseState, virtualGamePadState);
 
-                UpdateAttackTime(gameTime);
+                this.UpdateAttackTime(gameTime);
 
                 //UpdateShootTime(gameTime);
 
-                ApplyPhysics(gameTime);
+                this.ApplyPhysics(gameTime);
             }
 
-            if (IsAlive)
+            if (this.IsAlive)
                 {
-                    if (IsAttacking)
+                    if (this.IsAttacking)
                     {
-                        PlayAnimation(AttackAnimation);
-                        _drawWeaponAnimation = false;
+                        this.PlayAnimation(this.AttackAnimation);
+                        this._drawWeaponAnimation = false;
                     }
                     else
                     {
                         // Si la velocidad actual es mayor a 0, implica que se esta moviendo
                         // y que tiene que poner la animacion de correr.
                         // Sino verifica sino lo estan atacando, caso contrario pone Idle
-                        if (IsRunning)
+                        if (this.IsRunning)
                         {
-                            PlayAnimation(RunAnimation);
-                            _drawWeaponAnimation = true;
+                            this.PlayAnimation(this.RunAnimation);
+                            this._drawWeaponAnimation = true;
 
-                            if (CurrentWeapon.IsShooting)
+                            if (this.CurrentWeapon.IsShooting)
                             {
-                                PlayWeaponAnimation(CurrentWeapon.ShootAnimation);
+                                this.PlayWeaponAnimation(this.CurrentWeapon.ShootAnimation);
 
                                 // Centra el brazo (arm) en el personaje. Util para manejar un personaje compuesto x 2 sprites.
-                                CurrentWeapon.GameData.Position = Direction == SpriteEffects.FlipHorizontally
-                                   ? new Vector2(Position.X + CurrentWeapon.ShootAnimationRunningPosition.X, Position.Y - CurrentWeapon.ShootAnimationRunningPosition.Y)
-                                   : new Vector2(Position.X - CurrentWeapon.ShootAnimationRunningPosition.X, Position.Y - CurrentWeapon.ShootAnimationRunningPosition.Y);
+                                this.CurrentWeapon.GameData.Position = this.Direction == SpriteEffects.FlipHorizontally
+                                   ? new Vector2(this.Position.X + this.CurrentWeapon.ShootAnimationRunningPosition.X, this.Position.Y - this.CurrentWeapon.ShootAnimationRunningPosition.Y)
+                                   : new Vector2(this.Position.X - this.CurrentWeapon.ShootAnimationRunningPosition.X, this.Position.Y - this.CurrentWeapon.ShootAnimationRunningPosition.Y);
                             }
                             else
                             {
-                                PlayWeaponAnimation(CurrentWeapon.IdleAnimation);
+                                this.PlayWeaponAnimation(this.CurrentWeapon.IdleAnimation);
 
                                 // Centra el brazo (arm) en el personaje. Util para manejar un personaje compuesto x 2 sprites.
-                                CurrentWeapon.GameData.Position = Direction == SpriteEffects.FlipHorizontally
-                                   ? new Vector2(Position.X + CurrentWeapon.IdleAnimationRunningPosition.X, Position.Y - CurrentWeapon.IdleAnimationRunningPosition.Y)
-                                   : new Vector2(Position.X - CurrentWeapon.IdleAnimationRunningPosition.X, Position.Y - CurrentWeapon.IdleAnimationRunningPosition.Y);
+                                this.CurrentWeapon.GameData.Position = this.Direction == SpriteEffects.FlipHorizontally
+                                   ? new Vector2(this.Position.X + this.CurrentWeapon.IdleAnimationRunningPosition.X, this.Position.Y - this.CurrentWeapon.IdleAnimationRunningPosition.Y)
+                                   : new Vector2(this.Position.X - this.CurrentWeapon.IdleAnimationRunningPosition.X, this.Position.Y - this.CurrentWeapon.IdleAnimationRunningPosition.Y);
                             }
                         }
-                        else if (IsBeenHit)
+                        else if (this.IsBeenHit)
                         {
-                            PlayAnimation(BeAttackedAnimation);
-                            _drawWeaponAnimation = false;
+                            this.PlayAnimation(this.BeAttackedAnimation);
+                            this._drawWeaponAnimation = false;
                         }
                         else
                         {
-                            PlayAnimation(IdleAnimation);
-                            _drawWeaponAnimation = true;
+                            this.PlayAnimation(this.IdleAnimation);
+                            this._drawWeaponAnimation = true;
 
-                            if (CurrentWeapon.IsShooting)
+                            if (this.CurrentWeapon.IsShooting)
                             {
-                                PlayWeaponAnimation(CurrentWeapon.ShootAnimation);
+                                this.PlayWeaponAnimation(this.CurrentWeapon.ShootAnimation);
 
                                 // Centra el brazo (arm) en el personaje. Util para manejar un personaje compuesto x 2 sprites.
-                                CurrentWeapon.GameData.Position = Direction == SpriteEffects.FlipHorizontally
-                                   ? new Vector2(Position.X + CurrentWeapon.ShootAnimationPosition.X, Position.Y - CurrentWeapon.ShootAnimationPosition.Y)
-                                   : new Vector2(Position.X - CurrentWeapon.ShootAnimationPosition.X, Position.Y - CurrentWeapon.ShootAnimationPosition.Y);
+                                this.CurrentWeapon.GameData.Position = this.Direction == SpriteEffects.FlipHorizontally
+                                   ? new Vector2(this.Position.X + this.CurrentWeapon.ShootAnimationPosition.X, this.Position.Y - this.CurrentWeapon.ShootAnimationPosition.Y)
+                                   : new Vector2(this.Position.X - this.CurrentWeapon.ShootAnimationPosition.X, this.Position.Y - this.CurrentWeapon.ShootAnimationPosition.Y);
                             }
                             else
                             {
-                                PlayWeaponAnimation(CurrentWeapon.IdleAnimation);
+                                this.PlayWeaponAnimation(this.CurrentWeapon.IdleAnimation);
 
                                 // Centra el brazo (arm) en el personaje. Util para manejar un personaje compuesto x 2 sprites.
-                                CurrentWeapon.GameData.Position = Direction == SpriteEffects.FlipHorizontally
-                                   ? new Vector2(Position.X + CurrentWeapon.IdleAnimationPosition.X, Position.Y - CurrentWeapon.IdleAnimationPosition.Y)
-                                   : new Vector2(Position.X - CurrentWeapon.IdleAnimationPosition.X, Position.Y - CurrentWeapon.IdleAnimationPosition.Y);
+                                this.CurrentWeapon.GameData.Position = this.Direction == SpriteEffects.FlipHorizontally
+                                   ? new Vector2(this.Position.X + this.CurrentWeapon.IdleAnimationPosition.X, this.Position.Y - this.CurrentWeapon.IdleAnimationPosition.Y)
+                                   : new Vector2(this.Position.X - this.CurrentWeapon.IdleAnimationPosition.X, this.Position.Y - this.CurrentWeapon.IdleAnimationPosition.Y);
                             }
                         }
                     }
                 }
 
                 //Reset our variables every frame
-                _movement = Vector2.Zero;
-                _wasClimbing = IsClimbing;
-                IsClimbing = false;
+                this._movement = Vector2.Zero;
+                this._wasClimbing = this.IsClimbing;
+                this.IsClimbing = false;
             //}
 
-            CurrentWeapon.Update(gameTime);
-            UpdateBullets();
+            this.CurrentWeapon.Update(gameTime);
+            this.UpdateBullets();
         }
 
         ///// <summary>
@@ -418,17 +419,17 @@ namespace Platformer.Players
 
         public bool IsBeenHit
         {
-            get { return _hitTime > 0; }
+            get { return this._hitTime > 0; }
         }
 
         public bool IsRunning
         {
-            get { return Math.Abs(_velocity.X) - 0.02f > 0; }
+            get { return Math.Abs(this._velocity.X) - 0.02f > 0; }
         }
 
         private void UpdateBullets()
         {
-            foreach (var bulletNode in _bulletsPool.ActiveNodes)
+            foreach (var bulletNode in this._bulletsPool.ActiveNodes)
             {
                 var bulletUsed = false;
 
@@ -436,26 +437,26 @@ namespace Platformer.Players
                 bulletNode.Item.Position += bulletNode.Item.Velocity;
 
                 // Si la bala sale de los limites del nivel, entonces se descarta
-                if (!_screenRect.Contains((int)(bulletNode.Item.Position.X - Level.CameraPositionXAxis),
-                                          (int)(bulletNode.Item.Position.Y - Level.CameraPositionYAxis)))
+                if (!this._screenRect.Contains((int)(bulletNode.Item.Position.X - this.Level.CameraPositionXAxis),
+                                          (int)(bulletNode.Item.Position.Y - this.Level.CameraPositionYAxis)))
                 {
-                    _bulletsPool.Return(bulletNode);
+                    this._bulletsPool.Return(bulletNode);
                     continue;
                 }
 
                 // Verificamos cada enemigo con la bala en curso (solo una bala puede lastimar a un enemigo o sea que cuando le da a uno,
                 // esa bala ya no puede lastimar a otro enemigo)
-                if (Level.FastWeakMonstersPool != null)
+                if (this.Level.FastWeakMonstersPool != null)
                 {
-                    foreach (var enemyNodes in Level.FastWeakMonstersPool.ActiveNodes)
+                    foreach (var enemyNodes in this.Level.FastWeakMonstersPool.ActiveNodes)
                     {
                         // si el enemigo no esta vivo, que continue
                         if (!enemyNodes.Item.IsAlive) continue;
 
                         if (!bulletNode.Item.BoundingRectangle.Intersects(enemyNodes.Item.BoundingRectangle)) continue;
 
-                        OnEnemyHit(enemyNodes.Item, this, bulletNode.Item);
-                        _bulletsPool.Return(bulletNode);
+                        this.OnEnemyHit(enemyNodes.Item, this, bulletNode.Item);
+                        this._bulletsPool.Return(bulletNode);
                         bulletUsed = true;
                         break; // One bullet can hit one enemy
                     }
@@ -465,17 +466,17 @@ namespace Platformer.Players
 
                 // Verificamos cada enemigo con la bala en curso (solo una bala puede lastimar a un enemigo o sea que cuando le da a uno,
                 // esa bala ya no puede lastimar a otro enemigo)
-                if (Level.NormalMonstersPool != null)
+                if (this.Level.NormalMonstersPool != null)
                 {
-                    foreach (var enemyNodes in Level.NormalMonstersPool.ActiveNodes)
+                    foreach (var enemyNodes in this.Level.NormalMonstersPool.ActiveNodes)
                     {
                         // si el enemigo no esta vivo, que continue
                         if (!enemyNodes.Item.IsAlive) continue;
 
                         if (!bulletNode.Item.BoundingRectangle.Intersects(enemyNodes.Item.BoundingRectangle)) continue;
 
-                        OnEnemyHit(enemyNodes.Item, this, bulletNode.Item);
-                        _bulletsPool.Return(bulletNode);
+                        this.OnEnemyHit(enemyNodes.Item, this, bulletNode.Item);
+                        this._bulletsPool.Return(bulletNode);
                         bulletUsed = true;
                         break; // One bullet can hit one enemy
                     }
@@ -485,17 +486,17 @@ namespace Platformer.Players
 
                 // Verificamos cada enemigo con la bala en curso (solo una bala puede lastimar a un enemigo o sea que cuando le da a uno,
                 // esa bala ya no puede lastimar a otro enemigo)
-                if (Level.SlowStrongMonstersPool != null)
+                if (this.Level.SlowStrongMonstersPool != null)
                 {
-                    foreach (var enemyNodes in Level.SlowStrongMonstersPool.ActiveNodes)
+                    foreach (var enemyNodes in this.Level.SlowStrongMonstersPool.ActiveNodes)
                     {
                         // si el enemigo no esta vivo, que continue
                         if (!enemyNodes.Item.IsAlive) continue;
 
                         if (!bulletNode.Item.BoundingRectangle.Intersects(enemyNodes.Item.BoundingRectangle)) continue;
 
-                        OnEnemyHit(enemyNodes.Item, this, bulletNode.Item);
-                        _bulletsPool.Return(bulletNode);
+                        this.OnEnemyHit(enemyNodes.Item, this, bulletNode.Item);
+                        this._bulletsPool.Return(bulletNode);
                         //bulletUsed = true;
                         break; // One bullet can hit one enemy
                     }
@@ -517,23 +518,23 @@ namespace Platformer.Players
             // Si el enemigo que esta atacando ya tiene "AttackTime" entonces no lo puede volver a atacar hasta que se termine ese tiempo
             if (attackingEnemy.AttackTime > 0.0f) return;
 
-            CurrentHealth--;
+            this.CurrentHealth--;
 
-            if (CurrentHealth < 0)
+            if (this.CurrentHealth < 0)
             {
-                OnKilled();//attackingEnemy);
+                this.OnKilled();//attackingEnemy);
             }
             else
             {
                 // Le seteamos el AttackTime al enemigo segun el MaxHitTime del Player en cuestion
                 //attackingEnemy.SetMaxAttackTime(MaxHitTime);
-                attackingEnemy.AttackTime = MaxHitTime;
-                _hitTime = MaxHitTime; // seria lo mismo hacer _hitTime = MaxHitTime;
+                attackingEnemy.AttackTime = this.MaxHitTime;
+                this._hitTime = this.MaxHitTime; // seria lo mismo hacer _hitTime = MaxHitTime;
 
                 // Si no esta paralizado todavia, entonces lo paralizamos un toque. Esto sirve para que no pase caminando delante de los enemigos sin ningun efecto
-                if (_paralyzedTime <= 0.0f)
+                if (this._paralyzedTime <= 0.0f)
                 {
-                    _paralyzedTime = MaxParalyzedTime;
+                    this._paralyzedTime = this.MaxParalyzedTime;
                 }
             }
         }
@@ -589,7 +590,7 @@ namespace Platformer.Players
             //if (previousGamePadState.Triggers.Right < 0.5 && gamePadState.Triggers.Right > 0.5)
             //if ((_mouseStatePrevious.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released)
             //    || (_previousKeyboardState.IsKeyUp(SHOOT_KEY) && currentKeyboardState.IsKeyDown(SHOOT_KEY)))
-            DoAction(gameTime, currentKeyboardState, virtualGamePadState);
+            this.DoAction(gameTime, currentKeyboardState, virtualGamePadState);
 
             //_mouseStatePrevious = mouseState;
             
@@ -616,7 +617,7 @@ namespace Platformer.Players
             //}
 
             // Check if the player wants to move horizantally.
-            SetHorizontalMovement(currentKeyboardState, gamePadState, virtualGamePadState);
+            this.SetHorizontalMovement(currentKeyboardState, gamePadState, virtualGamePadState);
 
             // Check if the player wants to move vertically.
             //SetVerticalMovement(currentKeyboardState, gamePadState);
@@ -627,33 +628,33 @@ namespace Platformer.Players
             // Set current action
             //SetCurrentAction(currentKeyboardState);
 
-            SetCurrentWeapon(currentKeyboardState, virtualGamePadState);
+            this.SetCurrentWeapon(currentKeyboardState, virtualGamePadState);
 
-            ReloadCurrentWeapon(currentKeyboardState, virtualGamePadState);
+            this.ReloadCurrentWeapon(currentKeyboardState, virtualGamePadState);
 
-            _previusVirtualGamePadState = virtualGamePadState;
-            _previousKeyboardState = currentKeyboardState;
+            this._previusVirtualGamePadState = virtualGamePadState;
+            this._previousKeyboardState = currentKeyboardState;
         }
 
         private void ReloadCurrentWeapon(KeyboardState currentKeyboardState, VirtualGamePadState virtualGamePadState)
         {
-            if ((_previusVirtualGamePadState.Buttons.LeftShoulder == VirtualButtonState.Released && virtualGamePadState.Buttons.LeftShoulder == VirtualButtonState.Pressed)
-                || (currentKeyboardState.IsKeyUp(RELOAD_WEAPON_KEY) && _previousKeyboardState.IsKeyDown(RELOAD_WEAPON_KEY)))
+            if ((this._previusVirtualGamePadState.Buttons.LeftShoulder == VirtualButtonState.Released && virtualGamePadState.Buttons.LeftShoulder == VirtualButtonState.Pressed)
+                || (currentKeyboardState.IsKeyUp(RELOAD_WEAPON_KEY) && this._previousKeyboardState.IsKeyDown(RELOAD_WEAPON_KEY)))
             {
                 // Si el arma esta siendo cargada, que retorne sin hacer nada
-                if (CurrentWeapon.IsReloading) return;
+                if (this.CurrentWeapon.IsReloading) return;
 
                 // Si la cantidad de municiones es ("mayor o" - caso imposible) igual que la cantidad maxima de municiones que carga el arma,
                 // que retorne sin hacer nada
-                if (CurrentWeapon.CurrentAmmo >= CurrentWeapon.MaxAmmo) return;
+                if (this.CurrentWeapon.CurrentAmmo >= this.CurrentWeapon.MaxAmmo) return;
 
-                var availableAmmo = GetCurrentWeaponAvailableAmmo();
+                var availableAmmo = this.GetCurrentWeaponAvailableAmmo();
 
                 // Si no tenemos municiones disponibles, que retorne sin hacer nada
                 if (availableAmmo <= 0) return;
 
                 // Cargamos el arma con las que tenemos disponibles
-                SetCurrentWeaponAvailableAmmo(CurrentWeapon.Reload(availableAmmo));
+                this.SetCurrentWeaponAvailableAmmo(this.CurrentWeapon.Reload(availableAmmo));
             }
         }
 
@@ -664,12 +665,12 @@ namespace Platformer.Players
         /// <param name="virtualGamePadState"></param>
         private void SetCurrentWeapon(KeyboardState currentKeyboardState, VirtualGamePadState virtualGamePadState)
         {
-            if ((_previusVirtualGamePadState.Buttons.RightShoulder == VirtualButtonState.Released && virtualGamePadState.Buttons.RightShoulder == VirtualButtonState.Pressed)
-                || (currentKeyboardState.IsKeyUp(SWITCH_WEAPON_KEY) && _previousKeyboardState.IsKeyDown(SWITCH_WEAPON_KEY)))
+            if ((this._previusVirtualGamePadState.Buttons.RightShoulder == VirtualButtonState.Released && virtualGamePadState.Buttons.RightShoulder == VirtualButtonState.Pressed)
+                || (currentKeyboardState.IsKeyUp(SWITCH_WEAPON_KEY) && this._previousKeyboardState.IsKeyDown(SWITCH_WEAPON_KEY)))
             {
-                if (SecondaryWeapon != null)
+                if (this.SecondaryWeapon != null)
                 {
-                    CurrentWeapon = PrimaryWeapon.Type == CurrentWeapon.Type ? SecondaryWeapon : PrimaryWeapon;
+                    this.CurrentWeapon = this.PrimaryWeapon.Type == this.CurrentWeapon.Type ? this.SecondaryWeapon : this.PrimaryWeapon;
                 }
             }
         }
@@ -684,13 +685,13 @@ namespace Platformer.Players
 
         public void DoAction(GameTime gameTime)
         {
-            switch (CurrentAction)
+            switch (this.CurrentAction)
             {
                 case Actions.UseKnife:
-                    UseKnike();
+                    this.UseKnike();
                     break;
                 case Actions.Gun:
-                    FireWeapon(gameTime);
+                    this.FireWeapon(gameTime);
                     break;
                 //case Actions.CatchSurvivor:
                 //    if (CatchedCharacter == null)
@@ -730,20 +731,20 @@ namespace Platformer.Players
 
         private void UseKnike()
         {
-            IsAttacking = true;
-            HasHitEnemy = false;
-            _attackTime = MaxAttackTime;
+            this.IsAttacking = true;
+            this.HasHitEnemy = false;
+            this._attackTime = this.MaxAttackTime;
         }
 
         private void FireWeapon(GameTime gameTime)
         {
             // Si el arma esta recargandose, que retorne
-            if (CurrentWeapon.IsReloading) return;
+            if (this.CurrentWeapon.IsReloading) return;
 
             // Si todavia no puede disparar (no se cumplio el FireRate)
-            if (!CurrentWeapon.CanShoot) return;
+            if (!this.CurrentWeapon.CanShoot) return;
             
-            CurrentWeapon.Fire(gameTime, _bulletsPool, Direction);
+            this.CurrentWeapon.Fire(gameTime, this._bulletsPool, this.Direction);
         }
 
         /// <summary>
@@ -758,26 +759,26 @@ namespace Platformer.Players
             // TODO: agregar el boton del GamePad que se usa para el Melee y el arma
 
             // Si el player esta atacando con su melee entonces no puede volver a atacar ni disparar (no puede ejecutar otra accion)
-            if (_attackTime > 0.0f) return;
+            if (this._attackTime > 0.0f) return;
 
-            if ((currentVirtualGamePadState.Buttons.A == VirtualButtonState.Pressed && _previusVirtualGamePadState.Buttons.A == VirtualButtonState.Released)
-                || (_previousKeyboardState.IsKeyDown(MELEE_KEY) && currentKeyboardState.IsKeyUp(MELEE_KEY)))
+            if ((currentVirtualGamePadState.Buttons.A == VirtualButtonState.Pressed && this._previusVirtualGamePadState.Buttons.A == VirtualButtonState.Released)
+                || (this._previousKeyboardState.IsKeyDown(MELEE_KEY) && currentKeyboardState.IsKeyUp(MELEE_KEY)))
             {
                 //_nextActionTime = MAX_NEXT_ACTION_TIME;
-                CurrentAction = Actions.UseKnife;
-                DoAction(gameTime);
+                this.CurrentAction = Actions.UseKnife;
+                this.DoAction(gameTime);
                 return;
             }
 
             if ((currentVirtualGamePadState.Buttons.B == VirtualButtonState.Pressed &&
-                 (_previusVirtualGamePadState.Buttons.B == VirtualButtonState.Released ||
-                  (CurrentWeapon.IsAutomatic && CurrentWeapon.HasAmmo)))
+                 (this._previusVirtualGamePadState.Buttons.B == VirtualButtonState.Released ||
+                  (this.CurrentWeapon.IsAutomatic && this.CurrentWeapon.HasAmmo)))
                 ||
-                (_previousKeyboardState.IsKeyDown(SHOOT_KEY) &&
-                 (currentKeyboardState.IsKeyUp(SHOOT_KEY) || (CurrentWeapon.IsAutomatic && CurrentWeapon.HasAmmo))))
+                (this._previousKeyboardState.IsKeyDown(SHOOT_KEY) &&
+                 (currentKeyboardState.IsKeyUp(SHOOT_KEY) || (this.CurrentWeapon.IsAutomatic && this.CurrentWeapon.HasAmmo))))
             {
-                CurrentAction = Actions.Gun;
-                DoAction(gameTime);
+                this.CurrentAction = Actions.Gun;
+                this.DoAction(gameTime);
                 return;
             }
         }
@@ -848,14 +849,14 @@ namespace Platformer.Players
         private void SetHorizontalMovement(KeyboardState keyboardState, GamePadState gamePadState, VirtualGamePadState virtualGamePadState)
         {
             // Si el tiempo para la proxima accion no paso, entonces que no pueda caminar ni hacer nada
-            if (_attackTime > 0) return;
+            if (this._attackTime > 0) return;
 
             // Get analog horizontal movement.
-            _movement.X = gamePadState.ThumbSticks.Left.X * MOVE_STICK_SCALE;
+            this._movement.X = gamePadState.ThumbSticks.Left.X * MOVE_STICK_SCALE;
 
             // Ignore small movements to prevent running in place.
-            if (Math.Abs(_movement.X) < 0.5f)
-                _movement.X = 0.0f;
+            if (Math.Abs(this._movement.X) < 0.5f)
+                this._movement.X = 0.0f;
             
             // If any digital horizontal movement input is found, override the analog movement.
             if (gamePadState.IsButtonDown(Buttons.DPadLeft) ||
@@ -863,14 +864,14 @@ namespace Platformer.Players
                 //_movePlayerLeft ||
                 virtualGamePadState.Buttons.DPadLeft == VirtualButtonState.Pressed)
             {
-                _movement.X = -1.0f;
+                this._movement.X = -1.0f;
             }
             else if (gamePadState.IsButtonDown(Buttons.DPadRight) ||
                      keyboardState.IsKeyDown(RIGHT_KEY) ||
                    // _movePlayerRight ||
                     virtualGamePadState.Buttons.DPadRight == VirtualButtonState.Pressed)
             {
-                _movement.X = 1.0f;
+                this._movement.X = 1.0f;
             }
         }
 
@@ -1028,53 +1029,53 @@ namespace Platformer.Players
         public void ApplyPhysics(GameTime gameTime)
         {
             var elapsed = (float) gameTime.ElapsedGameTime.TotalSeconds;
-            var previousPosition = Position;
+            var previousPosition = this.Position;
 
             // Base velocity is a combination of horizontal movement control and
             // acceleration downward due to gravity.
             //LADDER
-            if (!IsClimbing)
+            if (!this.IsClimbing)
             {
-                if (_wasClimbing)
-                    _velocity.Y = 0;
+                if (this._wasClimbing)
+                    this._velocity.Y = 0;
                 else
-                    _velocity.Y = MathHelper.Clamp(
-                        _velocity.Y + GRAVITY_ACCELERATION*elapsed,
+                    this._velocity.Y = MathHelper.Clamp(
+                        this._velocity.Y + GRAVITY_ACCELERATION*elapsed,
                         -MAX_FALL_SPEED,
                         MAX_FALL_SPEED);
             }
             else
             {
-                _velocity.Y = _movement.Y*MoveAcceleration*elapsed;
+                this._velocity.Y = this._movement.Y*this.MoveAcceleration*elapsed;
             }
 
-            _velocity.X += _movement.X*MoveAcceleration*elapsed;
+            this._velocity.X += this._movement.X*this.MoveAcceleration*elapsed;
 
             //_velocity.Y = DoJump(_velocity.Y, gameTime);
 
             // Apply pseudo-drag horizontally.
-            if (IsOnGround)
-                _velocity.X *= GROUND_DRAG_FACTOR;
+            if (this.IsOnGround)
+                this._velocity.X *= GROUND_DRAG_FACTOR;
             else
-                _velocity.X *= AIR_DRAG_FACTOR;
+                this._velocity.X *= AIR_DRAG_FACTOR;
 
 
             // Prevent the player from running faster than his top speed.            
-            _velocity.X = MathHelper.Clamp(_velocity.X, -MAX_MOVE_SPEED, MAX_MOVE_SPEED);
+            this._velocity.X = MathHelper.Clamp(this._velocity.X, -MAX_MOVE_SPEED, MAX_MOVE_SPEED);
 
             // Apply velocity.
-            Position += _velocity * elapsed;
-            Position = new Vector2((float) Math.Round(Position.X), (float) Math.Round(Position.Y));
+            this.Position += this._velocity * elapsed;
+            this.Position = new Vector2((float) Math.Round(this.Position.X), (float) Math.Round(this.Position.Y));
 
             // If the player is now colliding with the level, separate them.
-            HandleCollisions();
+            this.HandleCollisions();
 
             // If the collision stopped us from moving, reset the velocity to zero.
-            if (Position.X == previousPosition.X)
-                _velocity.X = 0;
+            if (this.Position.X == previousPosition.X)
+                this._velocity.X = 0;
 
-            if (Position.Y == previousPosition.Y)
-                _velocity.Y = 0;
+            if (this.Position.Y == previousPosition.Y)
+                this._velocity.Y = 0;
         }
 
 
@@ -1138,23 +1139,23 @@ namespace Platformer.Players
         private void UpdateAttackTime(GameTime gameTime)
         {
             // If the player wants to attack
-            if (IsAttacking)
+            if (this.IsAttacking)
             {
                 // Begin or continue an attack
-                if (_attackTime > 0.0f)
+                if (this._attackTime > 0.0f)
                 {
-                    _attackTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    this._attackTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
                 }
                 else
                 {
-                    IsAttacking = false;
-                    HasHitEnemy = false;
+                    this.IsAttacking = false;
+                    this.HasHitEnemy = false;
                 }
             }
             else
             {
                 //Continues not attack or cancels an attack in progress
-                _attackTime = 0.0f;
+                this._attackTime = 0.0f;
             }
         }
 
@@ -1189,14 +1190,14 @@ namespace Platformer.Players
         private void HandleCollisions()
         {
             // Get the player's bounding rectangle and find neighboring tiles.
-            var bounds = BoundingRectangle;
+            var bounds = this.BoundingRectangle;
             var leftTile = (int)Math.Floor((float)bounds.Left / Tile.WIDTH);
             var rightTile = (int)Math.Ceiling(((float)bounds.Right / Tile.WIDTH)) - 1;
             var topTile = (int)Math.Floor((float)bounds.Top / Tile.HEIGHT);
             var bottomTile = (int)Math.Ceiling(((float)bounds.Bottom / Tile.HEIGHT)) - 1;
 
             // Reset flag to search for ground collision.
-            IsOnGround = false;
+            this.IsOnGround = false;
 
             // For each potentially colliding tile,
             for (int y = topTile; y <= bottomTile; ++y)
@@ -1204,7 +1205,7 @@ namespace Platformer.Players
                 for (int x = leftTile; x <= rightTile; ++x)
                 {
                     // If this tile is collidable,
-                    TileCollision collision = Level.GetCollision(x, y);
+                    TileCollision collision = this.Level.GetCollision(x, y);
 
                     //if (collision == TileCollision.Checkpoint)
                     //{
@@ -1214,7 +1215,7 @@ namespace Platformer.Players
                     if (collision == TileCollision.Passable) continue;
 
                     // Determine collision depth (with direction) and magnitude.
-                    var tileBounds = Level.GetBounds(x, y);
+                    var tileBounds = this.Level.GetBounds(x, y);
                     var depth = bounds.GetIntersectionDepth(tileBounds);
                     if (depth != Vector2.Zero)
                     {
@@ -1225,26 +1226,26 @@ namespace Platformer.Players
                         if (absDepthY < absDepthX || collision == TileCollision.Platform)
                         {
                             // If we crossed the top of a tile, we are on the ground.
-                            if (_previousBottom <= tileBounds.Top)
-                                IsOnGround = true;
+                            if (this._previousBottom <= tileBounds.Top)
+                                this.IsOnGround = true;
 
                             // Ignore platforms, unless we are on the ground.
-                            if (collision == TileCollision.Impassable || IsOnGround)
+                            if (collision == TileCollision.Impassable || this.IsOnGround)
                             {
                                 // Resolve the collision along the Y axis.
-                                Position = new Vector2(Position.X, Position.Y + depth.Y);
+                                this.Position = new Vector2(this.Position.X, this.Position.Y + depth.Y);
 
                                 // Perform further collisions with the new bounds.
-                                bounds = BoundingRectangle;
+                                bounds = this.BoundingRectangle;
                             }
                         }
                         else if (collision == TileCollision.Impassable) // Ignore platforms.
                         {
                             // Resolve the collision along the X axis.
-                            Position = new Vector2(Position.X + depth.X, Position.Y);
+                            this.Position = new Vector2(this.Position.X + depth.X, this.Position.Y);
 
                             // Perform further collisions with the new bounds.
-                            bounds = BoundingRectangle;
+                            bounds = this.BoundingRectangle;
                         }
 
                         // Resolve the collision along the shallow axis.
@@ -1331,7 +1332,7 @@ namespace Platformer.Players
             //}
 
             // Save the new bounds bottom.
-            _previousBottom = bounds.Bottom;
+            this._previousBottom = bounds.Bottom;
         }
 
         /// <summary>
@@ -1345,14 +1346,14 @@ namespace Platformer.Players
         {
             //ResetMovement();
             
-            IsAlive = false;
+            this.IsAlive = false;
 
             //if (killedBy != null)
-                KilledSound.Play();
+                this.KilledSound.Play();
             //else
             //    FallSound.Play();
 
-            PlayAnimation(DieAnimation);
+            this.PlayAnimation(this.DieAnimation);
         }
 
         /// <summary>
@@ -1360,7 +1361,7 @@ namespace Platformer.Players
         /// </summary>
         public void OnReachedExit()
         {
-            PlayAnimation(CelebrateAnimation);
+            this.PlayAnimation(this.CelebrateAnimation);
         }
 
         /// <summary>
@@ -1373,19 +1374,19 @@ namespace Platformer.Players
             // Si su punto de vision esta atras, entonces camina para atras (su punto de vision siempre esta adelante)
 
             // Flip the sprite to face the way we are moving.
-            if (_velocity.X > 0)
-                Direction = SpriteEffects.FlipHorizontally;
-            else if (_velocity.X < 0)
-                Direction = SpriteEffects.None;
+            if (this._velocity.X > 0)
+                this.Direction = SpriteEffects.FlipHorizontally;
+            else if (this._velocity.X < 0)
+                this.Direction = SpriteEffects.None;
 
             // Draw that sprite.
-            Sprite.Draw(gameTime, spriteBatch, Position, Direction);
+            this.Sprite.Draw(gameTime, spriteBatch, this.Position, this.Direction);
             
             // Si no esta atacando que dibuje el arma que corresponde
             //if ((!IsAttacking) && (_hitTime <= 0))
-            if (_drawWeaponAnimation)
+            if (this._drawWeaponAnimation)
             {
-                WeaponSprite.Draw(gameTime, spriteBatch, CurrentWeapon.GameData.Position, Direction);
+                this.WeaponSprite.Draw(gameTime, spriteBatch, this.CurrentWeapon.GameData.Position, this.Direction);
             }
 
             // TODO: Draw the bullets?
@@ -1403,11 +1404,11 @@ namespace Platformer.Players
             spriteBatch.Draw(_dummyTexture, KnifeBoundingRectangle, Color.Green);
 #endif
             
-            if (CurrentHealth >= 0 && DrawHealthBar)
+            if (this.CurrentHealth >= 0 && this.DrawHealthBar)
             {
                 //_healthBar.Draw(spriteBatch, Position, _sprite.Animation.FrameHeight, CurrentHealth, TotalHealth);
-                HealthBar.Draw(spriteBatch, Position, BoundingRectangle.Height + HealthBarMargin, CurrentHealth,
-                               TotalHealth);
+                this.HealthBar.Draw(spriteBatch, this.Position, this.BoundingRectangle.Height + this.HealthBarMargin, this.CurrentHealth,
+                               this.TotalHealth);
             }
         }
 
@@ -1430,8 +1431,8 @@ namespace Platformer.Players
         {
             if (animation == null) throw new Exception("La animacion del player no puede ser null");
 
-            Sprite.PlayAnimation(animation);
-            LocalBounds = animation.BoundingRectangle;
+            this.Sprite.PlayAnimation(animation);
+            this.LocalBounds = animation.BoundingRectangle;
         }
 
         /// <summary>
@@ -1442,19 +1443,19 @@ namespace Platformer.Players
         {
             if (animation == null) throw new Exception("La animacion del arma no puede ser null");
 
-            WeaponSprite.PlayAnimation(animation);
+            this.WeaponSprite.PlayAnimation(animation);
         }
 
         public void GainLive()
         {
-            SetLives(TotalHealth);
+            this.SetLives(this.TotalHealth);
         }
 
         public void SetLives(int currentLives)
         {
-            CurrentHealth = currentLives;
+            this.CurrentHealth = currentLives;
 
-            if (CurrentHealth > TotalHealth) TotalHealth = CurrentHealth;
+            if (this.CurrentHealth > this.TotalHealth) this.TotalHealth = this.CurrentHealth;
         }
 
         //public void TakeLive()
@@ -1464,7 +1465,7 @@ namespace Platformer.Players
 
         public int GetCurrentWeaponAvailableAmmo()
         {
-            return AmmoInventory == null || !AmmoInventory.ContainsKey((int)CurrentWeapon.Type) ? 0 : AmmoInventory[(int)CurrentWeapon.Type];
+            return this.AmmoInventory == null || !this.AmmoInventory.ContainsKey((int)this.CurrentWeapon.Type) ? 0 : this.AmmoInventory[(int)this.CurrentWeapon.Type];
         }
 
         /// <summary>
@@ -1473,18 +1474,18 @@ namespace Platformer.Players
         /// <param name="availableAmmo"></param>
         private void SetCurrentWeaponAvailableAmmo(int availableAmmo)
         {
-            var weaponIndex = (int) CurrentWeapon.Type;
+            var weaponIndex = (int) this.CurrentWeapon.Type;
 
-            if (AmmoInventory == null)
-                AmmoInventory = new Dictionary<int, int>();
+            if (this.AmmoInventory == null)
+                this.AmmoInventory = new Dictionary<int, int>();
 
-            if (AmmoInventory.ContainsKey(weaponIndex))
+            if (this.AmmoInventory.ContainsKey(weaponIndex))
             {
-                AmmoInventory[weaponIndex] = availableAmmo;
+                this.AmmoInventory[weaponIndex] = availableAmmo;
             }
             else
             {
-                AmmoInventory.Add(weaponIndex, availableAmmo);
+                this.AmmoInventory.Add(weaponIndex, availableAmmo);
             }
         }
     }

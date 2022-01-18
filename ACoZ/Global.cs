@@ -2,7 +2,7 @@
 //using EasyStorage;
 //#endif
 
-namespace Platformer
+namespace ACoZ
 {
     public class Global
     {

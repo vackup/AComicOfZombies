@@ -1,16 +1,18 @@
 #region Using Statements
+
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using ACoZ.Helpers;
+using ACoZ.ScreenManagers;
+using ACoZ.Weapons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Platformer.Helpers;
-using Platformer.ScreenManagers;
 // TODO: si hay que optimizar, revisar el uso de este LINQ
-using System.Linq;
-using Platformer.Weapons;
+
 #if WINDOWS_PHONE || IPHONE
 using Mobile.Base.Controls;
 using Mobile.Base.ScreenSystem;
@@ -24,7 +26,7 @@ using Desktop.Base.ScreenSystem;
 
 #endregion
 
-namespace Platformer.Screens
+namespace ACoZ.Screens
 {
     /// <summary>
     /// Buy Weapons Screen
@@ -54,25 +56,25 @@ namespace Platformer.Screens
 
         public BuyWeaponsScreen(ResumeState resumeState)
         {
-            TransitionOnTime = TimeSpan.FromSeconds(0.5);
-            TransitionOffTime = TimeSpan.FromSeconds(0.5);
+            this.TransitionOnTime = TimeSpan.FromSeconds(0.5);
+            this.TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
-            _resumeStateData = resumeState;
+            this._resumeStateData = resumeState;
 
             // Recargamos las armas que el player estaba usando
-            ReloadWeapons();
+            this.ReloadWeapons();
         }
 
         public override void LoadContent()
         {
-            if (_content == null)
+            if (this._content == null)
             {
                 // Probando de usar el ContentManager compartido
                 //_content = new ContentManager(ScreenManager.Game.Services, GlobalParameters.CONTENT_FOLDER);
-                _content = ScreenManager.Game.Content;
+                this._content = this.ScreenManager.Game.Content;
             }
 
-            _menuViewport = new Viewport
+            this._menuViewport = new Viewport
             {
 #if WINDOWS_PHONE || WINDOWS ||XBOX
                 MinDepth = 0,
@@ -84,22 +86,22 @@ namespace Platformer.Screens
                 Height = GlobalParameters.BUY_WEAPON_SCREEN_WEAPONS_MENU_HEIGHT,
             };
 
-            _weaponButtonNormalTexture = _content.Load<Texture2D>(GlobalParameters.WEAPON_BUTTON_NORMAL);
+            this._weaponButtonNormalTexture = this._content.Load<Texture2D>(GlobalParameters.WEAPON_BUTTON_NORMAL);
 
             //UpdateScreen();
 
-            CreateMenuHeader();
+            this.CreateMenuHeader();
 
-            var viewRect = new Rectangle(_menuViewport.X,
-                                         _menuViewport.Y,
-                                         _menuViewport.Width,
-                                         _menuViewport.Height);
+            var viewRect = new Rectangle(this._menuViewport.X,
+                                         this._menuViewport.Y,
+                                         this._menuViewport.Width,
+                                         this._menuViewport.Height);
 
-            CreateWeaponsListMenu(viewRect);
+            this.CreateWeaponsListMenu(viewRect);
 
-            CreateWeaponsDescriptionMenu();
+            this.CreateWeaponsDescriptionMenu();
 
-            CreateMenuFooter();
+            this.CreateMenuFooter();
 
             base.LoadContent();
         }
@@ -121,11 +123,11 @@ namespace Platformer.Screens
         /// </summary>
         public override void HandleInput(InputHelper input)
         {
-            _panelMenuHeader.HandleInput(input);
-            _panelWeaponMenuBoarder.HandleInput(input);
-            _scrollingWeaponsMenu.HandleInput(input);
-            _panelDescriptionMenu.HandleInput(input);
-            _panelMenuFooter.HandleInput(input);
+            this._panelMenuHeader.HandleInput(input);
+            this._panelWeaponMenuBoarder.HandleInput(input);
+            this._scrollingWeaponsMenu.HandleInput(input);
+            this._panelDescriptionMenu.HandleInput(input);
+            this._panelMenuFooter.HandleInput(input);
             base.HandleInput(input);
         }
         //public override void HandleGamePadInput(InputHelper input)
@@ -145,17 +147,17 @@ namespace Platformer.Screens
         {
             
             // Allows popup to be closed by back button
-            if (IsActive && GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (this.IsActive && GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
             {
-                ExitScreen();
+                this.ExitScreen();
             }
             
             //Update Menu states
-            _panelMenuHeader.Update(gameTime);
-            _panelWeaponMenuBoarder.Update(gameTime);
-            _scrollingWeaponsMenu.Update(gameTime);
-            _panelDescriptionMenu.Update(gameTime);
-            _panelMenuFooter.Update(gameTime);
+            this._panelMenuHeader.Update(gameTime);
+            this._panelWeaponMenuBoarder.Update(gameTime);
+            this._scrollingWeaponsMenu.Update(gameTime);
+            this._panelDescriptionMenu.Update(gameTime);
+            this._panelMenuFooter.Update(gameTime);
             
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
         }
@@ -164,33 +166,33 @@ namespace Platformer.Screens
         #region Game Methods - Draw
         public override void Draw(GameTime gameTime)
         {
-            if (!IsActive) return;
+            if (!this.IsActive) return;
 
             //Draw Background
-            DrawBackground();
+            this.DrawBackground();
 
             // Draw Menu Header
-            DrawMenuHeader(gameTime);
+            this.DrawMenuHeader(gameTime);
             
             // Draw Menu
-            DrawWeaponsMenu(gameTime);
+            this.DrawWeaponsMenu(gameTime);
 
-            DrawMenuFooter(gameTime);
+            this.DrawMenuFooter(gameTime);
         }
 
         private void DrawMenuHeader(GameTime gameTime)
         {
-            Control.BatchDraw(_panelMenuHeader, ScreenManager.GraphicsDevice, ScreenManager.SpriteBatch, Vector2.Zero, gameTime);
+            Control.BatchDraw(this._panelMenuHeader, this.ScreenManager.GraphicsDevice, this.ScreenManager.SpriteBatch, Vector2.Zero, gameTime);
         }
 
         private void DrawMenuFooter(GameTime gameTime)
         {
-            Control.BatchDraw(_panelMenuFooter, ScreenManager.GraphicsDevice, ScreenManager.SpriteBatch, Vector2.Zero, gameTime);
+            Control.BatchDraw(this._panelMenuFooter, this.ScreenManager.GraphicsDevice, this.ScreenManager.SpriteBatch, Vector2.Zero, gameTime);
         }
 
         private void DrawBackground()
         {
-            ScreenManager.GraphicsDevice.Clear(GlobalParameters.AlternativeColor);
+            this.ScreenManager.GraphicsDevice.Clear(GlobalParameters.AlternativeColor);
             //ScreenManager.SpriteBatch.Begin();
             //ScreenManager.SpriteBatch.Draw(_background, _viewport, Color.White);
             //ScreenManager.SpriteBatch.End();
@@ -203,20 +205,20 @@ namespace Platformer.Screens
             // Set our viewport. We store the old viewport so we can restore it when we're done in case
             // we want to render to the full viewport at some point.
 #if !SILVERLIGHT
-            var oldViewport = ScreenManager.GraphicsDevice.Viewport;
-            ScreenManager.GraphicsDevice.Viewport = _menuViewport;
+            var oldViewport = this.ScreenManager.GraphicsDevice.Viewport;
+            this.ScreenManager.GraphicsDevice.Viewport = this._menuViewport;
 #endif
             //Draw Weapon Selector list
-            Control.BatchDraw(_scrollingWeaponsMenu, ScreenManager.GraphicsDevice, ScreenManager.SpriteBatch,  Vector2.Zero, gameTime);
+            Control.BatchDraw(this._scrollingWeaponsMenu, this.ScreenManager.GraphicsDevice, this.ScreenManager.SpriteBatch,  Vector2.Zero, gameTime);
 
             // Now that we're done, set our old viewport back on the device
 #if !SILVERLIGHT
-            ScreenManager.GraphicsDevice.Viewport = oldViewport;
+            this.ScreenManager.GraphicsDevice.Viewport = oldViewport;
 #endif
 
-            Control.BatchDraw(_panelWeaponMenuBoarder, ScreenManager.GraphicsDevice, ScreenManager.SpriteBatch, Vector2.Zero, gameTime);
+            Control.BatchDraw(this._panelWeaponMenuBoarder, this.ScreenManager.GraphicsDevice, this.ScreenManager.SpriteBatch, Vector2.Zero, gameTime);
 
-            Control.BatchDraw(_panelDescriptionMenu, ScreenManager.GraphicsDevice, ScreenManager.SpriteBatch, Vector2.Zero, gameTime);
+            Control.BatchDraw(this._panelDescriptionMenu, this.ScreenManager.GraphicsDevice, this.ScreenManager.SpriteBatch, Vector2.Zero, gameTime);
         }
 
         #endregion
@@ -227,29 +229,29 @@ namespace Platformer.Screens
 #if FREE
 			var headerFont =  ScreenManager.SpriteFonts.TittleFontSmall;
 #else
-			var headerFont =  ScreenManager.SpriteFonts.TittleFont;
+			var headerFont =  this.ScreenManager.SpriteFonts.TittleFont;
 #endif
 
             //Initialize Text MenuPanel
-            _panelMenuHeader = new PanelControl
+            this._panelMenuHeader = new PanelControl
                                    {
-										Size = new Vector2(ScreenManager.GraphicsDevice.Viewport.Width, 
+										Size = new Vector2(this.ScreenManager.GraphicsDevice.Viewport.Width, 
 				                   							GlobalParameters.BUY_WEAPON_SCREEN_WEAPONS_MENU_Y - GlobalParameters.BANNER_MARGIN), // Ancho = Ancho de pantalla. Alto = position Y del menu de armas
 										Position = new Vector2(0, GlobalParameters.BANNER_MARGIN)
                                    };
 			       
-            var halfHeightMenuHeader = _panelMenuHeader.Size.Y / 2;
+            var halfHeightMenuHeader = this._panelMenuHeader.Size.Y / 2;
             
             // Creamos los textos que iran en el panel
-            _headerTitleTextControl = new TextControl(GetWeaponTextControlHeaderText(), headerFont, Color.White);
-            _headerTitleTextControl.Position = new Vector2(GlobalParameters.RIGHT_MARGIN, halfHeightMenuHeader - (_headerTitleTextControl.Size.Y / 2));
+            this._headerTitleTextControl = new TextControl(this.GetWeaponTextControlHeaderText(), headerFont, Color.White);
+            this._headerTitleTextControl.Position = new Vector2(GlobalParameters.RIGHT_MARGIN, halfHeightMenuHeader - (this._headerTitleTextControl.Size.Y / 2));
 
-            _scoreTextControl = new TextControl(GetScoreText(_resumeStateData.Score), headerFont, Color.White);
-            _scoreTextControl.Position = new Vector2(_panelMenuHeader.Size.X - _scoreTextControl.Size.X - GlobalParameters.RIGHT_MARGIN, halfHeightMenuHeader - (_scoreTextControl.Size.Y / 2));
+            this._scoreTextControl = new TextControl(this.GetScoreText(this._resumeStateData.Score), headerFont, Color.White);
+            this._scoreTextControl.Position = new Vector2(this._panelMenuHeader.Size.X - this._scoreTextControl.Size.X - GlobalParameters.RIGHT_MARGIN, halfHeightMenuHeader - (this._scoreTextControl.Size.Y / 2));
 
             // Agregamos los textos al panel
-            _panelMenuHeader.AddChild(_headerTitleTextControl);
-            _panelMenuHeader.AddChild(_scoreTextControl);
+            this._panelMenuHeader.AddChild(this._headerTitleTextControl);
+            this._panelMenuHeader.AddChild(this._scoreTextControl);
         }
 
         private void CreateWeaponsListMenu(Rectangle viewRect)
@@ -264,22 +266,22 @@ namespace Platformer.Screens
             var abajoLargoRectangle = GlobalParameters.ScreenAssetsData["CONTENEDOR_Abajo_Largo"];
             var lateralDerechoRectangle = GlobalParameters.ScreenAssetsData["CONTENEDOR_Lateral_Derecho"];
 
-            var contenedorArmasBordeIzquierdo = new ImageControl(ScreenManager.ScreenAssetsTexture, lateralIzquierdoRectangle, Vector2.Zero);
+            var contenedorArmasBordeIzquierdo = new ImageControl(this.ScreenManager.ScreenAssetsTexture, lateralIzquierdoRectangle, Vector2.Zero);
 
-            var contenedorArmasBordeSuperior = new ImageControl(ScreenManager.ScreenAssetsTexture, arribaLargoRectangle,
+            var contenedorArmasBordeSuperior = new ImageControl(this.ScreenManager.ScreenAssetsTexture, arribaLargoRectangle,
                                                                 new Vector2(lateralIzquierdoRectangle.Width - borde, 0));
 
-            var contenedorArmasBordeDerecho = new ImageControl(ScreenManager.ScreenAssetsTexture,
+            var contenedorArmasBordeDerecho = new ImageControl(this.ScreenManager.ScreenAssetsTexture,
                                                                lateralDerechoRectangle,
                                                                new Vector2(arribaLargoRectangle.Width - borde +
                                                                    lateralIzquierdoRectangle.Width - borde, 0));
 
-            var contenedorArmasBordeInferior = new ImageControl(ScreenManager.ScreenAssetsTexture, abajoLargoRectangle,
+            var contenedorArmasBordeInferior = new ImageControl(this.ScreenManager.ScreenAssetsTexture, abajoLargoRectangle,
                                                                          new Vector2(lateralIzquierdoRectangle.Width - borde,
                                                                              lateralIzquierdoRectangle.Height -
                                                                              abajoLargoRectangle.Height));
 
-            _panelWeaponMenuBoarder = new PanelControl
+            this._panelWeaponMenuBoarder = new PanelControl
             {
                 Position =
                     new Vector2(
@@ -287,13 +289,13 @@ namespace Platformer.Screens
                     viewRect.Y - GlobalParameters.BUY_WEAPON_SCREEN_WEAPONS_VERTICAL_MARGIN)
             };
 
-            _panelWeaponMenuBoarder.AddChild(contenedorArmasBordeDerecho);
-            _panelWeaponMenuBoarder.AddChild(contenedorArmasBordeInferior);
-            _panelWeaponMenuBoarder.AddChild(contenedorArmasBordeIzquierdo);
-            _panelWeaponMenuBoarder.AddChild(contenedorArmasBordeSuperior);
+            this._panelWeaponMenuBoarder.AddChild(contenedorArmasBordeDerecho);
+            this._panelWeaponMenuBoarder.AddChild(contenedorArmasBordeInferior);
+            this._panelWeaponMenuBoarder.AddChild(contenedorArmasBordeIzquierdo);
+            this._panelWeaponMenuBoarder.AddChild(contenedorArmasBordeSuperior);
 
             //Initialize MenuPanel
-            _scrollingWeaponsMenu = new ScrollingPanelControl(viewRect);
+            this._scrollingWeaponsMenu = new ScrollingPanelControl(viewRect);
 
             var buttonCounter = 0;
 
@@ -327,19 +329,19 @@ namespace Platformer.Screens
                                            };
                 
                 // Creamos el contenedor principal al que se le agregaran los demas elementos
-                var weaponButtonBackgroung = new ImageControl(_weaponButtonNormalTexture,
+                var weaponButtonBackgroung = new ImageControl(this._weaponButtonNormalTexture,
                                                               new Rectangle(0, 0, GlobalParameters.WEAPON_BUTTON_NORMAL_WIDTH,
                                                                             GlobalParameters.WEAPON_BUTTON_NORMAL_HEIGHT),
                                                               Vector2.Zero);
                 
                 // Creamos los demas elementos que se agregaran al contenedor principal
-                var weaponButtonWeaponIcon = new ImageControl(ScreenManager.ScreenAssetsTexture,
+                var weaponButtonWeaponIcon = new ImageControl(this.ScreenManager.ScreenAssetsTexture,
                                                               textureRectangle,
                                                               new Vector2((halfWithNormalButton - (textureRectangle.Width/2)),
                                                                   (halfHeightNormalButton - (textureRectangle.Height/2))));
 
                 var weaponButtonWeaponText = new TextControl(weaponItem.Name,
-                                                             ScreenManager.SpriteFonts.TextFont, Color.White,
+                                                             this.ScreenManager.SpriteFonts.TextFont, Color.White,
                                                              Vector2.Zero);
 
                 weaponButtonWeaponText.Position = new Vector2(
@@ -348,13 +350,13 @@ namespace Platformer.Screens
 
                 var showWeaponOnDescriptionMenuButton = new Button
                                        {
-                                           NormalButtonTexture = _weaponButtonNormalTexture,
+                                           NormalButtonTexture = this._weaponButtonNormalTexture,
                                            TextureRectangle = new Rectangle(0, 0, GlobalParameters.WEAPON_BUTTON_NORMAL_WIDTH, GlobalParameters.WEAPON_BUTTON_NORMAL_HEIGHT),
                                            Width = thirdWithNormalButton,
                                            Height = GlobalParameters.WEAPON_BUTTON_NORMAL_HEIGHT / 2,
                                            //ClickedButtonTexture = _btnClicked,
                                            TextVisible = true,
-                                           Font = ScreenManager.SpriteFonts.TextFont,
+                                           Font = this.ScreenManager.SpriteFonts.TextFont,
                                            Foreground = Color.White,
                                            ClickedForeground = Color.Red,
                                        };
@@ -362,7 +364,7 @@ namespace Platformer.Screens
                 showWeaponOnDescriptionMenuButton.Position = new Vector2(lastThirdHalfWithNormalButton - (showWeaponOnDescriptionMenuButton.Width/2),
                                                           halfHeightNormalButton - (showWeaponOnDescriptionMenuButton.Height/2));
 
-                SetListButtonAndWeaponState(showWeaponOnDescriptionMenuButton, weaponItem);
+                this.SetListButtonAndWeaponState(showWeaponOnDescriptionMenuButton, weaponItem);
 
                 showWeaponOnDescriptionMenuButton.OnClicked += ShowOnDescriptionMenu;
                 showWeaponOnDescriptionMenuButton.Tag = weaponItem;
@@ -374,7 +376,7 @@ namespace Platformer.Screens
                 controlContainer.AddChild(showWeaponOnDescriptionMenuButton);
 
                 // Agregamos el contenedor principal (controlContainer) con todos sus elementos al scrollMenu (_scrollingWeaponsMenu)
-                _scrollingWeaponsMenu.AddChild(controlContainer);
+                this._scrollingWeaponsMenu.AddChild(controlContainer);
                 buttonCounter++;
             }
         }
@@ -404,7 +406,7 @@ namespace Platformer.Screens
             #endregion
 
             // Creamos el panel para alojar los elementos
-            _panelDescriptionMenu = new PanelControl
+            this._panelDescriptionMenu = new PanelControl
                                         {
                                             Position =
                                                 new Vector2(GlobalParameters.BUY_WEAPON_SCREEN_WEAPONS_DESCRIPTION_MENU_X,
@@ -415,29 +417,29 @@ namespace Platformer.Screens
 
 
             // Creamos los bordes del panel
-            var contenedorArmasBordeIzquierdo = new ImageControl(ScreenManager.ScreenAssetsTexture,
+            var contenedorArmasBordeIzquierdo = new ImageControl(this.ScreenManager.ScreenAssetsTexture,
                                                                           GlobalParameters.ScreenAssetsData["CONTENEDOR_Lateral_Izquierdo"],
                                                                           new Vector2(0, 0));
 
-            var contenedorArmasBordeSuperior = new ImageControl(ScreenManager.ScreenAssetsTexture,
+            var contenedorArmasBordeSuperior = new ImageControl(this.ScreenManager.ScreenAssetsTexture,
                                                                          GlobalParameters.ScreenAssetsData["CONTENEDOR_Arriba_Corto"],
                                                                          new Vector2(lateralIzquierdoTextureWidth - 2, 0));
 
-            var contenedorArmasBordeDerecho = new ImageControl(ScreenManager.ScreenAssetsTexture,
+            var contenedorArmasBordeDerecho = new ImageControl(this.ScreenManager.ScreenAssetsTexture,
                                                                         GlobalParameters.ScreenAssetsData["CONTENEDOR_Lateral_Derecho"],
                                                                         new Vector2(arribaCortoWidth - 2 + lateralIzquierdoTextureWidth - 2, 0));
 
-            var contenedorArmasBordeInferior = new ImageControl(ScreenManager.ScreenAssetsTexture,
+            var contenedorArmasBordeInferior = new ImageControl(this.ScreenManager.ScreenAssetsTexture,
                                                                          GlobalParameters.ScreenAssetsData["CONTENEDOR_Abajo_Corto"],
                                                                          new Vector2(lateralIzquierdoTextureWidth - 2,
                                                                              lateralIzquieroTextureHeight - abajoCortoHeight));
 
 
             // Agregamos los bordes al panel
-            _panelDescriptionMenu.AddChild(contenedorArmasBordeDerecho);
-            _panelDescriptionMenu.AddChild(contenedorArmasBordeInferior);
-            _panelDescriptionMenu.AddChild(contenedorArmasBordeIzquierdo);
-            _panelDescriptionMenu.AddChild(contenedorArmasBordeSuperior);
+            this._panelDescriptionMenu.AddChild(contenedorArmasBordeDerecho);
+            this._panelDescriptionMenu.AddChild(contenedorArmasBordeInferior);
+            this._panelDescriptionMenu.AddChild(contenedorArmasBordeIzquierdo);
+            this._panelDescriptionMenu.AddChild(contenedorArmasBordeSuperior);
 
             // Setamos un arma x default para mostrar la primera vez en la pantalla
             var defaultSelectedWeapon = new Weapon(GlobalParameters.PRIMARY_WEAPON_TYPE);
@@ -445,7 +447,7 @@ namespace Platformer.Screens
             // Creamos el contenedor principal al que se le agregaran los demas elementos
             var controlContainer = new Control {Position = new Vector2(lateralIzquierdoTextureWidth, arribaCortoHeight)};
 
-            var weaponButtonBackgroung = new ImageControl(_weaponButtonNormalTexture,
+            var weaponButtonBackgroung = new ImageControl(this._weaponButtonNormalTexture,
                                                           new Rectangle(0, 0, GlobalParameters.WEAPON_BUTTON_NORMAL_SMALL_WIDTH,
                                                                         GlobalParameters.WEAPON_BUTTON_NORMAL_SMALL_HEIGHT),
                                                           Vector2.Zero);
@@ -454,61 +456,61 @@ namespace Platformer.Screens
             // Creamos los demas elementos que se agregaran al contenedor principal
             // Image Control del arma seleccionada
             var weaponTextureRectangle = GlobalParameters.ScreenAssetsData[defaultSelectedWeapon.Type.ToString()];
-            _weaponImageControl = new ImageControl(ScreenManager.ScreenAssetsTexture,
+            this._weaponImageControl = new ImageControl(this.ScreenManager.ScreenAssetsTexture,
                                                    weaponTextureRectangle,
                                                    new Vector2(
                                                        ((GlobalParameters.WEAPON_BUTTON_NORMAL_SMALL_WIDTH/2) - (weaponTextureRectangle.Width/2)),
                                                        (((GlobalParameters.WEAPON_BUTTON_NORMAL_SMALL_HEIGHT/3)/2) - (weaponTextureRectangle.Height/2))));
 
             // Text Control con la descripcion del arma seleccionada
-            _weaponDescriptionTextControl = new TextControl(GetWeaponDescription(defaultSelectedWeapon),
-                                                            ScreenManager.SpriteFonts.TextFontSmall, Color.White);
+            this._weaponDescriptionTextControl = new TextControl(this.GetWeaponDescription(defaultSelectedWeapon),
+                                                            this.ScreenManager.SpriteFonts.TextFontSmall, Color.White);
 
-            _weaponDescriptionTextControl.Position = new Vector2(
-                (GlobalParameters.WEAPON_BUTTON_NORMAL_SMALL_WIDTH / 2 - (_weaponDescriptionTextControl.Size.X / 2)),
+            this._weaponDescriptionTextControl.Position = new Vector2(
+                (GlobalParameters.WEAPON_BUTTON_NORMAL_SMALL_WIDTH / 2 - (this._weaponDescriptionTextControl.Size.X / 2)),
                 thirdHeightNormalButton);
             
             // Boton para las acciones del arma seleccionada
-            _weaponActionButton = new Button
+            this._weaponActionButton = new Button
             {
-                NormalButtonTexture = _weaponButtonNormalTexture,
+                NormalButtonTexture = this._weaponButtonNormalTexture,
                 TextureRectangle = new Rectangle(0, 0, GlobalParameters.WEAPON_BUTTON_BUY_WIDTH, GlobalParameters.WEAPON_BUTTON_BUY_HEIGHT),
                 Width = GlobalParameters.WEAPON_BUTTON_BUY_WIDTH,
                 Height = GlobalParameters.WEAPON_BUTTON_BUY_HEIGHT,
                 TextVisible = true,
-                Font = ScreenManager.SpriteFonts.TextFont,
+                Font = this.ScreenManager.SpriteFonts.TextFont,
                 Foreground = Color.White,
                 ClickedForeground = Color.Red,
             };
 
-            _weaponActionButton.Position = new Vector2(halfWidthPanel - (_weaponActionButton.Width / 2),
-                                                      lastThirdHalfHeightPanel - (_weaponActionButton.Height/2));
+            this._weaponActionButton.Position = new Vector2(halfWidthPanel - (this._weaponActionButton.Width / 2),
+                                                      lastThirdHalfHeightPanel - (this._weaponActionButton.Height/2));
 
-            SetDescriptionButtonAndWeaponState(_weaponActionButton, defaultSelectedWeapon);
+            this.SetDescriptionButtonAndWeaponState(this._weaponActionButton, defaultSelectedWeapon);
             //_weaponActionButton.OnClicked += sender => EquipWeapon(defaultSelectedWeapon);
-            _weaponActionButton.OnClicked += EquipWeapon;
-            _weaponActionButton.Tag = defaultSelectedWeapon;
+            this._weaponActionButton.OnClicked += EquipWeapon;
+            this._weaponActionButton.Tag = defaultSelectedWeapon;
 
 
             // Agregamos los elementos al contenedor principal (controlContainer)
             controlContainer.AddChild(weaponButtonBackgroung);
-            controlContainer.AddChild(_weaponImageControl);
-            controlContainer.AddChild(_weaponDescriptionTextControl);
+            controlContainer.AddChild(this._weaponImageControl);
+            controlContainer.AddChild(this._weaponDescriptionTextControl);
 
 
             // Agregamos el contenedor principal (controlContainer) con todos sus elementos al panelMenu (_panelDescriptionMenu)
-            _panelDescriptionMenu.AddChild(controlContainer);
-            _panelDescriptionMenu.AddChild(_weaponActionButton);
+            this._panelDescriptionMenu.AddChild(controlContainer);
+            this._panelDescriptionMenu.AddChild(this._weaponActionButton);
              
         }
 
         private void SetDescriptionButtonAndWeaponState(Button button, Weapon weapon)
         {
             // Si el arma es un arma primara o secundaria del Player
-            if (_resumeStateData.PrimaryWeapon.Type == weapon.Type
-                || (_resumeStateData.SecondaryWeapon != null && _resumeStateData.SecondaryWeapon.Type == weapon.Type))
+            if (this._resumeStateData.PrimaryWeapon.Type == weapon.Type
+                || (this._resumeStateData.SecondaryWeapon != null && this._resumeStateData.SecondaryWeapon.Type == weapon.Type))
             {
-                if (_resumeStateData.Score < weapon.AmmoScoreValue)
+                if (this._resumeStateData.Score < weapon.AmmoScoreValue)
                 {
                     button.DisplayText = GlobalParameters.WEAPON_EQUIPPED_TEXT;
                     weapon.State = WeaponState.Equipped;
@@ -521,14 +523,14 @@ namespace Platformer.Screens
             }
             // Si el arma, no es un arma primara o secundaria del Player pero la tiene en el inventario,
             // entonces que pueda equiparsela (EquipWeapon).
-            else if (_resumeStateData.WeaponInventory.Any(item => item.Type == weapon.Type))
+            else if (this._resumeStateData.WeaponInventory.Any(item => item.Type == weapon.Type))
             {
                 button.DisplayText = GlobalParameters.WEAPON_EQUIP_IT_TEXT;
                 weapon.State = WeaponState.InInventory;
             }
             // Si el arma no esta en el inventario del Player, entonces que puede comprarla (BuyWeapon)
             // y luego equiparla (si es que posee ptos suficientes).
-            else if (_resumeStateData.Score >= weapon.ScoreValue)
+            else if (this._resumeStateData.Score >= weapon.ScoreValue)
             {
                 button.DisplayText = GlobalParameters.WEAPON_BUY_IT_TEXT;
                 weapon.State = WeaponState.AvailableToBuy;
@@ -545,32 +547,32 @@ namespace Platformer.Screens
         private void CreateMenuFooter()
         {
             //Initialize Text MenuPanel
-            _panelMenuFooter = new PanelControl
+            this._panelMenuFooter = new PanelControl
             {
-                Size = new Vector2(ScreenManager.GraphicsDevice.Viewport.Width, GlobalParameters.BUY_WEAPON_SCREEN_WEAPONS_FOOTER_HEIGHT),
-                Position = new Vector2(0, ScreenManager.GraphicsDevice.Viewport.Height - GlobalParameters.BUY_WEAPON_SCREEN_WEAPONS_FOOTER_HEIGHT)
+                Size = new Vector2(this.ScreenManager.GraphicsDevice.Viewport.Width, GlobalParameters.BUY_WEAPON_SCREEN_WEAPONS_FOOTER_HEIGHT),
+                Position = new Vector2(0, this.ScreenManager.GraphicsDevice.Viewport.Height - GlobalParameters.BUY_WEAPON_SCREEN_WEAPONS_FOOTER_HEIGHT)
             };
 
-            var quarterWidthMenuFooter = _panelMenuFooter.Size.X / 4;
-            var halfHeightMenuFooter = _panelMenuFooter.Size.Y / 2;
+            var quarterWidthMenuFooter = this._panelMenuFooter.Size.X / 4;
+            var halfHeightMenuFooter = this._panelMenuFooter.Size.Y / 2;
 
-            _primaryWeaponTextControl =
+            this._primaryWeaponTextControl =
                 new TextControl(
-                    GetWeaponTextControlText(_resumeStateData.PrimaryWeapon),
-                    ScreenManager.SpriteFonts.TextFont, Color.Black);
+                    this.GetWeaponTextControlText(this._resumeStateData.PrimaryWeapon),
+                    this.ScreenManager.SpriteFonts.TextFont, Color.Black);
 
-            _primaryWeaponTextControl.Position = new Vector2(GlobalParameters.LEFT_MARGIN, halfHeightMenuFooter - _primaryWeaponTextControl.Size.Y);
+            this._primaryWeaponTextControl.Position = new Vector2(GlobalParameters.LEFT_MARGIN, halfHeightMenuFooter - this._primaryWeaponTextControl.Size.Y);
 
-            _secondaryWeaponTextControl =
+            this._secondaryWeaponTextControl =
                 new TextControl(
-                    GetWeaponTextControlText(_resumeStateData.SecondaryWeapon),
-                    ScreenManager.SpriteFonts.TextFont, Color.Black) { Position = new Vector2(GlobalParameters.LEFT_MARGIN, halfHeightMenuFooter) };
+                    this.GetWeaponTextControlText(this._resumeStateData.SecondaryWeapon),
+                    this.ScreenManager.SpriteFonts.TextFont, Color.Black) { Position = new Vector2(GlobalParameters.LEFT_MARGIN, halfHeightMenuFooter) };
 
             var playButton = new Button
             {
                 //ClickedButtonTexture = _btnClicked,
                 TextVisible = true,
-                Font = ScreenManager.SpriteFonts.TittleFontMedium,
+                Font = this.ScreenManager.SpriteFonts.TittleFontMedium,
                 DisplayText = GlobalParameters.BUY_WEAPON_SCREEN_PLAY_BUTTON_TEXT,
                 Foreground = Color.White,
                 ClickedForeground = Color.Black,
@@ -582,11 +584,11 @@ namespace Platformer.Screens
                 new Vector2((quarterWidthMenuFooter * 3) + ((quarterWidthMenuFooter / 2) - (playButton.Width / 2)),
                             halfHeightMenuFooter - (playButton.Height / 2));
 
-            playButton.OnClicked += sender => LoadNextLevel();
+            playButton.OnClicked += sender => this.LoadNextLevel();
 
-            _panelMenuFooter.AddChild(_primaryWeaponTextControl);
-            _panelMenuFooter.AddChild(_secondaryWeaponTextControl);
-            _panelMenuFooter.AddChild(playButton);
+            this._panelMenuFooter.AddChild(this._primaryWeaponTextControl);
+            this._panelMenuFooter.AddChild(this._secondaryWeaponTextControl);
+            this._panelMenuFooter.AddChild(playButton);
         }
 
         /// <summary>
@@ -668,7 +670,7 @@ namespace Platformer.Screens
                                  weapon.Position.ToString(),
                                  weapon.Name,
                                  weapon.CurrentAmmo,
-                                 _resumeStateData.AmmoInventory == null || !_resumeStateData.AmmoInventory.ContainsKey((int)weapon.Type) ? 0 : _resumeStateData.AmmoInventory[(int)weapon.Type]);
+                                 this._resumeStateData.AmmoInventory == null || !this._resumeStateData.AmmoInventory.ContainsKey((int)weapon.Type) ? 0 : this._resumeStateData.AmmoInventory[(int)weapon.Type]);
         }
 
         private string GetButtonDisplayTextToBuy(Weapon weapon)
@@ -703,18 +705,18 @@ namespace Platformer.Screens
             // Setamos las cosas a mostrar en el menu de descripcion segun el arma que seleccionamos
             // Seteamos la imagen del arma que seleccionamos
             var weaponTextureRectangle = GlobalParameters.ScreenAssetsData[weapon.Type.ToString()];
-            _weaponImageControl.Texture = ScreenManager.ScreenAssetsTexture;
-            _weaponImageControl.TextureRectangle = weaponTextureRectangle;
-            _weaponImageControl.Position =
+            this._weaponImageControl.Texture = this.ScreenManager.ScreenAssetsTexture;
+            this._weaponImageControl.TextureRectangle = weaponTextureRectangle;
+            this._weaponImageControl.Position =
                 new Vector2(((GlobalParameters.WEAPON_BUTTON_NORMAL_SMALL_WIDTH/2) - (weaponTextureRectangle.Width/2)),
                             (((GlobalParameters.WEAPON_BUTTON_NORMAL_SMALL_HEIGHT/3)/2) - (weaponTextureRectangle.Height/2)));
 
             // Seteamos el texto con la descripcion del arma que seleccionamos
-            _weaponDescriptionTextControl.Text = GetWeaponDescription(weapon);
+            this._weaponDescriptionTextControl.Text = this.GetWeaponDescription(weapon);
 
             // Seteamos el estado del boton, su evento y el estado del arma que seleccionamos
-            SetDescriptionButtonAndWeaponState(_weaponActionButton, weapon);
-            _weaponActionButton.Tag = weapon;
+            this.SetDescriptionButtonAndWeaponState(this._weaponActionButton, weapon);
+            this._weaponActionButton.Tag = weapon;
         }
 
         /// <summary>
@@ -726,8 +728,8 @@ namespace Platformer.Screens
         private void SetListButtonAndWeaponState(Button button, Weapon weapon)
         {
             // Si el arma es un arma primara o secundaria del Player
-            if (_resumeStateData.PrimaryWeapon.Type == weapon.Type
-                || (_resumeStateData.SecondaryWeapon != null && _resumeStateData.SecondaryWeapon.Type == weapon.Type))
+            if (this._resumeStateData.PrimaryWeapon.Type == weapon.Type
+                || (this._resumeStateData.SecondaryWeapon != null && this._resumeStateData.SecondaryWeapon.Type == weapon.Type))
             {
                 //button.DisplayText = GetButtonDisplayText(GlobalParameters.WEAPON_EQUIPPED_TEXT, weapon);
                 button.DisplayText = GlobalParameters.WEAPON_EQUIPPED_TEXT;
@@ -735,7 +737,7 @@ namespace Platformer.Screens
             }
             // Si el arma, no es un arma primara o secundaria del Player pero la tiene en el inventario,
             // entonces que pueda equiparsela (EquipWeapon).
-            else if (_resumeStateData.WeaponInventory.Any(item => item.Type == weapon.Type))
+            else if (this._resumeStateData.WeaponInventory.Any(item => item.Type == weapon.Type))
             {
                 //button.DisplayText = GetButtonDisplayText(GlobalParameters.WEAPON_IN_INVENTORY_TEXT, weapon);
                 button.DisplayText = GlobalParameters.WEAPON_IN_INVENTORY_TEXT;
@@ -745,8 +747,8 @@ namespace Platformer.Screens
             // y luego equiparla (si es que posee ptos suficientes).
             else
             {
-                button.DisplayText = GetButtonDisplayTextToBuy(weapon);
-                weapon.State = _resumeStateData.Score >= weapon.ScoreValue
+                button.DisplayText = this.GetButtonDisplayTextToBuy(weapon);
+                weapon.State = this._resumeStateData.Score >= weapon.ScoreValue
                                    ? WeaponState.AvailableToBuy
                                    : WeaponState.NotEnoughtToBuy;
             }
@@ -781,34 +783,34 @@ namespace Platformer.Screens
 
             // Si el arma posee un estadio "equipada" y los puntos que se poseen son menores al costo de las municiones,
             // entonces que retorne sin hacer nada.
-            if (weapon.State == WeaponState.Equipped && _resumeStateData.Score < weapon.AmmoScoreValue)
+            if (weapon.State == WeaponState.Equipped && this._resumeStateData.Score < weapon.AmmoScoreValue)
                 return;
             
             // Si el arma posee un estadio "equipada" y los puntos que se poseen son mayores al costo de las municiones,
             // entonces comprar las municiones.
-            if (weapon.State == WeaponState.Equipped && _resumeStateData.Score >= weapon.AmmoScoreValue)
+            if (weapon.State == WeaponState.Equipped && this._resumeStateData.Score >= weapon.AmmoScoreValue)
             {
-                BuyAmmo(weapon);
+                this.BuyAmmo(weapon);
 
                 // Refrescamos los menues de la pantalla
-                UpdateScreenControls();
+                this.UpdateScreenControls();
             }
             else
             {
                 // Si el arma posee un estado "disponible para comprarla", entonces comprarla
                 if (weapon.State == WeaponState.AvailableToBuy)
                 {
-                    BuyWeapon(weapon);
+                    this.BuyWeapon(weapon);
                 }
 
                 // Si el arma posee un estado "en inventario"
                 if (weapon.State == WeaponState.InInventory)
                 {
                     // Cambiamos el arma
-                    SetCurrentWeapon(weapon);
+                    this.SetCurrentWeapon(weapon);
 
                     // Refrescamos los menues de la pantalla
-                    UpdateScreenControls();
+                    this.UpdateScreenControls();
                 }
             }
         }
@@ -821,15 +823,15 @@ namespace Platformer.Screens
         private void BuyWeapon(Weapon weapon)
         {
             // Si el score es < al costo del arma, retornamos
-            if (_resumeStateData.Score < weapon.ScoreValue) return;
+            if (this._resumeStateData.Score < weapon.ScoreValue) return;
 
             // Disminuimos el score segun el costo del arma (ScoreValue)
-            _resumeStateData.Score -= weapon.ScoreValue;
+            this._resumeStateData.Score -= weapon.ScoreValue;
 
             // Lo agregamos al inventario
-            _resumeStateData.WeaponInventory.Add(weapon);
+            this._resumeStateData.WeaponInventory.Add(weapon);
 
-            GetAmmo(weapon);
+            this.GetAmmo(weapon);
 
             weapon.State = WeaponState.InInventory;
         }
@@ -837,25 +839,25 @@ namespace Platformer.Screens
         private void BuyAmmo(Weapon weapon)
         {
             // Si el score es < al costo de las municiones, retornamos
-            if (_resumeStateData.Score < weapon.AmmoScoreValue) return;
+            if (this._resumeStateData.Score < weapon.AmmoScoreValue) return;
 
             // Disminuimos el score segun el costo de las municiones (ScoreValue)
-            _resumeStateData.Score -= weapon.AmmoScoreValue;
+            this._resumeStateData.Score -= weapon.AmmoScoreValue;
 
-            GetAmmo(weapon);
+            this.GetAmmo(weapon);
         }
 
         private void GetAmmo(Weapon weapon)
         {
             var weaponKey = (int) weapon.Type;
 
-            if (_resumeStateData.AmmoInventory.ContainsKey(weaponKey))
+            if (this._resumeStateData.AmmoInventory.ContainsKey(weaponKey))
             {
-                _resumeStateData.AmmoInventory[weaponKey] += weapon.AmmoPack;
+                this._resumeStateData.AmmoInventory[weaponKey] += weapon.AmmoPack;
             }
             else
             {
-                _resumeStateData.AmmoInventory.Add(weaponKey, weapon.AmmoPack);
+                this._resumeStateData.AmmoInventory.Add(weaponKey, weapon.AmmoPack);
             }
         }
 
@@ -871,10 +873,10 @@ namespace Platformer.Screens
             switch (weapon.Position)
             {
                 case WeaponPosition.Primary:
-                    _resumeStateData.PrimaryWeapon = weapon;
+                    this._resumeStateData.PrimaryWeapon = weapon;
                     break;
                 case WeaponPosition.Secondary:
-                    _resumeStateData.SecondaryWeapon = weapon;
+                    this._resumeStateData.SecondaryWeapon = weapon;
                     break;
                 default:
                     throw new Exception("Position del arma inexistente");
@@ -896,17 +898,17 @@ namespace Platformer.Screens
         private void UpdateScreenControls()
         {
             //_headerTitleTextControl.Text = GetWeaponTextControlHeaderText();
-            _scoreTextControl.Text = GetScoreText(_resumeStateData.Score);
-            _primaryWeaponTextControl.Text = GetWeaponTextControlText(_resumeStateData.PrimaryWeapon);
-            _secondaryWeaponTextControl.Text = GetWeaponTextControlText(_resumeStateData.SecondaryWeapon);
+            this._scoreTextControl.Text = this.GetScoreText(this._resumeStateData.Score);
+            this._primaryWeaponTextControl.Text = this.GetWeaponTextControlText(this._resumeStateData.PrimaryWeapon);
+            this._secondaryWeaponTextControl.Text = this.GetWeaponTextControlText(this._resumeStateData.SecondaryWeapon);
 
             //currentButton.DisplayText = GetButtonDisplayText(GlobalParameters.WEAPON_EQUIPPED_TEXT, newWeapon);
             //currentButton.DisplayText = GlobalParameters.WEAPON_EQUIPPED_TEXT;
 
             // Iteramos todos los controles del menu en busqueda del boton del arma anterior para cambiarle el texto
-            for (var i = 0; i < _scrollingWeaponsMenu.ChildCount; i++)
+            for (var i = 0; i < this._scrollingWeaponsMenu.ChildCount; i++)
             {
-                var insideControl = _scrollingWeaponsMenu[i];
+                var insideControl = this._scrollingWeaponsMenu[i];
 
                 for (var x = 0; x < insideControl.ChildCount; x++)
                 {
@@ -920,19 +922,19 @@ namespace Platformer.Screens
 
                     var buttonWeapon = (Weapon)button.Tag;
 
-                    SetListButtonAndWeaponState(button, buttonWeapon);
+                    this.SetListButtonAndWeaponState(button, buttonWeapon);
                 }
             }
 
-            SetDescriptionButtonAndWeaponState(_weaponActionButton, (Weapon)_weaponActionButton.Tag);
+            this.SetDescriptionButtonAndWeaponState(this._weaponActionButton, (Weapon)this._weaponActionButton.Tag);
         }
 
         private void LoadNextLevel()
         {
             // Volvemos a regarlas las armas (por si no tenia balas cuando llego a esta pantalla y compro)
-            ReloadWeapons();
+            this.ReloadWeapons();
 
-            LoadingScreen.Load(ScreenManager, true, PlayerIndex.One, new GameplayScreen(_resumeStateData));
+            LoadingScreen.Load(this.ScreenManager, true, PlayerIndex.One, new GameplayScreen(this._resumeStateData));
         }
 
         /// <summary>
@@ -940,21 +942,21 @@ namespace Platformer.Screens
         /// </summary>
         private void ReloadWeapons()
         {
-            if (_resumeStateData.PrimaryWeapon != null) ReloadWeapons(_resumeStateData.PrimaryWeapon);
-            if (_resumeStateData.SecondaryWeapon != null) ReloadWeapons(_resumeStateData.SecondaryWeapon);
+            if (this._resumeStateData.PrimaryWeapon != null) this.ReloadWeapons(this._resumeStateData.PrimaryWeapon);
+            if (this._resumeStateData.SecondaryWeapon != null) this.ReloadWeapons(this._resumeStateData.SecondaryWeapon);
         }
 
         private void ReloadWeapons(Weapon weapon)
         {
             if (weapon.CurrentAmmo >= weapon.MaxAmmo) return;
 
-            var availableAmmo = GetWeaponAvailableAmmo(weapon);
+            var availableAmmo = this.GetWeaponAvailableAmmo(weapon);
 
             // Si no tenemos municiones disponibles, que retorne sin hacer nada
             if (availableAmmo <= 0) return;
 
             // Cargamos el arma con las que tenemos disponibles
-            SetWeaponAvailableAmmo(weapon, weapon.FastReload(availableAmmo));
+            this.SetWeaponAvailableAmmo(weapon, weapon.FastReload(availableAmmo));
         }
 
         /// <summary>
@@ -966,16 +968,16 @@ namespace Platformer.Screens
         {
             var weaponIndex = (int)weapon.Type;
 
-            if (_resumeStateData.AmmoInventory == null)
-                _resumeStateData.AmmoInventory = new Dictionary<int, int>();
+            if (this._resumeStateData.AmmoInventory == null)
+                this._resumeStateData.AmmoInventory = new Dictionary<int, int>();
 
-            if (_resumeStateData.AmmoInventory.ContainsKey(weaponIndex))
+            if (this._resumeStateData.AmmoInventory.ContainsKey(weaponIndex))
             {
-                _resumeStateData.AmmoInventory[weaponIndex] = availableAmmo;
+                this._resumeStateData.AmmoInventory[weaponIndex] = availableAmmo;
             }
             else
             {
-                _resumeStateData.AmmoInventory.Add(weaponIndex, availableAmmo);
+                this._resumeStateData.AmmoInventory.Add(weaponIndex, availableAmmo);
             }
         }
 
@@ -986,7 +988,7 @@ namespace Platformer.Screens
         /// <returns></returns>
         public int GetWeaponAvailableAmmo(Weapon weapon)
         {
-            return _resumeStateData.AmmoInventory == null || !_resumeStateData.AmmoInventory.ContainsKey((int)weapon.Type) ? 0 : _resumeStateData.AmmoInventory[(int)weapon.Type];
+            return this._resumeStateData.AmmoInventory == null || !this._resumeStateData.AmmoInventory.ContainsKey((int)weapon.Type) ? 0 : this._resumeStateData.AmmoInventory[(int)weapon.Type];
         }
         #endregion
 

@@ -1,4 +1,4 @@
-﻿namespace Platformer
+﻿namespace ACoZ
 {
     /// <summary>
     /// Facing direction along the X axis.

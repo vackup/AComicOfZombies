@@ -10,6 +10,9 @@
 #region Using Statements
 
 using System;
+using ACoZ.Helpers;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 #if WINDOWS_PHONE || IPHONE
 using Mobile.Base.Controls;
 #elif SILVERLIGHT
@@ -17,14 +20,10 @@ using Web.Base.Controls;
 #elif WINDOWS
 using Desktop.Base.Controls;
 #endif
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Platformer.Helpers;
 
 #endregion
 
-namespace Platformer.Screens
+namespace ACoZ.Screens
 {
     /// <summary>
     /// A popup message box screen, used to display "are you sure?"
@@ -51,7 +50,7 @@ namespace Platformer.Screens
         public TouchMessageBoxScreen(string message, Button.ClickHandler accepted)
             : base(true)
         {
-            _message = message;
+            this._message = message;
             
             //if (_message.Length > 20)
             //{
@@ -72,7 +71,7 @@ namespace Platformer.Screens
             //    _messageLines = 1;
             //}
             
-            _accepted = accepted;
+            this._accepted = accepted;
             //// Flag that there is no need for the game to transition
             //// off when the pause menu is on top of it.
             //IsPopup = true;
@@ -106,17 +105,17 @@ namespace Platformer.Screens
         {
             base.LoadContent();
 
-            _backgroundTexture = ScreenManager.Game.Content.Load<Texture2D>(GlobalParameters.WEAPON_BUTTON_NORMAL);
+            this._backgroundTexture = this.ScreenManager.Game.Content.Load<Texture2D>(GlobalParameters.WEAPON_BUTTON_NORMAL);
 
             //Creates Menu
-            CreateMenu();
+            this.CreateMenu();
         }
 
         private void CreateMenu()
         {
             //float screenWith = Viewport.Width;
 
-            _viewPortHalfWith = Viewport.Width / 2;
+            this._viewPortHalfWith = this.Viewport.Width / 2;
 
             //Add MenuItems
             //1. Play Game
@@ -127,7 +126,7 @@ namespace Platformer.Screens
                 //Font = ScreenManager.SpriteFonts.TittleFont,
                 //TextSize = Button.FontSize.Big,
                 //TextAlignment = Button.TextAlign.Centre                 
-                NormalButtonTexture = ScreenManager.ScreenAssetsTexture,
+                NormalButtonTexture = this.ScreenManager.ScreenAssetsTexture,
                 TextureRectangle = GlobalParameters.ScreenAssetsData["PANTALLA_QUIT0001_psd-confirm"],
             };
 
@@ -135,10 +134,10 @@ namespace Platformer.Screens
             //confirmButton.Height = confirmButton.TextHeight;
             confirmButton.Width = confirmButton.TextureRectangle.Width;
             confirmButton.Height = confirmButton.TextureRectangle.Height;
-            confirmButton.Position = new Vector2(_viewPortHalfWith - confirmButton.Width / 2, GlobalParameters.TOUCH_MESSAGE_BOX_SCREENFIRST_BUTTON_INITIAL_POSITION);
-            confirmButton.OnClicked += _accepted;
+            confirmButton.Position = new Vector2(this._viewPortHalfWith - confirmButton.Width / 2, GlobalParameters.TOUCH_MESSAGE_BOX_SCREENFIRST_BUTTON_INITIAL_POSITION);
+            confirmButton.OnClicked += this._accepted;
 
-            PanelMenu.AddChild(confirmButton);
+            this.PanelMenu.AddChild(confirmButton);
 
             //2. Options
             var cancelButton = new Button
@@ -148,7 +147,7 @@ namespace Platformer.Screens
                 //Font = ScreenManager.SpriteFonts.TittleFont,
                 //TextSize = Button.FontSize.Big,
                 //TextAlignment = Button.TextAlign.Centre
-                NormalButtonTexture = ScreenManager.ScreenAssetsTexture,
+                NormalButtonTexture = this.ScreenManager.ScreenAssetsTexture,
                 TextureRectangle = GlobalParameters.ScreenAssetsData["PANTALLA_QUIT0001_psd-cancel"],
             };
 
@@ -156,12 +155,12 @@ namespace Platformer.Screens
             //cancelButton.Height = cancelButton.TextHeight;
             cancelButton.Width = cancelButton.TextureRectangle.Width;
             cancelButton.Height = cancelButton.TextureRectangle.Height;
-            cancelButton.Position = new Vector2(_viewPortHalfWith - cancelButton.Width / 2,
+            cancelButton.Position = new Vector2(this._viewPortHalfWith - cancelButton.Width / 2,
                                                  confirmButton.Position.Y + confirmButton.Height +
                                                  GlobalParameters.TOUCH_MESSAGE_BOX_SCREENMARGIN_BETWEEN_BUTTONS);
             cancelButton.OnClicked += OnCancel;
 
-            PanelMenu.AddChild(cancelButton);
+            this.PanelMenu.AddChild(cancelButton);
         }
 
         public override void UnloadContent()
@@ -196,32 +195,32 @@ namespace Platformer.Screens
         public override void Draw(GameTime gameTime)
         {
             // Darken down any other screens that were drawn beneath the popup.
-            ScreenManager.FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
+            this.ScreenManager.FadeBackBufferToBlack(this.TransitionAlpha * 2 / 3);
 
             // make sure our entries are in the right place before we draw them
             //UpdateMenuEntryLocations();
 
             //var graphics = ScreenManager.GraphicsDevice;
-            var spriteBatch = ScreenManager.SpriteBatch;
-            var font = ScreenManager.SpriteFonts.TextFont;
+            var spriteBatch = this.ScreenManager.SpriteBatch;
+            var font = this.ScreenManager.SpriteFonts.TextFont;
 
             // Make the menu slide into place during transitions, using a
             // power curve to make things look more interesting (this makes
             // the movement slow down as it nears the end).
-            var transitionOffset = (float)Math.Pow(TransitionPosition, 2);
+            var transitionOffset = (float)Math.Pow(this.TransitionPosition, 2);
 
             // Draw the menu title centered on the screen
-            var titlePosition = new Vector2(_viewPortHalfWith, GlobalParameters.TOUCH_MESSAGE_BOX_SCREEN_BOX_POSITION_Y);
-            var titleOrigin = font.MeasureString(_message) / 2;
-            var titleColor = new Color(192, 192, 192) * TransitionAlpha;
+            var titlePosition = new Vector2(this._viewPortHalfWith, GlobalParameters.TOUCH_MESSAGE_BOX_SCREEN_BOX_POSITION_Y);
+            var titleOrigin = font.MeasureString(this._message) / 2;
+            var titleColor = new Color(192, 192, 192) * this.TransitionAlpha;
             const float titleScale = 1.15f;
 
             titlePosition.Y -= transitionOffset * 100;
 
             // Center the message text in the viewport.
-            var viewport = ScreenManager.GraphicsDevice.Viewport;
+            var viewport = this.ScreenManager.GraphicsDevice.Viewport;
             var viewportSize = new Vector2(viewport.Width, viewport.Height);
-            var textSize = font.MeasureString(_message) * titleScale;
+            var textSize = font.MeasureString(this._message) * titleScale;
             var textPosition = (viewportSize - textSize) / (2 * titleScale);
 
             // The background includes a border somewhat larger than the text itself.
@@ -246,12 +245,12 @@ namespace Platformer.Screens
             //                                        (int)textSize.Y * (menuEntries.Count + 1) + vPad * 2);
 
             // Fade the popup alpha during transitions.
-            var color = Color.White * TransitionAlpha;
+            var color = Color.White * this.TransitionAlpha;
 
             spriteBatch.Begin();
 
             // Draw the background rectangle.
-            spriteBatch.Draw(_backgroundTexture, backgroundRectangle, color);
+            spriteBatch.Draw(this._backgroundTexture, backgroundRectangle, color);
 
             // Draw each menu entry in turn.
             //for (int i = 0; i < menuEntries.Count; i++)
@@ -266,7 +265,7 @@ namespace Platformer.Screens
             //}
 
             // Draw the menu title centered on the screen
-            spriteBatch.DrawString(font, _message, titlePosition, titleColor, 0, titleOrigin, titleScale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(font, this._message, titlePosition, titleColor, 0, titleOrigin, titleScale, SpriteEffects.None, 0);
 
             //// Draw the message box text.
             //spriteBatch.DrawString(font, _message, textPosition, titleColor);

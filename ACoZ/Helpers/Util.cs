@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
+
 #if WINDOWS_PHONE
 using Microsoft.Phone.Tasks;
 #elif IPHONE
@@ -9,7 +9,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 #endif
 
-namespace Platformer.Helpers
+namespace ACoZ.Helpers
 {
     public static class Util
     {
@@ -18,11 +18,9 @@ namespace Platformer.Helpers
             // TODO: mover a un lugar donde puede ser accedido por todos los posibles enums
             var currentEnum = typeof(T);
             var resultSet = new List<T>();
-#if WINDOWS && NETFX_CORE            
-            if (!currentEnum.GetTypeInfo().IsEnum)
-#else
+
+            //if (!currentEnum.GetTypeInfo().IsEnum)
             if (!currentEnum.IsEnum)
-#endif
             {
                 throw new Exception(string.Format("{0} is not an enum", currentEnum));
             }
@@ -65,11 +63,8 @@ namespace Platformer.Helpers
 
         public static void GoToUrl(string urlAdress)
         {
-#if WINDOWS && !NETFX_CORE
+#if WINDOWS
             System.Diagnostics.Process.Start(urlAdress);
-#elif WINDOWS_PHONE
-            var wbt = new WebBrowserTask {URL = urlAdress};
-            wbt.Show();
 #elif IPHONE
             var url = new NSUrl(urlAdress);
 			 if (!UIApplication.SharedApplication.OpenUrl(url))

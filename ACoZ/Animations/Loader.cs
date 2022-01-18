@@ -1,27 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using System.IO;
-using Platformer.Helpers;
-using Platformer.Weapons;
+using ACoZ.Helpers;
+using Microsoft.Xna.Framework;
 
-namespace Platformer.Animations
+namespace ACoZ.Animations
 {
-    using System.Reflection;
-
     public static class Loader
     {
-        public static T ParseEnum<T>(string value) where T : struct 
-#if !NETFX_CORE
-            , IConvertible
-#endif
-        {
-            //if (!typeof(T).IsEnum) 
-#if WINDOWS && NETFX_CORE
-            if (!typeof(T).GetTypeInfo().IsEnum)
-#else
+        public static T ParseEnum<T>(string value) where T : struct, IConvertible
+        {            
+            //if (!typeof(T).GetTypeInfo().IsEnum)
             if (!typeof(T).IsEnum)
-#endif
             {
                 throw new ArgumentException("T must be an enumerated type");
             }
@@ -39,10 +29,7 @@ namespace Platformer.Animations
             throw new Exception("No se encontro el valor del enum");
         }
 
-        public static Dictionary<int, Rectangle> LoadData<T>(string fileName, int capacity) where T : struct
-#if !NETFX_CORE
-            , IConvertible
-#endif
+        public static Dictionary<int, Rectangle> LoadData<T>(string fileName, int capacity) where T : struct, IConvertible
         {
             var spriteSourceRectangles = new Dictionary<int, Rectangle>(capacity);
 

@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-//using System.Xml.Serialization;
-//using System.IO;
+using ACoZ.Helpers;
+using ACoZ.Npc;
+using ACoZ.Npc.Enemies;
+using ACoZ.Players;
+using ACoZ.Weapons;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
+//using System.Xml.Serialization;
+//using System.IO;
 #if WINDOWS_PHONE || IPHONE
 using Mobile.Base.VirtualInput;
 #elif SILVERLIGHT
@@ -14,14 +19,9 @@ using Web.Base.VirtualInput;
 #elif WINDOWS
 using Desktop.Base.VirtualInput;
 #endif
-using Platformer.Helpers;
-using Platformer.Npc;
-using Platformer.Npc.Enemies;
 //using Platformer.Npc.Survivors;
-using Platformer.Players;
-using Platformer.Weapons;
 
-namespace Platformer.Levels
+namespace ACoZ.Levels
 {
     /// <summary>
     /// A uniform grid of tiles with collections of gems and enemies.
@@ -116,56 +116,56 @@ namespace Platformer.Levels
         /// <param name="ammoInventory"></param>
         public Level(ContentManager contentManager, int levelIndex, int newScore, int currentLives, int nextLife, List<Weapon> weaponInventory, Weapon primaryWeapon, Weapon secondaryWeapon, PlayerInfo playerInfo, Dictionary<int, int> ammoInventory)
         {
-            _weaponInventory = weaponInventory;
-            _primaryWeapon = primaryWeapon;
-            _secondaryWeapon = secondaryWeapon;
-            _ammoInventory = ammoInventory;
-            _playerInfo = playerInfo;
+            this._weaponInventory = weaponInventory;
+            this._primaryWeapon = primaryWeapon;
+            this._secondaryWeapon = secondaryWeapon;
+            this._ammoInventory = ammoInventory;
+            this._playerInfo = playerInfo;
 
             //ScreenManager = screenManager;
-            Content = contentManager;
+            this.Content = contentManager;
 
             // Create a new content manager to load content used just by this level.
             //Content = new ContentManager(serviceProvider, GlobalParameters.CONTENT_FOLDER);
 
-            CurrentLevel = levelIndex;
+            this.CurrentLevel = levelIndex;
 
-            LoadTiles(levelIndex);
+            this.LoadTiles(levelIndex);
 
-            Player.SetLives(currentLives);
+            this.Player.SetLives(currentLives);
 
-            NextLife = nextLife;
-            Score = newScore;
+            this.NextLife = nextLife;
+            this.Score = newScore;
 
             // Set the time keepers to zero
-            _previousSpawnTime = TimeSpan.Zero;
+            this._previousSpawnTime = TimeSpan.Zero;
 
             // Load background layer textures. For now, all levels must
             // use the same backgrounds and only use the left-most part of them.
-            LoadBackground();
+            this.LoadBackground();
 
             // Load sounds.
-            LoadSounds();
+            this.LoadSounds();
 
             //LoadZoomMenu();
 
             //LoadCamera();
-            LoadEnemiesPool();
+            this.LoadEnemiesPool();
 
-            _tilesPerScreen = (int)Math.Floor(GlobalParameters.SCREEN_WIDTH / (double)Tile.WIDTH);
+            this._tilesPerScreen = (int)Math.Floor(GlobalParameters.SCREEN_WIDTH / (double)Tile.WIDTH);
         }
 
         private void LoadEnemiesPool()
         {
-            var fastWeakMonstersPoolQuantity = _enemiesParameters[NpcTypes.FastWeakMonster.ToString()].PoolQuantity;
-            var normalMonstersPoolQuantity = _enemiesParameters[NpcTypes.NormalMonster.ToString()].PoolQuantity;
-            var slowStrongMonsterPoolQuantity = _enemiesParameters[NpcTypes.SlowStrongMonster.ToString()].PoolQuantity;
+            var fastWeakMonstersPoolQuantity = this._enemiesParameters[NpcTypes.FastWeakMonster.ToString()].PoolQuantity;
+            var normalMonstersPoolQuantity = this._enemiesParameters[NpcTypes.NormalMonster.ToString()].PoolQuantity;
+            var slowStrongMonsterPoolQuantity = this._enemiesParameters[NpcTypes.SlowStrongMonster.ToString()].PoolQuantity;
 
             if (fastWeakMonstersPoolQuantity > 0)
             {
-                FastWeakMonstersPool = new Pool<FastWeakMonster>(fastWeakMonstersPoolQuantity);
+                this.FastWeakMonstersPool = new Pool<FastWeakMonster>(fastWeakMonstersPoolQuantity);
 
-                foreach (var enemy in FastWeakMonstersPool.AllNodes)
+                foreach (var enemy in this.FastWeakMonstersPool.AllNodes)
                 {
                     if (!enemy.Item.IsInit)
                     {
@@ -176,9 +176,9 @@ namespace Platformer.Levels
 
             if (normalMonstersPoolQuantity > 0)
             {
-                NormalMonstersPool = new Pool<NormalMonster>(normalMonstersPoolQuantity);
+                this.NormalMonstersPool = new Pool<NormalMonster>(normalMonstersPoolQuantity);
                 
-                foreach (var enemy in NormalMonstersPool.AllNodes)
+                foreach (var enemy in this.NormalMonstersPool.AllNodes)
                 {
                     if (!enemy.Item.IsInit)
                     {
@@ -189,9 +189,9 @@ namespace Platformer.Levels
 
             if (slowStrongMonsterPoolQuantity > 0)
             {
-                SlowStrongMonstersPool = new Pool<SlowStrongMonster>(slowStrongMonsterPoolQuantity);
+                this.SlowStrongMonstersPool = new Pool<SlowStrongMonster>(slowStrongMonsterPoolQuantity);
 
-                foreach (var enemy in SlowStrongMonstersPool.AllNodes)
+                foreach (var enemy in this.SlowStrongMonstersPool.AllNodes)
                 {
                     if (!enemy.Item.IsInit)
                     {
@@ -286,7 +286,7 @@ namespace Platformer.Levels
 
         private void LoadSounds()
         {
-            _exitReachedSound = Content.Load<SoundEffect>("Sounds/ExitReached");
+            this._exitReachedSound = this.Content.Load<SoundEffect>("Sounds/ExitReached");
         }
 
         private void LoadBackground()
@@ -303,10 +303,10 @@ namespace Platformer.Levels
                           //    new Layer(Content, "Backgrounds/Layer2", 0.8f, 6)
                           //};
 
-            _backGroundLayers = new Layer[2];
-            _backGroundLayers[0] = new Layer(Content, "Backgrounds/Layer00", 0.2f, 1);
+            this._backGroundLayers = new Layer[2];
+            this._backGroundLayers[0] = new Layer(this.Content, "Backgrounds/Layer00", 0.2f, 1);
             //_backGroundLayers[1] = new Layer(Content, "Backgrounds/Layer1", 0.5f, 1);
-            _backGroundLayers[1] = new Layer(Content, "Backgrounds/Layer2", 0.8f, 3);
+            this._backGroundLayers[1] = new Layer(this.Content, "Backgrounds/Layer2", 0.8f, 3);
             
 
 //#if !IPHONE
@@ -328,48 +328,48 @@ namespace Platformer.Levels
         public void LoadTiles(int levelNumber)
         {
             // Ponemos la bandera en FALSE para que no se hagan otras acciones mientras el nivel no esta cargado
-            LevelLoaded = false;
+            this.LevelLoaded = false;
 
             var levelData = new LevelData(levelNumber);
 
             // Used to determine how fast enemy respawns
-            _enemySpawnTime = levelData.EnemySpawnTimeTo;
+            this._enemySpawnTime = levelData.EnemySpawnTimeTo;
 
-            _enemySpawnTimeFrom = levelData.EnemySpawnTimeFrom;
-            _enemySpawnTimeTo = levelData.EnemySpawnTimeTo;
+            this._enemySpawnTimeFrom = levelData.EnemySpawnTimeFrom;
+            this._enemySpawnTimeTo = levelData.EnemySpawnTimeTo;
 
-            _enemiesParameters = levelData.EnemiesParameters;
+            this._enemiesParameters = levelData.EnemiesParameters;
 
             var width = levelData.Lines[0].Length;
 
             // HZ: Estas variables las seteamos x defecto en false pero para el futuro podrias ser parametro de cada nivel
-            GemsRequired = false;
+            this.GemsRequired = false;
             //_customGemsRequired = false;
 
             // Allocate the tile grid. Arma una matriz del tamaño del nivel
-            _tiles = new Tile[width, levelData.Lines.Count];
+            this._tiles = new Tile[width, levelData.Lines.Count];
 
             // Loop over every tile position,
-            for (var y = 0; y < Height; ++y)
+            for (var y = 0; y < this.Height; ++y)
             {
-                for (var x = 0; x < Width; ++x)
+                for (var x = 0; x < this.Width; ++x)
                 {
                     // to load each tile.
                     var tileType = levelData.Lines[y][x];
-                    _tiles[x, y] = LoadTile(tileType, x, y);
+                    this._tiles[x, y] = this.LoadTile(tileType, x, y);
                 }
             }
 
             //TimeRemaining = TimeSpan.FromMinutes(2.0);
-            TimeRemaining = levelData.TimeToCompleteLevel;
+            this.TimeRemaining = levelData.TimeToCompleteLevel;
 
             // Verify that the level has a beginning and an end.
-            if (Player == null)
+            if (this.Player == null)
                 throw new NotSupportedException("A level must have a starting point.");
-            if (_exit == InvalidPosition)
+            if (this._exit == InvalidPosition)
                 throw new NotSupportedException("A level must have an exit.");
 
-            LevelLoaded = true;
+            this.LevelLoaded = true;
         }
 
         //private List<string> LevelData(int levelNumber)
@@ -444,17 +444,17 @@ namespace Platformer.Levels
             {
                 // Blank space
                 case '.':
-                    return LoadPassableTile();
+                    return this.LoadPassableTile();
 
                 // Impassable block
                 case '#':
                     //return LoadTile(GlobalParameters.TRANSPARENT_TILE, TileCollision.Impassable);
-                    return LoadImpassableTile();
+                    return this.LoadImpassableTile();
 
                 // Player 1 start point
                 case '1':
                     //return _continuePreviusGame ? LoadPassableTile() : LoadStartTile(x, y);
-                    return LoadStartTile(x, y);
+                    return this.LoadStartTile(x, y);
 
                 // Gem
                 //case 'G':
@@ -462,7 +462,7 @@ namespace Platformer.Levels
 
                 // Exit
                 case 'X':
-                    return LoadExitTile(x, y);
+                    return this.LoadExitTile(x, y);
 
                 // Death Tile
                 //case '*':
@@ -578,7 +578,7 @@ namespace Platformer.Levels
         /// <returns>The new tile.</returns>
         private Tile LoadTile(string name, TileCollision collision)
         {
-            return new Tile(Content.Load<Texture2D>(name), collision);
+            return new Tile(this.Content.Load<Texture2D>(name), collision);
         }
 
 
@@ -606,25 +606,25 @@ namespace Platformer.Levels
         /// </summary>
         private Tile LoadStartTile(int x, int y)
         {
-            if (Player != null)
+            if (this.Player != null)
                 throw new NotSupportedException("A level may only have one starting point.");
 
-            var startPosition = GetBounds(x, y).GetBottomCenter();
+            var startPosition = this.GetBounds(x, y).GetBottomCenter();
 
-            switch (_playerInfo.Type)
+            switch (this._playerInfo.Type)
             {
                 case PlayerType.GordoMercenario:
-                    Player = new GordoMercenario(this, startPosition, _weaponInventory, _primaryWeapon, _secondaryWeapon, _ammoInventory);
+                    this.Player = new GordoMercenario(this, startPosition, this._weaponInventory, this._primaryWeapon, this._secondaryWeapon, this._ammoInventory);
                     break;
                 case PlayerType.Obama:
-                    Player = new Obama(this, startPosition, _weaponInventory, _primaryWeapon, _secondaryWeapon, _ammoInventory);
+                    this.Player = new Obama(this, startPosition, this._weaponInventory, this._primaryWeapon, this._secondaryWeapon, this._ammoInventory);
                     break;
                 default:
                     throw new Exception("Player no contemplado");
             }
 
             //return new Tile(null, TileCollision.Passable);
-            return LoadPassableTile();
+            return this.LoadPassableTile();
         }
 
         ///// <summary>
@@ -655,12 +655,12 @@ namespace Platformer.Levels
         /// </summary>
         private Tile LoadExitTile(int x, int y)
         {
-            if (_exit != InvalidPosition)
+            if (this._exit != InvalidPosition)
                 throw new NotSupportedException("A level may only have one exit.");
 
-            _exit = GetBounds(x, y).Center;
+            this._exit = this.GetBounds(x, y).Center;
 
-            return LoadTile(GlobalParameters.EXIT_TILE, TileCollision.Passable);
+            return this.LoadTile(GlobalParameters.EXIT_TILE, TileCollision.Passable);
         }
 
         ///// <summary>
@@ -786,13 +786,13 @@ namespace Platformer.Levels
         public TileCollision GetCollision(int x, int y)
         {
             // Prevent escaping past the level ends.
-            if (x < 0 || x >= Width)
+            if (x < 0 || x >= this.Width)
                 return TileCollision.Impassable;
             // Allow jumping past the level top and falling through the bottom.
-            if (y < 0 || y >= Height)
+            if (y < 0 || y >= this.Height)
                 return TileCollision.Passable;
 
-            return _tiles[x, y].Collision;
+            return this._tiles[x, y].Collision;
         }
 
         public TileCollision GetTileCollisionBehindPlayer(Vector2 playerPosition)
@@ -801,13 +801,13 @@ namespace Platformer.Levels
             int y = (int)(playerPosition.Y - 1) / Tile.HEIGHT;
 
             // Prevent escaping past the level ends.
-            if (x == Width)
+            if (x == this.Width)
                 return TileCollision.Impassable;
             // Allow jumping past the level top and falling through the bottom.
-            if (y == Height)
+            if (y == this.Height)
                 return TileCollision.Passable;
 
-            return _tiles[x, y].Collision;
+            return this._tiles[x, y].Collision;
         }
 
         public TileCollision GetTileCollisionBelowPlayer(Vector2 playerPosition)
@@ -816,14 +816,14 @@ namespace Platformer.Levels
             int y = (int)playerPosition.Y / Tile.HEIGHT;
 
             // Prevent escaping past the level ends.
-            if (x == Width)
+            if (x == this.Width)
                 return TileCollision.Impassable;
 
             // Allow jumping past the level top and falling through the bottom.
-            if (y == Height)
+            if (y == this.Height)
                 return TileCollision.Passable;
 
-            return _tiles[x, y].Collision;
+            return this._tiles[x, y].Collision;
         }
 
 
@@ -840,7 +840,7 @@ namespace Platformer.Levels
         /// </summary>
         public int Width
         {
-            get { return _tiles.GetLength(0); }
+            get { return this._tiles.GetLength(0); }
         }
 
         /// <summary>
@@ -848,7 +848,7 @@ namespace Platformer.Levels
         /// </summary>
         public int Height
         {
-            get { return _tiles.GetLength(1); }
+            get { return this._tiles.GetLength(1); }
         }
 
         public int CurrentLevel { get; private set; }
@@ -865,26 +865,26 @@ namespace Platformer.Levels
         {
             // Si el nivel no esta cargado, entonces que no ejecute logica
             // Util por si los datos del nivel vienen a traves de un servicio asincronico
-            if (!LevelLoaded) return;
+            if (!this.LevelLoaded) return;
 
             // Pause while the player is dead or time is expired.
-            if (!Player.IsAlive || TimeRemaining == TimeSpan.Zero)
+            if (!this.Player.IsAlive || this.TimeRemaining == TimeSpan.Zero)
             {
                 // Still want to perform physics on the player.
-                Player.ApplyPhysics(gameTime);
+                this.Player.ApplyPhysics(gameTime);
             }
-            else if (ReachedExit)
+            else if (this.ReachedExit)
             {
                 // Animate the time being converted into points.
                 var seconds = (int)Math.Round(gameTime.ElapsedGameTime.TotalSeconds * 100.0f);
-                seconds = Math.Min(seconds, (int)Math.Ceiling(TimeRemaining.TotalSeconds));
-                TimeRemaining -= TimeSpan.FromSeconds(seconds);
-                Score += seconds * GlobalParameters.POINTS_PER_SECOND;
+                seconds = Math.Min(seconds, (int)Math.Ceiling(this.TimeRemaining.TotalSeconds));
+                this.TimeRemaining -= TimeSpan.FromSeconds(seconds);
+                this.Score += seconds * GlobalParameters.POINTS_PER_SECOND;
             }
             else
             {
-                TimeRemaining -= gameTime.ElapsedGameTime;
-                Player.Update(gameTime, keyboardState, gamePadState, mouseState, virtualGamePadState);
+                this.TimeRemaining -= gameTime.ElapsedGameTime;
+                this.Player.Update(gameTime, keyboardState, gamePadState, mouseState, virtualGamePadState);
 
                 //UpdateItems(gameTime);
 
@@ -894,16 +894,16 @@ namespace Platformer.Levels
 
                 //UpdateSurvivors(gameTime);
 
-                UpdateEnemies(gameTime);
+                this.UpdateEnemies(gameTime);
 
                 // The player has reached the exit if they are standing on the ground and
                 // his bounding rectangle contains the center of the exit tile. They can only
                 // exit when they have collected all of the gems.
-                if (Player.IsAlive &&
-                    Player.IsOnGround &&
-                    Player.BoundingRectangle.Contains(_exit))
+                if (this.Player.IsAlive &&
+                    this.Player.IsOnGround &&
+                    this.Player.BoundingRectangle.Contains(this._exit))
                 {
-                    OnExitReached();
+                    this.OnExitReached();
                 }
 
 				// TODO: Nextlife - revisar si esto va a ser util
@@ -915,8 +915,8 @@ namespace Platformer.Levels
             }
 
             // Clamp the time remaining at zero.
-            if (TimeRemaining < TimeSpan.Zero)
-                TimeRemaining = TimeSpan.Zero;
+            if (this.TimeRemaining < TimeSpan.Zero)
+                this.TimeRemaining = TimeSpan.Zero;
         }
 
         /// <summary>
@@ -993,56 +993,56 @@ namespace Platformer.Levels
         private void UpdateEnemies(GameTime gameTime)
         {
             // Si el nivel no tiene enemigos, entonces que no haga nada :)
-            if (_enemiesParameters.Count <= 0) return;
+            if (this._enemiesParameters.Count <= 0) return;
 
             // Spawn a new enemy enemy every X seconds
-            if (_previousSpawnTime > _enemySpawnTime)
+            if (this._previousSpawnTime > this._enemySpawnTime)
             {
-                _enemySpawnTime =
-                    TimeSpan.FromSeconds(RandomUtil.NextDouble(_enemySpawnTimeFrom.TotalSeconds,
-                                                               _enemySpawnTimeTo.TotalSeconds));
+                this._enemySpawnTime =
+                    TimeSpan.FromSeconds(RandomUtil.NextDouble(this._enemySpawnTimeFrom.TotalSeconds,
+                                                               this._enemySpawnTimeTo.TotalSeconds));
 
                 //_previousSpawnTime = gameTime.TotalGameTime;
-                _previousSpawnTime = TimeSpan.FromSeconds(0);
+                this._previousSpawnTime = TimeSpan.FromSeconds(0);
                 // Add an Enemy
-                AddEnemy();
+                this.AddEnemy();
             }
             else
             {
-                _previousSpawnTime += gameTime.ElapsedGameTime;
+                this._previousSpawnTime += gameTime.ElapsedGameTime;
             }
 
-            if (FastWeakMonstersPool != null)
+            if (this.FastWeakMonstersPool != null)
             {
-                foreach (var node in FastWeakMonstersPool.ActiveNodes)
+                foreach (var node in this.FastWeakMonstersPool.ActiveNodes)
                 {
                     node.Item.Update(gameTime);
                     
-                    var enemyDistanceFromPlayer = (int)Math.Abs(node.Item.Position.X - Player.Position.X);
+                    var enemyDistanceFromPlayer = (int)Math.Abs(node.Item.Position.X - this.Player.Position.X);
 
                     // Si la distancia entre el enemigo y player es > a la distancia limite, que desaparezca
                     if (enemyDistanceFromPlayer > GlobalParameters.ENEMY_LIMIT_DISTANCE)
                     {
-                        FastWeakMonstersPool.Return(node);
+                        this.FastWeakMonstersPool.Return(node);
                     }
                     else
                     {
                         if (node.Item.IsAlive)
                         {
                             // Verificar si colisiona el enemigo contra el cuchillo del Player
-                            if (node.Item.BoundingRectangle.Intersects(Player.KnifeBoundingRectangle))
+                            if (node.Item.BoundingRectangle.Intersects(this.Player.KnifeBoundingRectangle))
                             {
-                                if (Player.IsAttacking && !Player.HasHitEnemy)
+                                if (this.Player.IsAttacking && !this.Player.HasHitEnemy)
                                 {
-                                    OnEnemyHit(node.Item, Player);
+                                    this.OnEnemyHit(node.Item, this.Player);
                                 }
                             }
 
                             // Verificar si colisiona el enemigo contra el Player, entonces atacarlo
-                            if (node.Item.BoundingRectangle.Intersects(Player.BoundingRectangle))
+                            if (node.Item.BoundingRectangle.Intersects(this.Player.BoundingRectangle))
                             {
-                                node.Item.AttackPlayer(Player);
-                                OnPlayerHit(node.Item);
+                                node.Item.AttackPlayer(this.Player);
+                                this.OnPlayerHit(node.Item);
                             }
                             else
                             {
@@ -1052,43 +1052,43 @@ namespace Platformer.Levels
                         else if (node.Item.DeathTime < 0)
                         {
                             // Si el enemigo murio, entonces lo marcamos como disponible dentro del pool
-                            FastWeakMonstersPool.Return(node);
+                            this.FastWeakMonstersPool.Return(node);
                         }
                     }
                 }
             }
 
-            if (NormalMonstersPool != null)
+            if (this.NormalMonstersPool != null)
             {
-                foreach (var node in NormalMonstersPool.ActiveNodes)
+                foreach (var node in this.NormalMonstersPool.ActiveNodes)
                 {
                     node.Item.Update(gameTime);
 
-                    var enemyDistanceFromPlayer = (int)Math.Abs(node.Item.Position.X - Player.Position.X);
+                    var enemyDistanceFromPlayer = (int)Math.Abs(node.Item.Position.X - this.Player.Position.X);
 
                     // Si la distancia entre el enemigo y player es > a la distancia limite, que desaparezca
                     if (enemyDistanceFromPlayer > GlobalParameters.ENEMY_LIMIT_DISTANCE)
                     {
-                        NormalMonstersPool.Return(node);
+                        this.NormalMonstersPool.Return(node);
                     }
                     else
                     {
                         if (node.Item.IsAlive)
                         {
                             // Verificar si colisiona el enemigo contra el cuchillo del Player
-                            if (node.Item.BoundingRectangle.Intersects(Player.KnifeBoundingRectangle))
+                            if (node.Item.BoundingRectangle.Intersects(this.Player.KnifeBoundingRectangle))
                             {
-                                if (Player.IsAttacking && !Player.HasHitEnemy)
+                                if (this.Player.IsAttacking && !this.Player.HasHitEnemy)
                                 {
-                                    OnEnemyHit(node.Item, Player);
+                                    this.OnEnemyHit(node.Item, this.Player);
                                 }
                             }
 
                             // Verificar si colisiona el enemigo contra el Player, entonces atacarlo
-                            if (node.Item.BoundingRectangle.Intersects(Player.BoundingRectangle))
+                            if (node.Item.BoundingRectangle.Intersects(this.Player.BoundingRectangle))
                             {
-                                node.Item.AttackPlayer(Player);
-                                OnPlayerHit(node.Item);
+                                node.Item.AttackPlayer(this.Player);
+                                this.OnPlayerHit(node.Item);
                             }
                             else
                             {
@@ -1098,43 +1098,43 @@ namespace Platformer.Levels
                         else if (node.Item.DeathTime < 0)
                         {
                             // Si el enemigo murio, entonces lo marcamos como disponible dentro del pool
-                            NormalMonstersPool.Return(node);
+                            this.NormalMonstersPool.Return(node);
                         }
                     }
                 }
             }
 
-            if (SlowStrongMonstersPool != null)
+            if (this.SlowStrongMonstersPool != null)
             {
-                foreach (var node in SlowStrongMonstersPool.ActiveNodes)
+                foreach (var node in this.SlowStrongMonstersPool.ActiveNodes)
                 {
                     node.Item.Update(gameTime);
 
                     if (node.Item.IsAlive)
                     {
-                        var enemyDistanceFromPlayer = (int)Math.Abs(node.Item.Position.X - Player.Position.X);
+                        var enemyDistanceFromPlayer = (int)Math.Abs(node.Item.Position.X - this.Player.Position.X);
 
                         // Si la distancia entre el enemigo y player es > a la distancia limite, que desaparezca
                         if (enemyDistanceFromPlayer > GlobalParameters.ENEMY_LIMIT_DISTANCE)
                         {
-                            SlowStrongMonstersPool.Return(node);
+                            this.SlowStrongMonstersPool.Return(node);
                         }
                         else
                         {
                             // Verificar si colisiona el enemigo contra el cuchillo del Player
-                            if (node.Item.BoundingRectangle.Intersects(Player.KnifeBoundingRectangle))
+                            if (node.Item.BoundingRectangle.Intersects(this.Player.KnifeBoundingRectangle))
                             {
-                                if (Player.IsAttacking && !Player.HasHitEnemy)
+                                if (this.Player.IsAttacking && !this.Player.HasHitEnemy)
                                 {
-                                    OnEnemyHit(node.Item, Player);
+                                    this.OnEnemyHit(node.Item, this.Player);
                                 }
                             }
 
                             // Verificar si colisiona el enemigo contra el Player, entonces atacarlo
-                            if (node.Item.BoundingRectangle.Intersects(Player.BoundingRectangle))
+                            if (node.Item.BoundingRectangle.Intersects(this.Player.BoundingRectangle))
                             {
-                                node.Item.AttackPlayer(Player);
-                                OnPlayerHit(node.Item);
+                                node.Item.AttackPlayer(this.Player);
+                                this.OnPlayerHit(node.Item);
                             }
                             else
                             {
@@ -1145,7 +1145,7 @@ namespace Platformer.Levels
                     else if (node.Item.DeathTime < 0)
                     {
                         // Si el enemigo murio, entonces lo marcamos como disponible dentro del pool
-                        SlowStrongMonstersPool.Return(node);
+                        this.SlowStrongMonstersPool.Return(node);
                     }
                 }
             }
@@ -1157,26 +1157,26 @@ namespace Platformer.Levels
         private void AddEnemy()
         {
             // Si el nivel no tiene definido los porcentajes de aparicion de enemigos
-            if (_enemiesParameters.Count <= 0) return; 
+            if (this._enemiesParameters.Count <= 0) return; 
 
             // Si los pooles no poseen ningun item disponible, entonces retornamos
-            if ((FastWeakMonstersPool == null || FastWeakMonstersPool.AvailableCount <= 0)
-                && (NormalMonstersPool == null || NormalMonstersPool.AvailableCount <= 0)
-                && (SlowStrongMonstersPool == null || SlowStrongMonstersPool.AvailableCount <= 0))
+            if ((this.FastWeakMonstersPool == null || this.FastWeakMonstersPool.AvailableCount <= 0)
+                && (this.NormalMonstersPool == null || this.NormalMonstersPool.AvailableCount <= 0)
+                && (this.SlowStrongMonstersPool == null || this.SlowStrongMonstersPool.AvailableCount <= 0))
                 return;
 
-            var enemyType = GetRandomEnemyType();
-            var faceDirection = GetEnemyFaceDirection();
-            var position = GetEnemyPosition(faceDirection);
+            var enemyType = this.GetRandomEnemyType();
+            var faceDirection = this.GetEnemyFaceDirection();
+            var position = this.GetEnemyPosition(faceDirection);
 
             switch (enemyType)
             {
                 case NpcTypes.FastWeakMonster:
                     // Verify there are some left in the pool
-                    if (FastWeakMonstersPool != null && FastWeakMonstersPool.AvailableCount > 0)
+                    if (this.FastWeakMonstersPool != null && this.FastWeakMonstersPool.AvailableCount > 0)
                     {
                         // Get an enemy from the pool.
-                        var fastWeakMonster = FastWeakMonstersPool.Get().Item;
+                        var fastWeakMonster = this.FastWeakMonstersPool.Get().Item;
 
                         fastWeakMonster.Start(position);
                         fastWeakMonster.Direction = faceDirection;
@@ -1184,10 +1184,10 @@ namespace Platformer.Levels
                     break;
                 case NpcTypes.NormalMonster:
                     // Verify there are some left in the pool
-                    if (NormalMonstersPool != null && NormalMonstersPool.AvailableCount > 0)
+                    if (this.NormalMonstersPool != null && this.NormalMonstersPool.AvailableCount > 0)
                     {
                         // Get an enemy from the pool.
-                        var normalMonster = NormalMonstersPool.Get().Item;
+                        var normalMonster = this.NormalMonstersPool.Get().Item;
 
                         normalMonster.Start(position);
                         normalMonster.Direction = faceDirection;
@@ -1195,10 +1195,10 @@ namespace Platformer.Levels
                     break;
                 case NpcTypes.SlowStrongMonster:
                     // Verify there are some left in the pool
-                    if (SlowStrongMonstersPool != null && SlowStrongMonstersPool.AvailableCount > 0)
+                    if (this.SlowStrongMonstersPool != null && this.SlowStrongMonstersPool.AvailableCount > 0)
                     {
                         // Get an enemy from the pool.
-                        var slowStrongMonster = SlowStrongMonstersPool.Get().Item;
+                        var slowStrongMonster = this.SlowStrongMonstersPool.Get().Item;
 
                         slowStrongMonster.Start(position);
                         slowStrongMonster.Direction = faceDirection;
@@ -1212,9 +1212,9 @@ namespace Platformer.Levels
         private Vector2 GetEnemyPosition(FaceDirection faceDirection)
         {
             var position = Vector2.Transform(
-                faceDirection == FaceDirection.Left ? new Vector2(GlobalParameters.SCREEN_WIDTH + 10, Player.Position.Y) : new Vector2(-10, Player.Position.Y),
-                Matrix.Invert(Matrix.CreateTranslation(-CameraPositionXAxis,
-                                                       -CameraPositionYAxis, 0.0f)));
+                faceDirection == FaceDirection.Left ? new Vector2(GlobalParameters.SCREEN_WIDTH + 10, this.Player.Position.Y) : new Vector2(-10, this.Player.Position.Y),
+                Matrix.Invert(Matrix.CreateTranslation(-this.CameraPositionXAxis,
+                                                       -this.CameraPositionYAxis, 0.0f)));
 
             return position;
         }
@@ -1223,9 +1223,9 @@ namespace Platformer.Levels
         {
             int enemySide;
 
-            if (Player.IsRunning)
+            if (this.Player.IsRunning)
             {
-                enemySide = Player.Direction == SpriteEffects.FlipHorizontally ? 1 : 0;
+                enemySide = this.Player.Direction == SpriteEffects.FlipHorizontally ? 1 : 0;
             }
             else
             {
@@ -1241,7 +1241,7 @@ namespace Platformer.Levels
             double percent = 0;
             var random = RandomUtil.NextDouble();
 
-            foreach (var enemyParameter in _enemiesParameters)
+            foreach (var enemyParameter in this._enemiesParameters)
             {
                 percent += enemyParameter.Value.Percent;
                 if (random > percent) continue;
@@ -1357,7 +1357,7 @@ namespace Platformer.Levels
         /// </param>
         private void OnPlayerHit(Enemy hitBy)
         {
-            Player.OnHit(hitBy);
+            this.Player.OnHit(hitBy);
         }
 
         ///// <summary>
@@ -1373,9 +1373,9 @@ namespace Platformer.Levels
         /// </summary>
         private void OnExitReached()
         {
-            Player.OnReachedExit();
-            _exitReachedSound.Play();
-            ReachedExit = true;
+            this.Player.OnReachedExit();
+            this._exitReachedSound.Play();
+            this.ReachedExit = true;
         }
 
         ///// <summary>
@@ -1408,33 +1408,33 @@ namespace Platformer.Levels
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // Si el nivel no esta cargado aun, volvemos. Esto es util cuando estamos esperando la respuesta asincronica de un servicio
-            if (!LevelLoaded) return;
+            if (!this.LevelLoaded) return;
 
             // Dibujamos los elementos que van atras (background)
             spriteBatch.Begin();
-            DrawBackground(spriteBatch);
+            this.DrawBackground(spriteBatch);
             spriteBatch.End();
 			
 			
             // Scrolleamos la camara
-            ScrollCamera(spriteBatch.GraphicsDevice.Viewport);
-            var cameraTransform = Matrix.CreateTranslation(-CameraPositionXAxis, -CameraPositionYAxis, 0.0f);
+            this.ScrollCamera(spriteBatch.GraphicsDevice.Viewport);
+            var cameraTransform = Matrix.CreateTranslation(-this.CameraPositionXAxis, -this.CameraPositionYAxis, 0.0f);
 
             // Dibujamos los elementos que son afectados por la camara
             //spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, cameraTransform);
 			spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, cameraTransform);
 
-            DrawTiles(spriteBatch);
+            this.DrawTiles(spriteBatch);
 
             //DrawItems(spriteBatch, gameTime);
 
             //DrawDeathTiles(spriteBatch, gameTime);
 
-            DrawPlayer(spriteBatch, gameTime);
+            this.DrawPlayer(spriteBatch, gameTime);
 
             //DrawSurvivors(spriteBatch, gameTime);
 
-            DrawEnemies(spriteBatch, gameTime);
+            this.DrawEnemies(spriteBatch, gameTime);
 
             spriteBatch.End();
       
@@ -1457,8 +1457,8 @@ namespace Platformer.Levels
 
         private void DrawBackground(SpriteBatch spriteBatch)
         {
-            for (var i = 0; i < _backGroundLayers.Length; i++)
-                _backGroundLayers[i].Draw(spriteBatch, CameraPositionXAxis);
+            for (var i = 0; i < this._backGroundLayers.Length; i++)
+                this._backGroundLayers[i].Draw(spriteBatch, this.CameraPositionXAxis);
         }
 
         //private void DrawItems(SpriteBatch spriteBatch, GameTime gameTime)
@@ -1488,48 +1488,48 @@ namespace Platformer.Levels
             
             // Calculate the edges of the screen.
             var marginWidth = viewport.Width * leftMargin;
-            var marginLeft = CameraPositionXAxis + marginWidth;
-            var marginRight = CameraPositionXAxis + viewport.Width - marginWidth;
+            var marginLeft = this.CameraPositionXAxis + marginWidth;
+            var marginRight = this.CameraPositionXAxis + viewport.Width - marginWidth;
 
             // Calculate how far to scroll when the player is near the edges of the screen.
             var cameraMovementX = 0.0f;
             
-            if (Player.Position.X < marginLeft)
-                cameraMovementX = Player.Position.X - marginLeft;
-            else if (Player.Position.X > marginRight)
-                cameraMovementX = Player.Position.X - marginRight;
+            if (this.Player.Position.X < marginLeft)
+                cameraMovementX = this.Player.Position.X - marginLeft;
+            else if (this.Player.Position.X > marginRight)
+                cameraMovementX = this.Player.Position.X - marginRight;
             
             // Update the camera position, but prevent scrolling off the ends of the level.
-            float maxCameraPosition = Tile.WIDTH * Width - viewport.Width;
-            CameraPositionXAxis = MathHelper.Clamp(CameraPositionXAxis + cameraMovementX, 0.0f, maxCameraPosition);
+            float maxCameraPosition = Tile.WIDTH * this.Width - viewport.Width;
+            this.CameraPositionXAxis = MathHelper.Clamp(this.CameraPositionXAxis + cameraMovementX, 0.0f, maxCameraPosition);
 
 
             // Calculate the scrolling borders for the Y-axis. 
             const float topMargin = 0.3f;
             const float bottomMargin = 0.3f;//0.1f;
 
-            float marginTop = CameraPositionYAxis + viewport.Height * topMargin;
-            float marginBottom = CameraPositionYAxis + viewport.Height - viewport.Height * bottomMargin;
+            float marginTop = this.CameraPositionYAxis + viewport.Height * topMargin;
+            float marginBottom = this.CameraPositionYAxis + viewport.Height - viewport.Height * bottomMargin;
 
             // Calculate how far to vertically scroll when the player is near the top or bottom of the screen. 
             float cameraMovementY = 0.0f;
 
-            if (Player.Position.Y < marginTop) //above the top margin 
-                cameraMovementY = Player.Position.Y - marginTop;
-            else if (Player.Position.Y > marginBottom) //below the bottom margin
-                cameraMovementY = Player.Position.Y - marginBottom;
+            if (this.Player.Position.Y < marginTop) //above the top margin 
+                cameraMovementY = this.Player.Position.Y - marginTop;
+            else if (this.Player.Position.Y > marginBottom) //below the bottom margin
+                cameraMovementY = this.Player.Position.Y - marginBottom;
 
             // Tracks the highest scrolling point for the camera:
-            float maxCameraPositionYOffset = Tile.HEIGHT * Height - viewport.Height;
-            CameraPositionYAxis = MathHelper.Clamp(CameraPositionYAxis + cameraMovementY, 0.0f, maxCameraPositionYOffset);
+            float maxCameraPositionYOffset = Tile.HEIGHT * this.Height - viewport.Height;
+            this.CameraPositionYAxis = MathHelper.Clamp(this.CameraPositionYAxis + cameraMovementY, 0.0f, maxCameraPositionYOffset);
         }
 
         private void DrawEnemies(SpriteBatch spriteBatch, GameTime gameTime)
         {
             // Draw FastWeakMonsters
-            if (FastWeakMonstersPool != null)
+            if (this.FastWeakMonstersPool != null)
             {
-                foreach (var enemy in FastWeakMonstersPool)
+                foreach (var enemy in this.FastWeakMonstersPool)
                 {
                     if (enemy.IsAlive || enemy.DeathTime > 0)
                         enemy.Draw(gameTime, spriteBatch);
@@ -1537,9 +1537,9 @@ namespace Platformer.Levels
             }
 
             // Draw NormalMonsters
-            if (NormalMonstersPool != null)
+            if (this.NormalMonstersPool != null)
             {
-                foreach (var enemy in NormalMonstersPool)
+                foreach (var enemy in this.NormalMonstersPool)
                 {
                     if (enemy.IsAlive || enemy.DeathTime > 0)
                         enemy.Draw(gameTime, spriteBatch);
@@ -1547,9 +1547,9 @@ namespace Platformer.Levels
             }
 
             // Draw SlowStrongMonsters
-            if (SlowStrongMonstersPool != null)
+            if (this.SlowStrongMonstersPool != null)
             {
-                foreach (var enemy in SlowStrongMonstersPool)
+                foreach (var enemy in this.SlowStrongMonstersPool)
                 {
                     if (enemy.IsAlive || enemy.DeathTime > 0)
                         enemy.Draw(gameTime, spriteBatch);
@@ -1578,7 +1578,7 @@ namespace Platformer.Levels
 
         private void DrawPlayer(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            Player.Draw(gameTime, spriteBatch);
+            this.Player.Draw(gameTime, spriteBatch);
         }
 
         /// <summary>
@@ -1592,23 +1592,23 @@ namespace Platformer.Levels
             // the screen at the time. This reduces the drawing load, speeding up the game.
 
             // Calculate the visible range of tiles.
-            var left = (int)Math.Floor(CameraPositionXAxis / Tile.WIDTH);
+            var left = (int)Math.Floor(this.CameraPositionXAxis / Tile.WIDTH);
             //var right = left + (int)Math.Floor(spriteBatch.GraphicsDevice.Viewport.Width / (double)Tile.WIDTH);
-            var right = left + _tilesPerScreen;
-            right = Math.Min(right, Width - 1);
+            var right = left + this._tilesPerScreen;
+            right = Math.Min(right, this.Width - 1);
 
             // For each tile position
-            for (int y = 0; y < Height; ++y)
+            for (int y = 0; y < this.Height; ++y)
             {
                 //for (int x = 0; x < Width; ++x)
                 for (int x = left; x <= right; ++x)
                 {
                     // If there is a visible tile in that position
-                    if (_tiles[x, y].Texture == null) continue;
+                    if (this._tiles[x, y].Texture == null) continue;
 
                     // Draw it in screen space.
                     var position = new Vector2(x, y) * Tile.Size;
-                    spriteBatch.Draw(_tiles[x, y].Texture, position, Color.White);
+                    spriteBatch.Draw(this._tiles[x, y].Texture, position, Color.White);
                 }
             }
         }

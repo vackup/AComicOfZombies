@@ -1,4 +1,4 @@
-﻿namespace Platformer.Levels
+﻿namespace ACoZ.Levels
 {
     /// <summary>
     /// Controls the collision detection and response behavior of a tile.

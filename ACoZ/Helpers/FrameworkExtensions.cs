@@ -3,7 +3,7 @@ using System.Globalization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Platformer.Helpers
+namespace ACoZ.Helpers
 {
 	public static class FrameworkExtensions
 	{

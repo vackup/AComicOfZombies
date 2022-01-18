@@ -1,4 +1,4 @@
-﻿namespace Platformer.Weapons
+﻿namespace ACoZ.Weapons
 {
     public enum WeaponState
     {

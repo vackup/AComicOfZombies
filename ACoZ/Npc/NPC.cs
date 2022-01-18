@@ -1,4 +1,9 @@
 using System;
+using ACoZ.Animations;
+using ACoZ.Helpers;
+using ACoZ.Levels;
+using ACoZ.Players;
+using ACoZ.Weapons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,13 +15,8 @@ using Microsoft.Xna.Framework.Graphics;
 //using Desktop.Base.Components;
 //#endif
 //using Platformer.Helpers;
-using Platformer.Animations;
-using Platformer.Helpers;
-using Platformer.Levels;
-using Platformer.Players;
-using Platformer.Weapons;
 
-namespace Platformer.Npc
+namespace ACoZ.Npc
 {
     /// <summary>
     /// An evil monster hell-bent on impeding the progress of our fearless adventurer.
@@ -75,8 +75,8 @@ namespace Platformer.Npc
 
         protected Npc()
         {
-            SpotlightHeight = GlobalParameters.SPOTLIGHT_HEIGHT;
-            SpotlightWidth = GlobalParameters.SPOTLIGHT_WIDTH;
+            this.SpotlightHeight = GlobalParameters.SPOTLIGHT_HEIGHT;
+            this.SpotlightWidth = GlobalParameters.SPOTLIGHT_WIDTH;
         }
 
         /// <summary>
@@ -93,12 +93,12 @@ namespace Platformer.Npc
 
                 //_boundingRectangle.X = (int) Math.Round(Position.X - Sprite.Origin.X) + LocalBounds.X;
                 //_boundingRectangle.Y = (int)Math.Round(Position.Y - Sprite.Origin.Y) + LocalBounds.Y;
-                _boundingRectangle.X = (int) Math.Round(Position.X - LocalBounds.Width / 2);
-                _boundingRectangle.Y = (int) Math.Round(Position.Y - LocalBounds.Height);
-                _boundingRectangle.Width = LocalBounds.Width;
-                _boundingRectangle.Height = LocalBounds.Height;
+                this._boundingRectangle.X = (int) Math.Round(this.Position.X - this.LocalBounds.Width / 2);
+                this._boundingRectangle.Y = (int) Math.Round(this.Position.Y - this.LocalBounds.Height);
+                this._boundingRectangle.Width = this.LocalBounds.Width;
+                this._boundingRectangle.Height = this.LocalBounds.Height;
 
-                return _boundingRectangle;
+                return this._boundingRectangle;
             }
         }
 
@@ -116,14 +116,14 @@ namespace Platformer.Npc
                 //_spotlightRectangle.X = Direction == FaceDirection.Right
                 //                                  ? BoundingRectangle.X + BoundingRectangle.Width
                 //                                  : BoundingRectangle.X - SpotlightWidth;
-                _spotlightRectangle.X = (BoundingRectangle.X + BoundingRectangle.Width / 2) - (SpotlightWidth / 2); // Centrado en X
+                this._spotlightRectangle.X = (this.BoundingRectangle.X + this.BoundingRectangle.Width / 2) - (this.SpotlightWidth / 2); // Centrado en X
                 
                 //_spotlightRectangle.Y = (int)Math.Round(Position.Y - Sprite.Origin.Y) + LocalBounds.Y;
-                _spotlightRectangle.Y = (BoundingRectangle.Y + BoundingRectangle.Height / 2) - (SpotlightHeight / 2); // Centrado en Y
-                _spotlightRectangle.Width = SpotlightWidth;
-                _spotlightRectangle.Height = SpotlightHeight;
+                this._spotlightRectangle.Y = (this.BoundingRectangle.Y + this.BoundingRectangle.Height / 2) - (this.SpotlightHeight / 2); // Centrado en Y
+                this._spotlightRectangle.Width = this.SpotlightWidth;
+                this._spotlightRectangle.Height = this.SpotlightHeight;
 
-                return _spotlightRectangle;
+                return this._spotlightRectangle;
             }
         }
 
@@ -218,43 +218,43 @@ namespace Platformer.Npc
             //Reset();
 
             //DrawHealthBar = true;
-            FollowPlayer = followPlayer;
-            Level = level;
+            this.FollowPlayer = followPlayer;
+            this.Level = level;
             
             //Load sounds. 
-            _killedSound = Level.Content.Load<SoundEffect>(GlobalParameters.ZOMBIE_KILLED_SOUND);
+            this._killedSound = this.Level.Content.Load<SoundEffect>(GlobalParameters.ZOMBIE_KILLED_SOUND);
             
-            TotalHealth = 5;
-            CurrentHealth = TotalHealth;
+            this.TotalHealth = 5;
+            this.CurrentHealth = this.TotalHealth;
 
             // Trae problemas de performance, aun cuando no se dibuje
             //if (DrawHealthBar)
             //    HealthBar = new HealthBar(Level.Content);
 
-            IsInit = true;
+            this.IsInit = true;
 
-            InitBoundingRectangule();
+            this.InitBoundingRectangule();
 
-            InitSpotlightRectangle();
+            this.InitSpotlightRectangle();
         }
 
         private void InitSpotlightRectangle()
         {
-            var left = (int)Math.Round(Position.X - Sprite.Origin.X) + LocalBounds.X;
-            var top = (int)Math.Round(Position.Y - Sprite.Origin.Y) + LocalBounds.Y;
+            var left = (int)Math.Round(this.Position.X - this.Sprite.Origin.X) + this.LocalBounds.X;
+            var top = (int)Math.Round(this.Position.Y - this.Sprite.Origin.Y) + this.LocalBounds.Y;
 
-            _spotlightRectangle = new Rectangle(left - (SpotlightWidth/2),
+            this._spotlightRectangle = new Rectangle(left - (this.SpotlightWidth/2),
                                                 top,
-                                                SpotlightWidth,
-                                                SpotlightHeight);
+                                                this.SpotlightWidth,
+                                                this.SpotlightHeight);
         }
 
         private void InitBoundingRectangule()
         {
-            var left = (int)Math.Round(Position.X - Sprite.Origin.X) + LocalBounds.X;
-            var top = (int)Math.Round(Position.Y - Sprite.Origin.Y) + LocalBounds.Y;
+            var left = (int)Math.Round(this.Position.X - this.Sprite.Origin.X) + this.LocalBounds.X;
+            var top = (int)Math.Round(this.Position.Y - this.Sprite.Origin.Y) + this.LocalBounds.Y;
 
-            _boundingRectangle = new Rectangle(left, top, LocalBounds.Width, LocalBounds.Height);
+            this._boundingRectangle = new Rectangle(left, top, this.LocalBounds.Width, this.LocalBounds.Height);
         }
 
         /// <summary>
@@ -263,10 +263,10 @@ namespace Platformer.Npc
         /// <param name="position">Posicion inicial</param>
         public virtual void Start(Vector2 position)
         {
-            Position = position;
-            IsAlive = true;
-            DeathTime = DEATH_TIME_MAX;
-            CurrentHealth = TotalHealth;
+            this.Position = position;
+            this.IsAlive = true;
+            this.DeathTime = DEATH_TIME_MAX;
+            this.CurrentHealth = this.TotalHealth;
         }
         
         //public Npc(Level level, Vector2 position, bool isAlive, int currentHealth, bool followPlayer) : this (level, position, followPlayer)
@@ -334,53 +334,53 @@ namespace Platformer.Npc
             var elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // Si el character esta vivo
-            if (IsAlive)
+            if (this.IsAlive)
             {
-                CheckVision();
-                DoIA(gameTime, elapsed);
+                this.CheckVision();
+                this.DoIA(gameTime, elapsed);
             }
             else
             {
-                Die(gameTime);
+                this.Die(gameTime);
             }
         }
 
         protected virtual void CheckVision()
         {
-            SeePlayer = FollowPlayer && SpotlightRectangle.Intersects(Level.Player.BoundingRectangle);
+            this.SeePlayer = this.FollowPlayer && this.SpotlightRectangle.Intersects(this.Level.Player.BoundingRectangle);
         }
 
         protected virtual void Die(GameTime gameTime)
         {
-            DeathTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+            this.DeathTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
         protected virtual void DoIA(GameTime gameTime, float elapsed)
         {
-            if (CurrentSate == CharacterStates.Attacked) return;
+            if (this.CurrentSate == CharacterStates.Attacked) return;
 
             // Calculate tile position based on the side we are walking towards.
-            var posX = Position.X + LocalBounds.Width / 2 * (int)Direction;
-            var tileX = (int)Math.Floor(posX / Tile.WIDTH) - (int)Direction;
-            var tileY = (int)Math.Floor(Position.Y / Tile.HEIGHT);
+            var posX = this.Position.X + this.LocalBounds.Width / 2 * (int)this.Direction;
+            var tileX = (int)Math.Floor(posX / Tile.WIDTH) - (int)this.Direction;
+            var tileY = (int)Math.Floor(this.Position.Y / Tile.HEIGHT);
 
-            if (WaitTime > 0)
+            if (this.WaitTime > 0)
             {
                 // Wait for some amount of time.
-                WaitTime = Math.Max(0.0f, WaitTime - (float)gameTime.ElapsedGameTime.TotalSeconds);
-                if (WaitTime <= 0.0f && !SeePlayer)
+                this.WaitTime = Math.Max(0.0f, this.WaitTime - (float)gameTime.ElapsedGameTime.TotalSeconds);
+                if (this.WaitTime <= 0.0f && !this.SeePlayer)
                 {
                     // Then turn around.
-                    Direction = (FaceDirection)(-(int)Direction);
+                    this.Direction = (FaceDirection)(-(int)this.Direction);
                 }
             }
             else
             {
                 // If we are about to run into a wall or off a cliff, start waiting.
-                if (Level.GetCollision(tileX + (int)Direction, tileY - 1) == TileCollision.Impassable ||
-                    (Level.GetCollision(tileX + (int)Direction, tileY) == TileCollision.Passable))
+                if (this.Level.GetCollision(tileX + (int)this.Direction, tileY - 1) == TileCollision.Impassable ||
+                    (this.Level.GetCollision(tileX + (int)this.Direction, tileY) == TileCollision.Passable))
                 {
-                    WaitTime = MAX_WAIT_TIME;
+                    this.WaitTime = MAX_WAIT_TIME;
                 }
                 else
                 {
@@ -401,12 +401,12 @@ namespace Platformer.Npc
                     //}
                     //else
                     //{
-                    Acceleration = ACCELERATION_NORMAL;
+                    this.Acceleration = ACCELERATION_NORMAL;
                     //}
 
                     // Move in the current direction.
-                    var velocity = new Vector2((int)Direction * MOVE_SPEED * Acceleration * elapsed, 0.0f);
-                    Position = Position + velocity;
+                    var velocity = new Vector2((int)this.Direction * MOVE_SPEED * this.Acceleration * elapsed, 0.0f);
+                    this.Position = this.Position + velocity;
                 }
             }
         }
@@ -417,63 +417,63 @@ namespace Platformer.Npc
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // Stop running when the game is paused or before turning around.
-            if (((!Level.Player.IsAlive ||
-                Level.ReachedExit ||
-                Level.TimeRemaining == TimeSpan.Zero) || (WaitTime > 0 && !SeePlayer)) && IsAlive)
+            if (((!this.Level.Player.IsAlive ||
+                this.Level.ReachedExit ||
+                this.Level.TimeRemaining == TimeSpan.Zero) || (this.WaitTime > 0 && !this.SeePlayer)) && this.IsAlive)
             {
-                PlayAnimation(IdleAnimation);
+                this.PlayAnimation(this.IdleAnimation);
             }
-            else if (!IsAlive)
+            else if (!this.IsAlive)
             {
-                PlayAnimation(DieAnimation);
+                this.PlayAnimation(this.DieAnimation);
             }
-            else if (CurrentSate == CharacterStates.Attacked)
+            else if (this.CurrentSate == CharacterStates.Attacked)
             {
-                PlayAnimation(HitAnimation);
+                this.PlayAnimation(this.HitAnimation);
             }
             else
             {
-                PlayAnimation(RunAnimation);
+                this.PlayAnimation(this.RunAnimation);
             }
 
 
             // Draw facing the way the Npc is moving.
-            var flip = Direction > 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-            Sprite.Draw(gameTime, spriteBatch, Position, flip);
+            var flip = this.Direction > 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            this.Sprite.Draw(gameTime, spriteBatch, this.Position, flip);
         }
 
         public void OnHit(Player killedBy, Bullet bullet)
         {
-            OnHit(bullet);
+            this.OnHit(bullet);
         }
 
         internal virtual void OnHit(Bullet bullet)
         {
             if (bullet == null)
             {
-                CurrentHealth = CurrentHealth - 1;
+                this.CurrentHealth = this.CurrentHealth - 1;
                 //throw new Exception("El objeto de ataque no puede ser null");
             }
             else
             {
-                CurrentHealth = CurrentHealth - bullet.Power;    
+                this.CurrentHealth = this.CurrentHealth - bullet.Power;    
             }
             
 
             //Force the health to remain between 0 and 100
-            CurrentHealth = (int)MathHelper.Clamp(CurrentHealth, 0, TotalHealth);
+            this.CurrentHealth = (int)MathHelper.Clamp(this.CurrentHealth, 0, this.TotalHealth);
 
-            if (CurrentHealth == 0)
+            if (this.CurrentHealth == 0)
             {
-                IsAlive = false;
-                _killedSound.Play();
+                this.IsAlive = false;
+                this._killedSound.Play();
             }
             else
             {
-                if (HittedTime != MAX_HITTED_TIME)
+                if (this.HittedTime != MAX_HITTED_TIME)
                 {
-                    CurrentSate = CharacterStates.Attacked;
-                    HittedTime = MAX_HITTED_TIME;
+                    this.CurrentSate = CharacterStates.Attacked;
+                    this.HittedTime = MAX_HITTED_TIME;
                 }
             }
         }
@@ -484,8 +484,8 @@ namespace Platformer.Npc
         /// <param name="animation"></param>
         protected void PlayAnimation(Animation animation)
         {
-            Sprite.PlayAnimation(animation);
-            LocalBounds = animation.BoundingRectangle;
+            this.Sprite.PlayAnimation(animation);
+            this.LocalBounds = animation.BoundingRectangle;
         }
     }
 }

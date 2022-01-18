@@ -8,10 +8,10 @@
 #endregion
 
 #region Using Statements
+
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input.Touch;
-using System.IO;
+
 #if WINDOWS_PHONE || IPHONE
 using Mobile.Base.ScreenSystem;
 #elif SILVERLIGHT
@@ -22,7 +22,7 @@ using Desktop.Base.ScreenSystem;
 
 #endregion
 
-namespace Platformer.ScreenManagers
+namespace ACoZ.ScreenManagers
 {
     /// <summary>
     /// Enum describes the screen transition state.
@@ -63,8 +63,8 @@ namespace Platformer.ScreenManagers
         /// </summary>
         public TimeSpan TransitionOnTime
         {
-            get { return _transitionOnTime; }
-            protected set { _transitionOnTime = value; }
+            get { return this._transitionOnTime; }
+            protected set { this._transitionOnTime = value; }
         }
 
         TimeSpan _transitionOnTime = TimeSpan.Zero;
@@ -76,8 +76,8 @@ namespace Platformer.ScreenManagers
         /// </summary>
         public TimeSpan TransitionOffTime
         {
-            get { return _transitionOffTime; }
-            protected set { _transitionOffTime = value; }
+            get { return this._transitionOffTime; }
+            protected set { this._transitionOffTime = value; }
         }
 
         TimeSpan _transitionOffTime = TimeSpan.Zero;
@@ -90,8 +90,8 @@ namespace Platformer.ScreenManagers
         /// </summary>
         public float TransitionPosition
         {
-            get { return _transitionPosition; }
-            protected set { _transitionPosition = value; }
+            get { return this._transitionPosition; }
+            protected set { this._transitionPosition = value; }
         }
 
         float _transitionPosition = 1;
@@ -104,7 +104,7 @@ namespace Platformer.ScreenManagers
         /// </summary>
         public float TransitionAlpha
         {
-            get { return 1f - TransitionPosition; }
+            get { return 1f - this.TransitionPosition; }
         }
 
 
@@ -113,8 +113,8 @@ namespace Platformer.ScreenManagers
         /// </summary>
         public ScreenState ScreenState
         {
-            get { return _screenState; }
-            protected set { _screenState = value; }
+            get { return this._screenState; }
+            protected set { this._screenState = value; }
         }
 
         ScreenState _screenState = ScreenState.TransitionOn;
@@ -130,8 +130,8 @@ namespace Platformer.ScreenManagers
         /// </summary>
         public bool IsExiting
         {
-            get { return _isExiting; }
-            protected internal set { _isExiting = value; }
+            get { return this._isExiting; }
+            protected internal set { this._isExiting = value; }
         }
 
         bool _isExiting;
@@ -144,9 +144,9 @@ namespace Platformer.ScreenManagers
         {
             get
             {
-                return !_otherScreenHasFocus &&
-                       (_screenState == ScreenState.TransitionOn ||
-                        _screenState == ScreenState.Active);
+                return !this._otherScreenHasFocus &&
+                       (this._screenState == ScreenState.TransitionOn ||
+                        this._screenState == ScreenState.Active);
             }
         }
 
@@ -249,28 +249,28 @@ namespace Platformer.ScreenManagers
         public virtual void Update(GameTime gameTime, bool otherScreenHasFocus,
                                                       bool coveredByOtherScreen)
         {
-            _otherScreenHasFocus = otherScreenHasFocus;
+            this._otherScreenHasFocus = otherScreenHasFocus;
 
-            if (_isExiting)
+            if (this._isExiting)
             {
                 // If the screen is going away to die, it should transition off.
-                _screenState = ScreenState.TransitionOff;
+                this._screenState = ScreenState.TransitionOff;
 
-                if (!UpdateTransition(gameTime, _transitionOffTime, 1))
+                if (!this.UpdateTransition(gameTime, this._transitionOffTime, 1))
                 {
                     // When the transition finishes, remove the screen.
-                    ScreenManager.RemoveScreen(this);
+                    this.ScreenManager.RemoveScreen(this);
                 }
             }
             else if (coveredByOtherScreen)
             {
                 // If the screen is covered by another, it should transition off.
-                _screenState = UpdateTransition(gameTime, _transitionOffTime, 1) ? ScreenState.TransitionOff : ScreenState.Hidden;
+                this._screenState = this.UpdateTransition(gameTime, this._transitionOffTime, 1) ? ScreenState.TransitionOff : ScreenState.Hidden;
             }
             else
             {
                 // Otherwise the screen should transition on and become active.
-                _screenState = UpdateTransition(gameTime, _transitionOnTime, -1) ? ScreenState.TransitionOn : ScreenState.Active;
+                this._screenState = this.UpdateTransition(gameTime, this._transitionOnTime, -1) ? ScreenState.TransitionOn : ScreenState.Active;
             }
         }
 
@@ -290,13 +290,13 @@ namespace Platformer.ScreenManagers
                                           time.TotalMilliseconds);
 
             // Update the transition position.
-            _transitionPosition += transitionDelta * direction;
+            this._transitionPosition += transitionDelta * direction;
 
             // Did we reach the end of the transition?
-            if (((direction < 0) && (_transitionPosition <= 0)) ||
-                ((direction > 0) && (_transitionPosition >= 1)))
+            if (((direction < 0) && (this._transitionPosition <= 0)) ||
+                ((direction > 0) && (this._transitionPosition >= 1)))
             {
-                _transitionPosition = MathHelper.Clamp(_transitionPosition, 0, 1);
+                this._transitionPosition = MathHelper.Clamp(this._transitionPosition, 0, 1);
                 return false;
             }
 
@@ -342,15 +342,15 @@ namespace Platformer.ScreenManagers
         /// </summary>
         public void ExitScreen()
         {
-            if (TransitionOffTime == TimeSpan.Zero)
+            if (this.TransitionOffTime == TimeSpan.Zero)
             {
                 // If the screen has a zero transition time, remove it immediately.
-                ScreenManager.RemoveScreen(this);
+                this.ScreenManager.RemoveScreen(this);
             }
             else
             {
                 // Otherwise flag that it should transition off and then exit.
-                _isExiting = true;
+                this._isExiting = true;
             }
         }
 

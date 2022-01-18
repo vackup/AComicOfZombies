@@ -8,15 +8,15 @@
 #endregion
 
 using System;
+using ACoZ.Animations;
+using ACoZ.Helpers;
+using ACoZ.Levels;
+using ACoZ.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
-using Platformer.Animations;
-using Platformer.Helpers;
-using Platformer.Levels;
-using Platformer.Players;
 
-namespace Platformer.Npc.Enemies
+namespace ACoZ.Npc.Enemies
 {
     public abstract class Enemy : Npc
     {
@@ -56,12 +56,12 @@ namespace Platformer.Npc.Enemies
         {
             base.Init(followPlayer, level);
 
-            _attackSound = Level.Content.Load<SoundEffect>(GlobalParameters.ZOMBIE_ATTACK_SOUND);
+            this._attackSound = this.Level.Content.Load<SoundEffect>(GlobalParameters.ZOMBIE_ATTACK_SOUND);
 
-            _attackSoundDuration = TimeSpan.FromSeconds(0);
+            this._attackSoundDuration = TimeSpan.FromSeconds(0);
 
             // Set initial character velocity movenment
-            Velocity = Vector2.Zero;
+            this.Velocity = Vector2.Zero;
         }
 
         //public Enemy(Level level, Vector2 position, bool isAlive, int currentHealth)
@@ -79,23 +79,23 @@ namespace Platformer.Npc.Enemies
 
         public void AttackPlayer(Player player)
         {
-            AttackedPlayer = player;
-            CurrentSate = CharacterStates.Attacking;
+            this.AttackedPlayer = player;
+            this.CurrentSate = CharacterStates.Attacking;
 
-            if (_attackSoundDuration > TimeSpan.FromSeconds(0))
+            if (this._attackSoundDuration > TimeSpan.FromSeconds(0))
                 return;
 
 #if IPHONE
             _attackSoundDuration = TimeSpan.FromSeconds(ATTACK_SOUND_DURATION);
 #else
-            _attackSoundDuration = _attackSound.Duration;
+            this._attackSoundDuration = this._attackSound.Duration;
 #endif
-            _attackSound.Play();
+            this._attackSound.Play();
         }
 
         public override void Start(Vector2 position)
         {
-            _alreadySumPoint = false;
+            this._alreadySumPoint = false;
             base.Start(position);
         }
 
@@ -104,20 +104,20 @@ namespace Platformer.Npc.Enemies
             base.Die(gameTime);
 
             // Si ya sumo los ptos por muerte, entonces que retorne
-            if (_alreadySumPoint) return;
+            if (this._alreadySumPoint) return;
 
-            Level.Score += PointValue;
-            _alreadySumPoint = true;
+            this.Level.Score += this.PointValue;
+            this._alreadySumPoint = true;
         }
 
         protected override void DoIA(GameTime gameTime, float elapsed)
         {
-            switch (CurrentSate)
+            switch (this.CurrentSate)
             {
                 case CharacterStates.Attacking:
-                    Velocity = Vector2.Zero;
+                    this.Velocity = Vector2.Zero;
 
-                    ApplyVelocity();
+                    this.ApplyVelocity();
 
                     //if (AttackedSurvivor != null)
                     //{
@@ -127,37 +127,37 @@ namespace Platformer.Npc.Enemies
                     //    }
                     //}
 
-                    if (AttackedPlayer != null)
+                    if (this.AttackedPlayer != null)
                     {
-                        if (!AttackedPlayer.IsAlive)
+                        if (!this.AttackedPlayer.IsAlive)
                         {
-                            StopAttackingPlayer();
+                            this.StopAttackingPlayer();
                         }
                     }
                     break;
                 case CharacterStates.Walking:
                     // Calculate tile position based on the side we are walking towards.
-                    var posX = Position.X + LocalBounds.Width/2*(int) Direction;
-                    var tileX = (int) Math.Floor(posX/Tile.WIDTH) - (int) Direction;
-                    var tileY = (int) Math.Floor(Position.Y/Tile.HEIGHT);
+                    var posX = this.Position.X + this.LocalBounds.Width/2*(int) this.Direction;
+                    var tileX = (int) Math.Floor(posX/Tile.WIDTH) - (int) this.Direction;
+                    var tileY = (int) Math.Floor(this.Position.Y/Tile.HEIGHT);
 
-                    if (WaitTime > 0)
+                    if (this.WaitTime > 0)
                     {
                         // Wait for some amount of time.
-                        WaitTime = Math.Max(0.0f, WaitTime - (float) gameTime.ElapsedGameTime.TotalSeconds);
-                        if (WaitTime <= 0.0f && !SeePlayer)
+                        this.WaitTime = Math.Max(0.0f, this.WaitTime - (float) gameTime.ElapsedGameTime.TotalSeconds);
+                        if (this.WaitTime <= 0.0f && !this.SeePlayer)
                         {
                             // Then turn around.
-                            Direction = (FaceDirection) (-(int) Direction);
+                            this.Direction = (FaceDirection) (-(int) this.Direction);
                         }
                     }
                     else
                     {
                         // If we are about to run into a wall or off a cliff, start waiting.
-                        if (Level.GetCollision(tileX + (int) Direction, tileY - 1) == TileCollision.Impassable ||
-                            (Level.GetCollision(tileX + (int) Direction, tileY) == TileCollision.Passable))
+                        if (this.Level.GetCollision(tileX + (int) this.Direction, tileY - 1) == TileCollision.Impassable ||
+                            (this.Level.GetCollision(tileX + (int) this.Direction, tileY) == TileCollision.Passable))
                         {
-                            WaitTime = MAX_WAIT_TIME;
+                            this.WaitTime = MAX_WAIT_TIME;
                         }
                         else
                         {
@@ -166,16 +166,16 @@ namespace Platformer.Npc.Enemies
 
                             //Acceleration = ACCELERATION_NORMAL;
 
-                            if (SeePlayer) // Si el enemigo ve al personaje pero no a un sobreviviente ...
+                            if (this.SeePlayer) // Si el enemigo ve al personaje pero no a un sobreviviente ...
                             {
                                 // ...  si esta dado vuelta, se da vuelta para perseguirlo
-                                if (Level.Player.Position.X < Position.X && Direction == FaceDirection.Right)
+                                if (this.Level.Player.Position.X < this.Position.X && this.Direction == FaceDirection.Right)
                                 {
-                                    Direction = FaceDirection.Left;
+                                    this.Direction = FaceDirection.Left;
                                 }
-                                else if (Level.Player.Position.X > Position.X && Direction == FaceDirection.Left)
+                                else if (this.Level.Player.Position.X > this.Position.X && this.Direction == FaceDirection.Left)
                                 {
-                                    Direction = FaceDirection.Right;
+                                    this.Direction = FaceDirection.Right;
                                 }
 
                                 // TODO: revisar esto sobre como boludea un zombie
@@ -204,21 +204,21 @@ namespace Platformer.Npc.Enemies
                             // Move in the current direction.
                             //var velocity = new Vector2((int) _direction*MOVE_SPEED*_acceleration*elapsed, 0.0f);
                             //_position = _position + velocity;
-                            Velocity = new Vector2((int) Direction*MOVE_SPEED*Acceleration*elapsed, 0.0f);
-                            ApplyVelocity();
+                            this.Velocity = new Vector2((int) this.Direction*MOVE_SPEED*this.Acceleration*elapsed, 0.0f);
+                            this.ApplyVelocity();
                         }
                     }
                     break;
                 case CharacterStates.Attacked:
-                    BeHitted(gameTime, elapsed);
+                    this.BeHitted(gameTime, elapsed);
                     break;
             }
         }
 
         private void ApplyVelocity()
         {
-            Position += Velocity;
-            Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
+            this.Position += this.Velocity;
+            this.Position = new Vector2((float)Math.Round(this.Position.X), (float)Math.Round(this.Position.Y));
         }
 
         //private void StopAttackingSurvivor()
@@ -229,39 +229,39 @@ namespace Platformer.Npc.Enemies
 
         private void StopAttackingPlayer()
         {
-            CurrentSate = CharacterStates.Walking;
-            AttackedPlayer = null;
+            this.CurrentSate = CharacterStates.Walking;
+            this.AttackedPlayer = null;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // Stop running when the game is paused or before turning around.
-            if (((!Level.Player.IsAlive ||
-                Level.ReachedExit ||
-                Level.TimeRemaining == TimeSpan.Zero) || (WaitTime > 0 && !SeePlayer)) && IsAlive)
+            if (((!this.Level.Player.IsAlive ||
+                this.Level.ReachedExit ||
+                this.Level.TimeRemaining == TimeSpan.Zero) || (this.WaitTime > 0 && !this.SeePlayer)) && this.IsAlive)
             {
-                PlayAnimation(IdleAnimation);
+                this.PlayAnimation(this.IdleAnimation);
             }
-            else if (!IsAlive)
+            else if (!this.IsAlive)
             {
-                PlayAnimation(DieAnimation);
+                this.PlayAnimation(this.DieAnimation);
             }
-            else if (CurrentSate == CharacterStates.Attacked)
+            else if (this.CurrentSate == CharacterStates.Attacked)
             {
-                PlayAnimation(HitAnimation);
+                this.PlayAnimation(this.HitAnimation);
             }
-            else if (CurrentSate == CharacterStates.Attacking)
+            else if (this.CurrentSate == CharacterStates.Attacking)
             {
-                PlayAnimation(AttackAnimation);
+                this.PlayAnimation(this.AttackAnimation);
             }
             else
             {
-                PlayAnimation(RunAnimation);
+                this.PlayAnimation(this.RunAnimation);
             }
 
             // Draw facing the way the Npc is moving.
-            var flip = Direction > 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-            Sprite.Draw(gameTime, spriteBatch, Position, flip);
+            var flip = this.Direction > 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            this.Sprite.Draw(gameTime, spriteBatch, this.Position, flip);
 
 #if DEBUG && !IPHONE
             // Draw BoundingRectangle (for DEBUG purpouse)
@@ -279,17 +279,17 @@ namespace Platformer.Npc.Enemies
         private void BeHitted(GameTime gameTime, float elapsed)
         {
             // If the player wants to attack
-            if (CurrentSate == CharacterStates.Attacked)
+            if (this.CurrentSate == CharacterStates.Attacked)
             {
                 // Begin or continue an attack
-                if (HittedTime > 0.0f)
+                if (this.HittedTime > 0.0f)
                 {
-                    HittedTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    this.HittedTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
                     int empujado;
 
                     // ...  si esta dado vuelta, se da vuelta para perseguirlo
-                    if (Level.Player.Position.X < Position.X)
+                    if (this.Level.Player.Position.X < this.Position.X)
                     {
                         empujado = (int)FaceDirection.Right;
                     }
@@ -299,26 +299,26 @@ namespace Platformer.Npc.Enemies
                     }
 
                     // Move in the current direction.
-                    var velocity = new Vector2(empujado * MOVE_SPEED * Acceleration * elapsed, 0.0f);
-                    Position = Position + velocity;
+                    var velocity = new Vector2(empujado * MOVE_SPEED * this.Acceleration * elapsed, 0.0f);
+                    this.Position = this.Position + velocity;
                 }
                 else
                 {
-                    CurrentSate = CharacterStates.Walking;
+                    this.CurrentSate = CharacterStates.Walking;
                 }
             }
             else
             {
                 //Continues not attack or cancels an attack in progress
-                HittedTime = 0.0f;
+                this.HittedTime = 0.0f;
             }
         }
 
         protected override void CheckVision()
         {
-            if (CurrentSate != CharacterStates.Attacking)
+            if (this.CurrentSate != CharacterStates.Attacking)
             {
-                SeePlayer = FollowPlayer && SpotlightRectangle.Intersects(Level.Player.BoundingRectangle);
+                this.SeePlayer = this.FollowPlayer && this.SpotlightRectangle.Intersects(this.Level.Player.BoundingRectangle);
 
                 //_seeSurvivor = false;
 
@@ -339,7 +339,7 @@ namespace Platformer.Npc.Enemies
             }
             else
             {
-                SeePlayer = false;
+                this.SeePlayer = false;
                 //_seeSurvivor = false;
             }
         }
@@ -363,9 +363,9 @@ namespace Platformer.Npc.Enemies
         public void NotAttackingPlayer()
         {
             // Si el estado era de Ataque y estaba atacando a un player
-            if (CurrentSate == CharacterStates.Attacking && AttackedPlayer != null)
+            if (this.CurrentSate == CharacterStates.Attacking && this.AttackedPlayer != null)
             {
-                StopAttackingPlayer();
+                this.StopAttackingPlayer();
             }
         }
 
@@ -381,14 +381,14 @@ namespace Platformer.Npc.Enemies
         {
             var elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (AttackTime > 0.0f)
+            if (this.AttackTime > 0.0f)
             {
-                AttackTime -= elapsed;
+                this.AttackTime -= elapsed;
             }
 
-            if (_attackSoundDuration > TimeSpan.FromSeconds(0))
+            if (this._attackSoundDuration > TimeSpan.FromSeconds(0))
             {
-                _attackSoundDuration = _attackSoundDuration - TimeSpan.FromSeconds(elapsed);
+                this._attackSoundDuration = this._attackSoundDuration - TimeSpan.FromSeconds(elapsed);
             }
             
             base.Update(gameTime);

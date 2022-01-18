@@ -24,7 +24,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Platformer.Helpers
+namespace ACoZ.Helpers
 {
     /// <summary>
     /// Represents a fixed-size pool of available items that can be removed
@@ -77,7 +77,7 @@ namespace Platformer.Helpers
         /// </remarks>
         public int AvailableCount
         {
-            get { return available.Count; }
+            get { return this.available.Count; }
         }
 
 
@@ -89,7 +89,7 @@ namespace Platformer.Helpers
         /// </remarks>
         public int ActiveCount
         {
-            get { return pool.Length - available.Count; }
+            get { return this.pool.Length - this.available.Count; }
         }
 
 
@@ -101,7 +101,7 @@ namespace Platformer.Helpers
         /// </remarks>
         public int Capacity
         {
-            get { return pool.Length; }
+            get { return this.pool.Length; }
         }
 
 
@@ -123,18 +123,18 @@ namespace Platformer.Helpers
                               "Pool must contain at least one item.");
             }
 
-            pool = new Node[capacity];
-            active = new bool[capacity];
-            available = new Queue<int>(capacity);
+            this.pool = new Node[capacity];
+            this.active = new bool[capacity];
+            this.available = new Queue<int>(capacity);
 
             for (int i = 0; i < capacity; i++)
             {
-                pool[i] = new Node();
-                pool[i].NodeIndex = i;
-                pool[i].Item = new T();
+                this.pool[i] = new Node();
+                this.pool[i].NodeIndex = i;
+                this.pool[i].Item = new T();
 
-                active[i] = false;
-                available.Enqueue(i);
+                this.active[i] = false;
+                this.available.Enqueue(i);
             }
         }
 
@@ -147,12 +147,12 @@ namespace Platformer.Helpers
         /// </remarks>
         public void Clear()
         {
-            available.Clear();
+            this.available.Clear();
 
-            for (int i = 0; i < pool.Length; i++)
+            for (int i = 0; i < this.pool.Length; i++)
             {
-                active[i] = false;
-                available.Enqueue(i);
+                this.active[i] = false;
+                this.available.Enqueue(i);
             }
         }
 
@@ -169,9 +169,9 @@ namespace Platformer.Helpers
         /// </remarks>
         public Node Get()
         {
-            int nodeIndex = available.Dequeue();
-            active[nodeIndex] = true;
-            return pool[nodeIndex];
+            int nodeIndex = this.available.Dequeue();
+            this.active[nodeIndex] = true;
+            return this.pool[nodeIndex];
         }
 
 
@@ -191,18 +191,18 @@ namespace Platformer.Helpers
         /// </remarks>
         public void Return(Node item)
         {
-            if ((item.NodeIndex < 0) || (item.NodeIndex > pool.Length))
+            if ((item.NodeIndex < 0) || (item.NodeIndex > this.pool.Length))
             {
                 throw new ArgumentException("Invalid item node.");
             }
 
-            if (!active[item.NodeIndex])
+            if (!this.active[item.NodeIndex])
             {
                 throw new InvalidOperationException("Attempt to return an inactive node.");
             }
 
-            active[item.NodeIndex] = false;
-            available.Enqueue(item.NodeIndex);
+            this.active[item.NodeIndex] = false;
+            this.available.Enqueue(item.NodeIndex);
         }
 
 
@@ -222,12 +222,12 @@ namespace Platformer.Helpers
         /// </remarks>
         public void SetItemValue(Node item)
         {
-            if ((item.NodeIndex < 0) || (item.NodeIndex > pool.Length))
+            if ((item.NodeIndex < 0) || (item.NodeIndex > this.pool.Length))
             {
                 throw new ArgumentException("Invalid item node.");
             }
 
-            pool[item.NodeIndex].Item = item.Item;
+            this.pool[item.NodeIndex].Item = item.Item;
         }
 
 
@@ -251,9 +251,9 @@ namespace Platformer.Helpers
         {
             int index = arrayIndex;
 
-            foreach (Node item in pool)
+            foreach (Node item in this.pool)
             {
-                if (active[item.NodeIndex])
+                if (this.active[item.NodeIndex])
                 {
                     array[index++] = item.Item;
 
@@ -279,9 +279,9 @@ namespace Platformer.Helpers
         /// </remarks>
         public IEnumerator<T> GetEnumerator()
         {
-            foreach (Node item in pool)
+            foreach (Node item in this.pool)
             {
-                if (active[item.NodeIndex])
+                if (this.active[item.NodeIndex])
                 {
                     yield return item.Item;
                 }
@@ -301,9 +301,9 @@ namespace Platformer.Helpers
         {
             get
             {
-                foreach (Node item in pool)
+                foreach (Node item in this.pool)
                 {
-                    if (active[item.NodeIndex])
+                    if (this.active[item.NodeIndex])
                     {
                         yield return item;
                     }
@@ -323,7 +323,7 @@ namespace Platformer.Helpers
         {
             get
             {
-                foreach (Node item in pool)
+                foreach (Node item in this.pool)
                 {
                     yield return item;
                 }
@@ -337,7 +337,7 @@ namespace Platformer.Helpers
         /// <returns></returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            return this.GetEnumerator();
         }
     }
 }

@@ -8,13 +8,14 @@
 #endregion
 
 #region Using Statements
+
 using System;
 using System.Collections.Generic;
+using ACoZ.ScreenManagers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input.Touch;
-using Platformer.ScreenManagers;
 using Microsoft.Xna.Framework.Input;
+
 #if WINDOWS_PHONE || IPHONE
 using Mobile.Base.ScreenSystem;
 #elif SILVERLIGHT
@@ -25,7 +26,7 @@ using Desktop.Base.ScreenSystem;
 
 #endregion
 
-namespace Platformer.Screens
+namespace ACoZ.Screens
 {
     /// <summary>
     /// Base class for screens that contain a menu of options. The user can
@@ -55,7 +56,7 @@ namespace Platformer.Screens
         /// </summary>
         protected IList<MenuEntry> MenuEntries
         {
-            get { return menuEntries; }
+            get { return this.menuEntries; }
         }
 
 
@@ -76,8 +77,8 @@ namespace Platformer.Screens
 
             this.menuTitle = menuTitle;
 
-            TransitionOnTime = TimeSpan.FromSeconds(0.5);
-            TransitionOffTime = TimeSpan.FromSeconds(0.5);
+            this.TransitionOnTime = TimeSpan.FromSeconds(0.5);
+            this.TransitionOffTime = TimeSpan.FromSeconds(0.5);
         }
 
 
@@ -148,21 +149,21 @@ namespace Platformer.Screens
             
 #else
             // Move to the previous menu entry?
-            if (input.IsMenuUp(ControllingPlayer))
+            if (input.IsMenuUp(this.ControllingPlayer))
             {
-                selectedEntry--;
+                this.selectedEntry--;
 
-                if (selectedEntry < 0)
-                    selectedEntry = menuEntries.Count - 1;
+                if (this.selectedEntry < 0)
+                    this.selectedEntry = this.menuEntries.Count - 1;
             }
 
             // Move to the next menu entry?
-            if (input.IsMenuDown(ControllingPlayer))
+            if (input.IsMenuDown(this.ControllingPlayer))
             {
-                selectedEntry++;
+                this.selectedEntry++;
 
-                if (selectedEntry >= menuEntries.Count)
-                    selectedEntry = 0;
+                if (this.selectedEntry >= this.menuEntries.Count)
+                    this.selectedEntry = 0;
             }
 
             // Accept or cancel the menu? We pass in our ControllingPlayer, which may
@@ -172,13 +173,13 @@ namespace Platformer.Screens
             // OnSelectEntry and OnCancel, so they can tell which player triggered them.
             PlayerIndex playerIndex;
 
-            if (input.IsMenuSelect(ControllingPlayer, out playerIndex))
+            if (input.IsMenuSelect(this.ControllingPlayer, out playerIndex))
             {
-                OnSelectEntry(selectedEntry, playerIndex);
+                this.OnSelectEntry(this.selectedEntry, playerIndex);
             }
-            else if (input.IsMenuCancel(ControllingPlayer, out playerIndex))
+            else if (input.IsMenuCancel(this.ControllingPlayer, out playerIndex))
             {
-                OnCancel(playerIndex);
+                this.OnCancel(playerIndex);
             }
 #endif
         }
@@ -189,7 +190,7 @@ namespace Platformer.Screens
         /// </summary>
         protected virtual void OnSelectEntry(int entryIndex, PlayerIndex playerIndex)
         {
-            menuEntries[entryIndex].OnSelectEntry(playerIndex);
+            this.menuEntries[entryIndex].OnSelectEntry(playerIndex);
         }
 
 
@@ -198,7 +199,7 @@ namespace Platformer.Screens
         /// </summary>
         protected virtual void OnCancel(PlayerIndex playerIndex)
         {
-            ExitScreen();
+            this.ExitScreen();
         }
 
 
@@ -207,7 +208,7 @@ namespace Platformer.Screens
         /// </summary>
         protected void OnCancel(object sender, PlayerIndexEventArgs e)
         {
-            OnCancel(e.PlayerIndex);
+            this.OnCancel(e.PlayerIndex);
         }
 
 
@@ -225,7 +226,7 @@ namespace Platformer.Screens
             // Make the menu slide into place during transitions, using a
             // power curve to make things look more interesting (this makes
             // the movement slow down as it nears the end).
-            var transitionOffset = (float)Math.Pow(TransitionPosition, 2);
+            var transitionOffset = (float)Math.Pow(this.TransitionPosition, 2);
 
             // start at Y = 175; each X value is generated per entry
 #if !IPHONE
@@ -235,12 +236,12 @@ namespace Platformer.Screens
 #endif
 
             // update each menu entry's location in turn
-            foreach (var menuEntry in menuEntries)
+            foreach (var menuEntry in this.menuEntries)
             {
                 // each entry is to be centered horizontally
-                position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - menuEntry.GetWidth(this) / 2;
+                position.X = this.ScreenManager.GraphicsDevice.Viewport.Width / 2 - menuEntry.GetWidth(this) / 2;
 
-                if (ScreenState == ScreenState.TransitionOn)
+                if (this.ScreenState == ScreenState.TransitionOn)
                     position.X -= transitionOffset * 256;
                 else
                     position.X += transitionOffset * 512;
@@ -270,16 +271,16 @@ namespace Platformer.Screens
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
             // Update each nested MenuEntry object.
-            for (int i = 0; i < menuEntries.Count; i++)
+            for (int i = 0; i < this.menuEntries.Count; i++)
             {
-                bool isSelected = IsActive && (i == selectedEntry);
+                bool isSelected = this.IsActive && (i == this.selectedEntry);
 
-                menuEntries[i].Update(this, isSelected, gameTime);
+                this.menuEntries[i].Update(this, isSelected, gameTime);
             }
 			
 			MouseState state = Mouse.GetState();
-			position = new Vector2(state.X, state.Y);
-			down = state.LeftButton == ButtonState.Pressed;
+			this.position = new Vector2(state.X, state.Y);
+			this.down = state.LeftButton == ButtonState.Pressed;
         }
 
 
@@ -289,11 +290,11 @@ namespace Platformer.Screens
         public override void Draw(GameTime gameTime)
         {			
             // make sure our entries are in the right place before we draw them
-            UpdateMenuEntryLocations();
+            this.UpdateMenuEntryLocations();
 
-            GraphicsDevice graphics = ScreenManager.GraphicsDevice;
-            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
-            SpriteFont font = ScreenManager.SpriteFonts.TextFont;
+            GraphicsDevice graphics = this.ScreenManager.GraphicsDevice;
+            SpriteBatch spriteBatch = this.ScreenManager.SpriteBatch;
+            SpriteFont font = this.ScreenManager.SpriteFonts.TextFont;
 
             //Vector2 position = new Vector2(100, 150);
 
@@ -310,11 +311,11 @@ namespace Platformer.Screens
             spriteBatch.Begin();
 
             // Draw each menu entry in turn.
-            for (int i = 0; i < menuEntries.Count; i++)
+            for (int i = 0; i < this.menuEntries.Count; i++)
             {
-                MenuEntry menuEntry = menuEntries[i];
+                MenuEntry menuEntry = this.menuEntries[i];
 
-                bool isSelected = IsActive && (i == selectedEntry);
+                bool isSelected = this.IsActive && (i == this.selectedEntry);
 
                 menuEntry.Draw(this, isSelected, gameTime);
 
@@ -324,20 +325,20 @@ namespace Platformer.Screens
             // Make the menu slide into place during transitions, using a
             // power curve to make things look more interesting (this makes
             // the movement slow down as it nears the end).
-            var transitionOffset = (float)Math.Pow(TransitionPosition, 2);
+            var transitionOffset = (float)Math.Pow(this.TransitionPosition, 2);
 
             // Draw the menu title centered on the screen
             var titlePosition = new Vector2(graphics.Viewport.Width / 2, 80);
-            var titleOrigin = font.MeasureString(menuTitle) / 2;
-            var titleColor = new Color(192, 192, 192) * TransitionAlpha;
+            var titleOrigin = font.MeasureString(this.menuTitle) / 2;
+            var titleColor = new Color(192, 192, 192) * this.TransitionAlpha;
             const float titleScale = 1.25f;
 
             titlePosition.Y -= transitionOffset * 100;
 
-            spriteBatch.DrawString(font, menuTitle, titlePosition, titleColor, 0, titleOrigin, titleScale, SpriteEffects.None, 0);
+            spriteBatch.DrawString(font, this.menuTitle, titlePosition, titleColor, 0, titleOrigin, titleScale, SpriteEffects.None, 0);
 			
 			// TODO: remover esto que lo puse para testear los clicks
-			spriteBatch.DrawString(font, position.ToString(), position + new Vector2(5), down ? Color.Red : Color.Yellow);
+			spriteBatch.DrawString(font, this.position.ToString(), this.position + new Vector2(5), this.down ? Color.Red : Color.Yellow);
 			
             spriteBatch.End();
         }

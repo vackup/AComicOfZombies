@@ -1,10 +1,10 @@
 using System.Collections.Generic;
+using ACoZ.Players;
+using ACoZ.Weapons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using Platformer.Players;
-using Platformer.Weapons;
 
-namespace Platformer.Helpers
+namespace ACoZ.Helpers
 {
     public class ResumeState
     {
@@ -25,8 +25,8 @@ namespace Platformer.Helpers
 
         public void LoadContent(ContentManager contentManager)
         {
-            if (PrimaryWeapon != null) PrimaryWeapon.LoadSoundEffects(contentManager);
-            if (SecondaryWeapon != null) SecondaryWeapon.LoadSoundEffects(contentManager);
+            if (this.PrimaryWeapon != null) this.PrimaryWeapon.LoadSoundEffects(contentManager);
+            if (this.SecondaryWeapon != null) this.SecondaryWeapon.LoadSoundEffects(contentManager);
         }
     }
 }

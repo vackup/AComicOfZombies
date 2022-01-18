@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Platformer.Helpers
+namespace ACoZ.Helpers
 {
 	public class RandomUtil {
 		private static Random s_rand = new Random();

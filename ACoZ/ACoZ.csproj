@@ -12,9 +12,46 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;WINDOWS;OPENGL</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;WINDOWS;OPENGL</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Content\bin\**" />
+    <Compile Remove="Content\obj\**" />
+    <EmbeddedResource Remove="Content\bin\**" />
+    <EmbeddedResource Remove="Content\obj\**" />
+    <None Remove="Content\bin\**" />
+    <None Remove="Content\obj\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Content\Data\ScreenAsset_WP7.txt" />
+    <None Remove="Content\Sprites\FastWeakMonster\Data\FWM_WP7.txt" />
+    <None Remove="Content\Sprites\NormalMonster\Data\NM_WP7.txt" />
+    <None Remove="Content\Sprites\ObamaSurvivor\Data\Obama_WP7.txt" />
+    <None Remove="Content\Sprites\ObamaSurvivor\Data\WeaponsPosition_WP7.txt" />
+    <None Remove="Content\Sprites\SlowStrongMonster\Data\SSM_WP7.txt" />
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Data\ScreenAsset_WP7.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sprites\FastWeakMonster\Data\FWM_WP7.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sprites\NormalMonster\Data\NM_WP7.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sprites\ObamaSurvivor\Data\Obama_WP7.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sprites\ObamaSurvivor\Data\WeaponsPosition_WP7.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Sprites\SlowStrongMonster\Data\SSM_WP7.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />

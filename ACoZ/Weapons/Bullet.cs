@@ -1,10 +1,6 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Platformer.Helpers;
-using Platformer.Levels;
+﻿using Microsoft.Xna.Framework;
 
-namespace Platformer.Weapons
+namespace ACoZ.Weapons
 {
     public class Bullet : GameObject
     {
@@ -12,12 +8,12 @@ namespace Platformer.Weapons
         {
             get
             {
-                _boundingRectangle.X = (int) Position.X - Width*2;
-                _boundingRectangle.Y = (int) Position.Y - Height*2;
-                _boundingRectangle.Width = Width*4;
-                _boundingRectangle.Height = Height*4;
+                this._boundingRectangle.X = (int) this.Position.X - this.Width*2;
+                this._boundingRectangle.Y = (int) this.Position.Y - this.Height*2;
+                this._boundingRectangle.Width = this.Width*4;
+                this._boundingRectangle.Height = this.Height*4;
 
-                return _boundingRectangle;
+                return this._boundingRectangle;
             }
         }
     }

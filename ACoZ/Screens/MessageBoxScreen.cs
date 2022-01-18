@@ -8,11 +8,12 @@
 #endregion
 
 #region Using Statements
+
 using System;
+using ACoZ.ScreenManagers;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Platformer.ScreenManagers;
+
 #if WINDOWS_PHONE || IPHONE
 using Mobile.Base.ScreenSystem;
 #elif SILVERLIGHT
@@ -23,7 +24,7 @@ using Desktop.Base.ScreenSystem;
 
 #endregion
 
-namespace Platformer.Screens
+namespace ACoZ.Screens
 {
     /// <summary>
     /// A popup message box screen, used to display "are you sure?"
@@ -70,10 +71,10 @@ namespace Platformer.Screens
             else
                 this._message = message;
 
-            IsPopup = true;
+            this.IsPopup = true;
 
-            TransitionOnTime = TimeSpan.FromSeconds(0.2);
-            TransitionOffTime = TimeSpan.FromSeconds(0.2);
+            this.TransitionOnTime = TimeSpan.FromSeconds(0.2);
+            this.TransitionOffTime = TimeSpan.FromSeconds(0.2);
         }
 
 
@@ -85,7 +86,7 @@ namespace Platformer.Screens
         /// </summary>
         public override void LoadContent()
         {
-            _gradientTexture = ScreenManager.Game.Content.Load<Texture2D>("Menu/gradient");
+            this._gradientTexture = this.ScreenManager.Game.Content.Load<Texture2D>("Menu/gradient");
         }
 
         public override void UnloadContent()
@@ -110,21 +111,21 @@ namespace Platformer.Screens
             // controlling player, the InputState helper returns to us which player
             // actually provided the input. We pass that through to our Accepted and
             // Cancelled events, so they can tell which player triggered them.
-            if (input.IsMenuSelect(ControllingPlayer, out playerIndex))
+            if (input.IsMenuSelect(this.ControllingPlayer, out playerIndex))
             {
                 // Raise the accepted event, then exit the message box.
-                if (Accepted != null)
-                    Accepted(this, new PlayerIndexEventArgs(playerIndex));
+                if (this.Accepted != null)
+                    this.Accepted(this, new PlayerIndexEventArgs(playerIndex));
 
-                ExitScreen();
+                this.ExitScreen();
             }
-            else if (input.IsMenuCancel(ControllingPlayer, out playerIndex))
+            else if (input.IsMenuCancel(this.ControllingPlayer, out playerIndex))
             {
                 // Raise the cancelled event, then exit the message box.
-                if (Cancelled != null)
-                    Cancelled(this, new PlayerIndexEventArgs(playerIndex));
+                if (this.Cancelled != null)
+                    this.Cancelled(this, new PlayerIndexEventArgs(playerIndex));
 
-                ExitScreen();
+                this.ExitScreen();
             }
         }
 
@@ -139,16 +140,16 @@ namespace Platformer.Screens
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
-            SpriteFont font = ScreenManager.SpriteFonts.TextFont;
+            SpriteBatch spriteBatch = this.ScreenManager.SpriteBatch;
+            SpriteFont font = this.ScreenManager.SpriteFonts.TextFont;
 
             // Darken down any other screens that were drawn beneath the popup.
-            ScreenManager.FadeBackBufferToBlack(TransitionAlpha * 2 / 3);
+            this.ScreenManager.FadeBackBufferToBlack(this.TransitionAlpha * 2 / 3);
 
             // Center the message text in the viewport.
-            Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+            Viewport viewport = this.ScreenManager.GraphicsDevice.Viewport;
             Vector2 viewportSize = new Vector2(viewport.Width, viewport.Height);
-            Vector2 textSize = font.MeasureString(_message);
+            Vector2 textSize = font.MeasureString(this._message);
             Vector2 textPosition = (viewportSize - textSize) / 2;
 
             // The background includes a border somewhat larger than the text itself.
@@ -161,15 +162,15 @@ namespace Platformer.Screens
                                                           (int)textSize.Y + vPad * 2);
 
             // Fade the popup alpha during transitions.
-            Color color = Color.White * TransitionAlpha;
+            Color color = Color.White * this.TransitionAlpha;
 
             spriteBatch.Begin();
 
             // Draw the background rectangle.
-            spriteBatch.Draw(_gradientTexture, backgroundRectangle, color);
+            spriteBatch.Draw(this._gradientTexture, backgroundRectangle, color);
 
             // Draw the message box text.
-            spriteBatch.DrawString(font, _message, textPosition, color);
+            spriteBatch.DrawString(font, this._message, textPosition, color);
 
             spriteBatch.End();
         }

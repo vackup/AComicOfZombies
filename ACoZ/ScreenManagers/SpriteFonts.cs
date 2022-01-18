@@ -1,10 +1,8 @@
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+using ACoZ.Helpers;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Platformer.Helpers;
 
-namespace Platformer.ScreenManagers
+namespace ACoZ.ScreenManagers
 {
     /// <summary>
     /// Font helper class.
@@ -13,11 +11,11 @@ namespace Platformer.ScreenManagers
     {
         public SpriteFonts(ContentManager contentManager)
         {
-            TextFont = contentManager.Load<SpriteFont>(GlobalParameters.TEXT_FONT);
-            TextFontSmall = contentManager.Load<SpriteFont>(GlobalParameters.TEXT_FONT_SMALL);
-            TittleFont = contentManager.Load<SpriteFont>(GlobalParameters.TITTLE_FONT);
-            TittleFontMedium = contentManager.Load<SpriteFont>(GlobalParameters.TITTLE_FONT_MEDIUM);
-            TittleFontSmall = contentManager.Load<SpriteFont>(GlobalParameters.TITTLE_FONT_SMALL);
+            this.TextFont = contentManager.Load<SpriteFont>(GlobalParameters.TEXT_FONT);
+            this.TextFontSmall = contentManager.Load<SpriteFont>(GlobalParameters.TEXT_FONT_SMALL);
+            this.TittleFont = contentManager.Load<SpriteFont>(GlobalParameters.TITTLE_FONT);
+            this.TittleFontMedium = contentManager.Load<SpriteFont>(GlobalParameters.TITTLE_FONT_MEDIUM);
+            this.TittleFontSmall = contentManager.Load<SpriteFont>(GlobalParameters.TITTLE_FONT_SMALL);
         }
 
         public SpriteFont TittleFont { get; private set; }

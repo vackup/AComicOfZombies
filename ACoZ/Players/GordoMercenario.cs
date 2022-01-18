@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
+using ACoZ.Animations;
+using ACoZ.Helpers;
+using ACoZ.Levels;
+using ACoZ.Weapons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
-using Platformer.Animations;
-using Platformer.Helpers;
-using Platformer.Levels;
-using Platformer.Weapons;
 
-namespace Platformer.Players
+namespace ACoZ.Players
 {
     public class GordoMercenario : Player
     {
@@ -17,56 +17,56 @@ namespace Platformer.Players
         {
 			//CurrentWeaponAnimation = new GameObject(Level.Content.Load<Texture2D>(GlobalParameters.GORDO_MERCENARIO_ARM));
 
-            HealthBarMargin = GlobalParameters.GORDO_MERCENARIO_HEALTH_BAR_MARGIN;
+            this.HealthBarMargin = GlobalParameters.GORDO_MERCENARIO_HEALTH_BAR_MARGIN;
 
-            var spriteTexture = Level.Content.Load<Texture2D>(GlobalParameters.GORDO_MERCENARIO_ANIMATION_TEXTURE);
+            var spriteTexture = this.Level.Content.Load<Texture2D>(GlobalParameters.GORDO_MERCENARIO_ANIMATION_TEXTURE);
 
-            IdleAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.GordoAnimationRectangulesIdle);
+            this.IdleAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.GordoAnimationRectangulesIdle);
 
-            RunAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.GordoAnimationRectangulesRun);
-            RunAnimation.SetBoundingRectangle(IdleAnimation.BoundingRectangle);
+            this.RunAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.GordoAnimationRectangulesRun);
+            this.RunAnimation.SetBoundingRectangle(this.IdleAnimation.BoundingRectangle);
 
-            DieAnimation = new Animation(spriteTexture, 0.075f, false, GlobalParameters.GordoAnimationRectangulesDie);
-            DieAnimation.SetBoundingRectangle(IdleAnimation.BoundingRectangle);
+            this.DieAnimation = new Animation(spriteTexture, 0.075f, false, GlobalParameters.GordoAnimationRectangulesDie);
+            this.DieAnimation.SetBoundingRectangle(this.IdleAnimation.BoundingRectangle);
 
-            BeAttackedAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.GordoAnimationRectangulesBeAttacked);
-            BeAttackedAnimation.SetBoundingRectangle(IdleAnimation.BoundingRectangle);
+            this.BeAttackedAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.GordoAnimationRectangulesBeAttacked);
+            this.BeAttackedAnimation.SetBoundingRectangle(this.IdleAnimation.BoundingRectangle);
 
-            AttackAnimation = new Animation(spriteTexture, 0.075f, false, GlobalParameters.GordoAnimationRectangulesAttack);
-            AttackAnimation.SetBoundingRectangle(IdleAnimation.BoundingRectangle);
+            this.AttackAnimation = new Animation(spriteTexture, 0.075f, false, GlobalParameters.GordoAnimationRectangulesAttack);
+            this.AttackAnimation.SetBoundingRectangle(this.IdleAnimation.BoundingRectangle);
 
-            CelebrateAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.GordoAnimationRectangulesCelebrate);
-            CelebrateAnimation.SetBoundingRectangle(IdleAnimation.BoundingRectangle);
+            this.CelebrateAnimation = new Animation(spriteTexture, 0.075f, true, GlobalParameters.GordoAnimationRectangulesCelebrate);
+            this.CelebrateAnimation.SetBoundingRectangle(this.IdleAnimation.BoundingRectangle);
 
-            primaryWeapon.IdleAnimation = LoadWeaponAnimation(primaryWeapon, spriteTexture, WeaponAnimationType.Idle);
-            primaryWeapon.IdleAnimationPosition = GetWeaponAnimationPosition(primaryWeapon, WeaponAnimationType.Idle);
+            primaryWeapon.IdleAnimation = this.LoadWeaponAnimation(primaryWeapon, spriteTexture, WeaponAnimationType.Idle);
+            primaryWeapon.IdleAnimationPosition = this.GetWeaponAnimationPosition(primaryWeapon, WeaponAnimationType.Idle);
 
-            primaryWeapon.ShootAnimation = LoadWeaponAnimation(primaryWeapon, spriteTexture, WeaponAnimationType.Shoot);
-            primaryWeapon.ShootAnimationPosition = GetWeaponAnimationPosition(primaryWeapon, WeaponAnimationType.Shoot);
+            primaryWeapon.ShootAnimation = this.LoadWeaponAnimation(primaryWeapon, spriteTexture, WeaponAnimationType.Shoot);
+            primaryWeapon.ShootAnimationPosition = this.GetWeaponAnimationPosition(primaryWeapon, WeaponAnimationType.Shoot);
 
-            secondaryWeapon.IdleAnimation = LoadWeaponAnimation(secondaryWeapon, spriteTexture, WeaponAnimationType.Idle);
-            secondaryWeapon.IdleAnimationPosition = GetWeaponAnimationPosition(secondaryWeapon, WeaponAnimationType.Idle);
+            secondaryWeapon.IdleAnimation = this.LoadWeaponAnimation(secondaryWeapon, spriteTexture, WeaponAnimationType.Idle);
+            secondaryWeapon.IdleAnimationPosition = this.GetWeaponAnimationPosition(secondaryWeapon, WeaponAnimationType.Idle);
 
-            secondaryWeapon.ShootAnimation = LoadWeaponAnimation(secondaryWeapon, spriteTexture, WeaponAnimationType.Shoot);
-            secondaryWeapon.ShootAnimationPosition = GetWeaponAnimationPosition(secondaryWeapon, WeaponAnimationType.Shoot);
+            secondaryWeapon.ShootAnimation = this.LoadWeaponAnimation(secondaryWeapon, spriteTexture, WeaponAnimationType.Shoot);
+            secondaryWeapon.ShootAnimationPosition = this.GetWeaponAnimationPosition(secondaryWeapon, WeaponAnimationType.Shoot);
 
             // Set animation to play
-            PlayAnimation(IdleAnimation);
-            PlayWeaponAnimation(primaryWeapon.IdleAnimation);
+            this.PlayAnimation(this.IdleAnimation);
+            this.PlayWeaponAnimation(primaryWeapon.IdleAnimation);
 
             // Load sounds.            
-            KilledSound = Level.Content.Load<SoundEffect>(GlobalParameters.GORDO_MERCENARIO_KILLED_SOUND);
+            this.KilledSound = this.Level.Content.Load<SoundEffect>(GlobalParameters.GORDO_MERCENARIO_KILLED_SOUND);
 
-            Type = new PlayerInfo(PlayerType.GordoMercenario);
+            this.Type = new PlayerInfo(PlayerType.GordoMercenario);
 
-            KnifeWidth = GlobalParameters.GORDO_MERCENARIO_KNIFE_WIDTH;
-            KnifeHeight = GlobalParameters.GORDO_MERCENARIO_KNIFE_HEIGHT;
+            this.KnifeWidth = GlobalParameters.GORDO_MERCENARIO_KNIFE_WIDTH;
+            this.KnifeHeight = GlobalParameters.GORDO_MERCENARIO_KNIFE_HEIGHT;
 
             // Personalizacion de caracteristas del player
-            MaxAttackTime = 0.9f;
-            MaxHitTime = 1.0f;
-            MaxParalyzedTime = 0.375f;
-            MoveAcceleration = 9750.0f;
+            this.MaxAttackTime = 0.9f;
+            this.MaxHitTime = 1.0f;
+            this.MaxParalyzedTime = 0.375f;
+            this.MoveAcceleration = 9750.0f;
         }
 
         private Vector2 GetWeaponAnimationPosition(Weapon weapon, WeaponAnimationType weaponAnimationType)
