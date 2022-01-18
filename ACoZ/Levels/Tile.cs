@@ -1,13 +1,4 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
-// Tile.cs
-//
-// Microsoft XNA Community Game Platform
-// Copyright (C) Microsoft Corporation. All rights reserved.
-//-----------------------------------------------------------------------------
-#endregion
-
-using ACoZ.Helpers;
+﻿using ACoZ.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

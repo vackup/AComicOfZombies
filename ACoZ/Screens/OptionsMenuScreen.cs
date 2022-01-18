@@ -1,12 +1,3 @@
-#region File Description
-//-----------------------------------------------------------------------------
-// OptionsMenuScreen.cs
-//
-// Microsoft XNA Community Game Platform
-// Copyright (C) Microsoft Corporation. All rights reserved.
-//-----------------------------------------------------------------------------
-#endregion
-
 using ACoZ.Helpers;
 using Microsoft.Xna.Framework;
 
