@@ -7,7 +7,7 @@ A Comic Of Zombies is a videogame developed using Monogame. It used to be a paid
 
 Right now I'm working on the Windows OpenGL version.
 ## License
-The code is all licensed under the terms of the GPL (gnu public license).  
+The code is all licensed under the terms of the [GPL (gnu public license)](https://github.com/vackup/AComicOfZombies/blob/master/LICENSE).
 You should read the entire license, but the gist of it is that you can do 
 anything you want with the code, including sell your new version.  The catch 
 is that if you distribute new binary versions, you are required to make the 
