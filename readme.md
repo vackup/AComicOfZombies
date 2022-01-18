@@ -1,3 +1,11 @@
+zombocalypse have come, you are one of the last survivors on earth! So try to stay alive in a never ending fight for survival! Help President Obama in his road to White House.
+
+A Comic Of Zombies is a videogame developed using Monogame. It used to be a paid iOs game but it's not published anymore in the app store so I opened source it just in case someone wants to learn how it works.
+
+MonoGame is a simple and powerful open source .NET library for creating games for desktop PCs, video game consoles, and mobile devices.
+
+Right now I'm working on the Windows OpenGL version.
+
 The code is all licensed under the terms of the GPL (gnu public license).  
 You should read the entire license, but the gist of it is that you can do 
 anything you want with the code, including sell your new version.  The catch 
